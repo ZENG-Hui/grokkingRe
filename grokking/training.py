@@ -40,9 +40,10 @@ def main(args: dict):
         betas=(0.9, 0.98),
         weight_decay=config.weight_decay
         )
-    scheduler = torch.optim.lr_scheduler.LinearLR(
-        optimizer, start_factor = 0.1, total_iters=9
-    )
+    # scheduler = torch.optim.lr_scheduler.LinearLR(
+    #     optimizer, start_factor = 0.1, total_iters=9
+    # )
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=config.num_steps)
 
     num_epochs = ceil(config.num_steps / len(train_loader))
 
