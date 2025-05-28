@@ -1,2 +1,4 @@
 wandb/offline-run-20250528_160026-dmbxelxq
 wandb/offline-run-20250528_151616-6ym4o8j2
+wandb/offline-run-20250528_160026-dmbxelxqwandb
+wandb

@@ -1,6 +1,9 @@
 # zenghui self's global gitignore file
 test.*
 saved_models/
+monitor/
+multimonitor/
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

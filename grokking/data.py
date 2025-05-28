@@ -2,16 +2,19 @@ from math import ceil # 向上取整函数
 import torch
 
 # 反向构造，保证所有x/y 都存在
+# 这段定义了一个字典，键是字符串 "x/y"，值是一个 lambda 函数。
+# Lambda 函数：是匿名函数，这里接收三个参数 x、y 和 p，返回一个三元组
 DIVISION_MODULO_OPERATIONS = {
     "x/y": lambda x, y, p: (x*y % p, y, x),
 }
 
 ALL_MODULO_OPERATIONS = {
-    "x+y": lambda x, y, _: (x, y, x + y),
-    "x-y": lambda x, y, _: (x, y, x - y),
-    **DIVISION_MODULO_OPERATIONS, # Python字典解包语法，合并字典
+    "x+y": lambda x, y, p: (x, y, (x + y) % p),  # 加上模p运算
+    "x-y": lambda x, y, p: (x, y, (x - y) % p),  # 加上模p运算
+    **DIVISION_MODULO_OPERATIONS,
 }
 
+# 注： " ** " 操作符用于解包字典，在 Python 3.5+ 中引入。这允许将一个字典的内容合并到另一个字典中，避免使用 .update() 方法。
 ALL_OPERATIONS = {
     **ALL_MODULO_OPERATIONS,
 }

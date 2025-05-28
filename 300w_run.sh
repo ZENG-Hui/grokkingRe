@@ -1,7 +1,7 @@
 #PBS -N test
 #PBS -l nodes=1:ppn=24
 #PBS -l walltime=1:00:00
-#PBS -q short
+#PBS -q cmt
 ulimit -s unlimited
 
 cd $PBS_O_WORKDIR

@@ -1,11 +1,5 @@
 #!/bin/bash
 
-SYNC_MODE="all"  # 默认同步所有实验
-if [ "$1" = "--latest" ]; then
-    SYNC_MODE="latest"
-    echo "仅同步最新实验模式已启用" >> $SYNC_LOG
-fi
-
 # 配置参数
 SYNC_INTERVAL=30  # 每30秒同步一次
 SYNC_LOG="monitor/auto_sync.log"
@@ -13,6 +7,12 @@ SYNCED_RUNS_FILE="monitor/synced_runs.txt"
 COMPUTE_NODE=$(head -n 1 node)  # 从node文件获取计算节点名称
 REMOTE_PATH="/home/zengh/2025/Grokking/grokkingRe"  # 计算节点上的项目路径
 SKIPPED_RUNS_FILE="monitor/skipped_runs.txt"  # 跳过云端被删除的运行ID列表
+
+SYNC_MODE="all"  # 默认同步所有实验
+if [ "$1" = "--latest" ]; then
+    SYNC_MODE="latest"
+    echo "仅同步最新实验模式已启用" >> $SYNC_LOG
+fi
 
 # 添加状态跟踪变量，任务结束后停止同步
 TASK_RUNNING=false
