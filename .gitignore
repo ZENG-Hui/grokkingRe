@@ -1,5 +1,6 @@
 # zenghui self's global gitignore file
 test.*
+saved_models/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

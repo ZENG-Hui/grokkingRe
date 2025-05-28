@@ -6,3 +6,6 @@ wandb/offline-run-20250527_194829-ppajxqiv
 wandb/offline-run-20250527_195445-w0yr5cpu
 wandb/offline-run-20250527_200740-4wwbnzr2
 wandb/offline-run-20250527_203432-hljyjnxz
+wandb/offline-run-20250528_151616-6ym4o8j2
+wandb/offline-run-20250528_160026-dmbxelxq
+wandb/offline-run-20250528_171753-f1ntn9bx
