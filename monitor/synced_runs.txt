@@ -17,3 +17,10 @@ wandb/offline-run-20250528_182647-c93vot5b
 wandb/offline-run-20250528_183521-348x4w48
 wandb/offline-run-20250528_183521-348x4w48
 wandb/offline-run-20250528_184723-z3wmbzq5
+wandb/run-20250630_191708-n19tztg0
+wandb/offline-run-20250528_191253-5wpr37xb
+wandb/offline-run-20250620_110613-wb0dly6x
+wandb/offline-run-20250528_191302-muyn31ja
+wandb/offline-run-20250630_192750-hlblf4p3
+wandb/offline-run-20250630_193217-msppj13k
+wandb/offline-run-20250630_193916-4fqa92e8

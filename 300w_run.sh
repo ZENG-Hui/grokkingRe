@@ -1,6 +1,6 @@
 #PBS -N test
 #PBS -l nodes=1:ppn=24
-#PBS -l walltime=1:00:00
+#PBS -l walltime=24:00:00
 #PBS -q cmt
 ulimit -s unlimited
 
@@ -15,7 +15,7 @@ echo "节点核心数: $NCORE" >> debug.log
 
 # 1. 激活适当的Python环境
 source ~/.bashrc
-conda activate base
+conda activate AI
 echo "环境激活状态: $?" >> debug.log
 
 # 2. 设置wandb

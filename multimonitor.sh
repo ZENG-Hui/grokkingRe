@@ -65,7 +65,7 @@ echo "启动动态多节点自动同步 - $(date)" > $SYNC_LOG
 # 激活Python环境
 echo "激活Python环境..." >> $SYNC_LOG
 source ~/.bashrc
-conda activate base
+conda activate AI
 echo "Python环境激活状态: $?" >> $SYNC_LOG
 
 # 检查wandb

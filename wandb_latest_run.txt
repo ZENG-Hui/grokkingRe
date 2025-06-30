@@ -1,1 +1,1 @@
-最新的wandb运行目录: wandb/offline-run-20250528_184723-z3wmbzq5
+最新的wandb运行目录: wandb/offline-run-20250630_194951-qigm1gu4

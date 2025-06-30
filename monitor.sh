@@ -29,7 +29,7 @@ echo "配置：同步间隔=$SYNC_INTERVAL秒，计算节点=$COMPUTE_NODE" >> $
 # 激活Python环境 - 解决wandb命令未找到问题
 echo "激活Python环境..." >> $SYNC_LOG
 source ~/.bashrc
-conda activate base
+conda activate AI
 echo "Python环境激活状态: $?" >> $SYNC_LOG
 # 检查wandb是否可用
 echo "检查wandb是否可用..." >> $SYNC_LOG
