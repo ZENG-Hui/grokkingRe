@@ -45,26 +45,104 @@ def operation_mod_p_data(operation: str, p: int, eq_token: int, op_token: int):
 
     return inputs, labels
 
-def get_data(operation: str, prime: int, training_fraction: float, batch_size: int):
-    
+def get_data(operation: str, prime: int, training_fraction: float, batch_size: int, custom_split: bool = False):
+    """
+    获取数据的统一接口
+    custom_split: 是否使用自定义划分方式
+    """
+    if custom_split and operation in ["x+y", "x-y", "x/y"]:
+        return get_data_custom_split(operation, prime, batch_size)
+    else:
+        inputs, labels = operation_mod_p_data(operation, prime, prime, prime+1)
+        
+        # 创建一个TensorDataset，将输入和标签组合在一起，允许通过索引访问
+        # TensorDataset 是 PyTorch 中的一个数据集类，用于将多个张量组合在一起
+        dataset = torch.utils.data.TensorDataset(inputs, labels)
+
+        # 计算Train Data和Val Data的大小，然后将数据集随机划分为Train Data和Val Data
+        train_size = int(training_fraction * len(dataset))
+        val_size = len(dataset) - train_size
+        train_dataset, val_dataset = torch.utils.data.random_split(dataset, [train_size, val_size])
+
+        # 确保batch_size不超过Val Data的大小，ceil 保证 batch_size 至少为1
+        batch_size = min(batch_size, ceil(len(dataset) / 2))
+
+        # 创建数据加载器，使用随机打乱的方式加载Train Data和Val Data
+        # DataLoader 是 PyTorch 中的一个类，用于批量加载数据集
+        # shuffle=True 表示在每个epoch开始时打乱数据
+        train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+        val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=batch_size, shuffle=True)
+
+        return train_loader, val_loader
+
+################################################################################
+# Self-defined data split for addition operation
+################################################################################
+def get_data_custom_split(operation: str, prime: int, batch_size: int):
+    """
+    自定义数据划分：
+    - 加法 "x+y": Train Data a≤b, Val Data a>b
+    - 减法 "x-y": Train Data a≥b, Val Data a<b  
+    - 除法 "x/y": Train Data y≤prime//2, Val Data y>prime//2
+    """
     inputs, labels = operation_mod_p_data(operation, prime, prime, prime+1)
     
-    # 创建一个TensorDataset，将输入和标签组合在一起，允许通过索引访问
-    # TensorDataset 是 PyTorch 中的一个数据集类，用于将多个张量组合在一起
-    dataset = torch.utils.data.TensorDataset(inputs, labels)
-
-    # 计算训练集和验证集的大小，然后将数据集随机划分为训练集和验证集
-    train_size = int(training_fraction * len(dataset))
-    val_size = len(dataset) - train_size
-    train_dataset, val_dataset = torch.utils.data.random_split(dataset, [train_size, val_size])
-
-    # 确保batch_size不超过验证集的大小，ceil 保证 batch_size 至少为1
-    batch_size = min(batch_size, ceil(len(dataset) / 2))
-
-    # 创建数据加载器，使用随机打乱的方式加载训练集和验证集
-    # DataLoader 是 PyTorch 中的一个类，用于批量加载数据集
-    # shuffle=True 表示在每个epoch开始时打乱数据
+    if operation == "x+y":
+        # 获取原始的x, y值
+        x_orig = torch.arange(0, prime)
+        y_orig = torch.arange(0, prime)
+        x_orig, y_orig = torch.cartesian_prod(x_orig, y_orig).T
+        
+        # Train Data：a <= b，Val Data：a > b
+        train_mask = x_orig <= y_orig
+        val_mask = x_orig > y_orig
+        split_info = "Train Data: a≤b, Val Data: a>b"
+        
+    elif operation == "x-y":
+        # 获取原始的x, y值
+        x_orig = torch.arange(0, prime)
+        y_orig = torch.arange(0, prime)
+        x_orig, y_orig = torch.cartesian_prod(x_orig, y_orig).T
+        
+        # Train Data：a >= b，Val Data：a < b
+        train_mask = x_orig >= y_orig
+        val_mask = x_orig < y_orig
+        split_info = "Train Data: a≥b, Val Data: a<b"
+        
+    elif operation == "x/y":
+        # 对于除法，y的范围是1到prime-1
+        x_orig = torch.arange(0, prime)
+        y_orig = torch.arange(1, prime)
+        x_orig, y_orig = torch.cartesian_prod(x_orig, y_orig).T
+        
+        # 按除数大小划分：Train Data用小除数，Val Data用大除数
+        threshold = prime // 2
+        train_mask = y_orig <= threshold
+        val_mask = y_orig > threshold
+        split_info = f"Train Data: y≤{threshold}, Val Data: y>{threshold}"
+        
+    else:
+        raise ValueError(f"Unsupported operation type: {operation}")
+    
+    # 划分数据
+    train_inputs = inputs[train_mask]
+    train_labels = labels[train_mask]
+    val_inputs = inputs[val_mask]
+    val_labels = labels[val_mask]
+    
+    # 创建数据集
+    train_dataset = torch.utils.data.TensorDataset(train_inputs, train_labels)
+    val_dataset = torch.utils.data.TensorDataset(val_inputs, val_labels)
+    
+    # 调整batch_size
+    batch_size = min(batch_size, max(1, len(train_dataset) // 2))
+    
+    # 创建数据加载器
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=batch_size, shuffle=True)
-
+    
+    print(f"{operation} operation - {split_info}")
+    print(f"Train Size: {len(train_dataset)}")
+    print(f"Val Size: {len(val_dataset)}")
+    
     return train_loader, val_loader

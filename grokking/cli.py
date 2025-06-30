@@ -6,6 +6,7 @@ from training import main
 if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("--operation", type=str, choices=ALL_OPERATIONS.keys(), default="x-y")
+    parser.add_argument("--custom_split", action="store_true", help="Use custom split for training and validation data")
     parser.add_argument("--training_fraction", type=float, default=0.5)
     parser.add_argument("--prime", type=int, default=97)
     parser.add_argument("--num_layers", type=int, default=2)

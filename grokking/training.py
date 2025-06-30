@@ -25,7 +25,7 @@ def main(args: dict):
     wandb.define_metric("epoch")
 
     # Define metrics
-    # 也就是我们在网页上看到的指标
+    # 也就是我们在wandb网页上看到的指标
     wandb.define_metric("training/accuracy", step_metric='step')
     wandb.define_metric("training/loss", step_metric='step')
     wandb.define_metric("validation/accuracy", step_metric='epoch')
@@ -36,7 +36,8 @@ def main(args: dict):
         config.operation,
         config.prime,
         config.training_fraction,
-        config.batch_size
+        config.batch_size,
+        custom_split=config.custom_split # 是否使用自定义划分方式
         )
     # 调用模型，将模型转移到指定设备
     model = Transformer(
