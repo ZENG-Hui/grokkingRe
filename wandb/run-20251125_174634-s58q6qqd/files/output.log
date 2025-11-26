@@ -1,0 +1,29 @@
+Using device: cpu
+Loading data: x+y mod 97
+Creating sparse model...
+Model parameters: 63,011
+Initial nonzero: 62,755 (99.59%)
+Training for 1000 steps (~100 epochs)
+Epochs:   0%|          | 0/100 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "D:\ZENG_Hui_files\Code\2025\AntiGravityPlay\training_sparse.py", line 406, in <module>
+    main(config)
+  File "D:\ZENG_Hui_files\Code\2025\AntiGravityPlay\training_sparse.py", line 138, in main
+    global_step = train_epoch(
+                  ^^^^^^^^^^^^
+  File "D:\ZENG_Hui_files\Code\2025\AntiGravityPlay\training_sparse.py", line 239, in train_epoch
+    loss = criterion(output, labels)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zengqiang\.conda\envs\AI\Lib\site-packages\torch\nn\modules\module.py", line 1751, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zengqiang\.conda\envs\AI\Lib\site-packages\torch\nn\modules\module.py", line 1762, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zengqiang\.conda\envs\AI\Lib\site-packages\torch\nn\modules\loss.py", line 1297, in forward
+    return F.cross_entropy(
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\zengqiang\.conda\envs\AI\Lib\site-packages\torch\nn\functional.py", line 3494, in cross_entropy
+    return torch._C._nn.cross_entropy_loss(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: Target 153 is out of bounds.

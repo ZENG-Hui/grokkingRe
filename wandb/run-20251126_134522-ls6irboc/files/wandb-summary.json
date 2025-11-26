@@ -1,0 +1,1 @@
+{"_step":2000,"training/learning_rate":0,"validation/loss":8.666516304016113,"validation/accuracy":0.05037194490432739,"_wandb":{"runtime":189},"sparsity/current_L0":1,"training/accuracy":1,"epoch":199,"_runtime":189.7757449,"training/grad_rms":3.996419952184436e-06,"_timestamp":1.7641361153339274e+09,"step":2000,"training/loss":0.00011034647468477488}

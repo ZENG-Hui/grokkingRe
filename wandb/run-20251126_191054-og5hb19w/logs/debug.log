@@ -1,0 +1,11 @@
+2025-11-26 19:10:54,109 INFO    MainThread:35248 [wandb_setup.py:_flush():80] Current SDK version is 0.23.0
+2025-11-26 19:10:54,109 INFO    MainThread:35248 [wandb_setup.py:_flush():80] Configure stats pid to 35248
+2025-11-26 19:10:54,110 INFO    MainThread:35248 [wandb_setup.py:_flush():80] Loading settings from C:\Users\zengqiang\.config\wandb\settings
+2025-11-26 19:10:54,110 INFO    MainThread:35248 [wandb_setup.py:_flush():80] Loading settings from D:\ZENG_Hui_files\Code\2025\AntiGravityPlay\wandb\settings
+2025-11-26 19:10:54,110 INFO    MainThread:35248 [wandb_setup.py:_flush():80] Loading settings from environment variables
+2025-11-26 19:10:54,110 INFO    MainThread:35248 [wandb_init.py:setup_run_log_directory():713] Logging user logs to D:\ZENG_Hui_files\Code\2025\AntiGravityPlay\wandb\run-20251126_191054-og5hb19w\logs\debug.log
+2025-11-26 19:10:54,119 INFO    MainThread:35248 [wandb_init.py:setup_run_log_directory():714] Logging internal logs to D:\ZENG_Hui_files\Code\2025\AntiGravityPlay\wandb\run-20251126_191054-og5hb19w\logs\debug-internal.log
+2025-11-26 19:10:54,119 INFO    MainThread:35248 [wandb_init.py:init():840] calling init triggers
+2025-11-26 19:10:54,119 INFO    MainThread:35248 [wandb_init.py:init():845] wandb.init called with sweep_config: {}
+config: {'operation': 'x+y', 'prime': 97, 'training_fraction': 0.5, 'batch_size': 512, 'num_layers': 2, 'dim_model': 128, 'num_heads': 4, 'seq_len': 5, 'norm_type': 'layernorm', 'regularization_type': 'l2-topk', 'final_L0': 0.8, 'initial_L0': 1.0, 'anneal_end_ratio': 0.3, 'activation_sparsity_ratio': 0.95, 'use_activation_sparsity': True, 'min_connections': 1, 'enforce_sparsity_on': [], 'num_steps': 4000, 'learning_rate': 0.001, 'weight_decay': 1.0, 'adam_beta1': 0.9, 'adam_beta2': 0.98, 'adam_eps': 1e-08, 'warmup_ratio': 0.01, 'use_cosine_decay': True, 'use_L0_lr_scaling': True, 'min_lr_ratio': 0.0, 'grad_clip_rms': 1.0, 'device': 'cpu', 'seed': 42, 'log_every': 1, 'eval_every': 5, 'use_wandb': True, 'wandb_project': 'sparse_vs_dense', 'wandb_mode': 'online', 'save_model': True, 'save_dir': './checkpoints', 'save_every': 10000, 'num_tokens': 99, 'num_epochs': 444, '_wandb': {}}
+2025-11-26 19:10:54,119 INFO    MainThread:35248 [wandb_init.py:init():888] starting backend

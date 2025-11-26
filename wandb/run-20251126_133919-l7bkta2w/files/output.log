@@ -1,0 +1,36 @@
+ 39%|███▉      | 389/1000 [05:30<08:38,  1.18it/s]
+Traceback (most recent call last):
+  File "D:\ZENG_Hui_files\Code\2025\AntiGravityPlay\run_dense_vs_sparse.py", line 281, in <module>
+    main()
+  File "D:\ZENG_Hui_files\Code\2025\AntiGravityPlay\run_dense_vs_sparse.py", line 262, in main
+    results['dense'] = run_dense_training(run_id)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ZENG_Hui_files\Code\2025\AntiGravityPlay\run_dense_vs_sparse.py", line 162, in run_dense_training
+    dense_main(args)
+  File "D:\ZENG_Hui_files\Code\2025\AntiGravityPlay\training.py", line 68, in main
+    evaluate(model, val_loader, device, epoch)
+  File "D:\ZENG_Hui_files\Code\2025\AntiGravityPlay\training.py", line 155, in evaluate
+    output = model(inputs)[-1,:,:]
+             ^^^^^^^^^^^^^
+  File "C:\Users\zengqiang\.conda\envs\AI\Lib\site-packages\torch\nn\modules\module.py", line 1751, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zengqiang\.conda\envs\AI\Lib\site-packages\torch\nn\modules\module.py", line 1762, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ZENG_Hui_files\Code\2025\AntiGravityPlay\model.py", line 107, in forward
+    token_embedding = self.token_embeddings(inputs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zengqiang\.conda\envs\AI\Lib\site-packages\torch\nn\modules\module.py", line 1751, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zengqiang\.conda\envs\AI\Lib\site-packages\torch\nn\modules\module.py", line 1762, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zengqiang\.conda\envs\AI\Lib\site-packages\torch\nn\modules\sparse.py", line 190, in forward
+    return F.embedding(
+           ^^^^^^^^^^^^
+  File "C:\Users\zengqiang\.conda\envs\AI\Lib\site-packages\torch\nn\functional.py", line 2551, in embedding
+    return torch.embedding(weight, input, padding_idx, scale_grad_by_freq, sparse)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

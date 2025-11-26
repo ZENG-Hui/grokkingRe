@@ -1,0 +1,27 @@
+{
+  "os": "Windows-10-10.0.19045-SP0",
+  "python": "CPython 3.12.9",
+  "startedAt": "2025-11-25T12:22:51.828441Z",
+  "args": [
+    "--sequential"
+  ],
+  "program": "D:\\ZENG_Hui_files\\Code\\2025\\AntiGravityPlay\\run_dense_vs_sparse.py",
+  "codePath": "run_dense_vs_sparse.py",
+  "codePathLocal": "run_dense_vs_sparse.py",
+  "email": "zeng-h21@mails.tsinghua.edu.cn",
+  "root": "D:\\ZENG_Hui_files\\Code\\2025\\AntiGravityPlay",
+  "host": "LAPTOP-QM4EL0FR",
+  "executable": "C:\\Users\\zengqiang\\.conda\\envs\\AI\\python.exe",
+  "cpu_count": 4,
+  "cpu_count_logical": 8,
+  "disk": {
+    "/": {
+      "total": "368537759744",
+      "used": "125869600768"
+    }
+  },
+  "memory": {
+    "total": "16969424896"
+  },
+  "writerId": "e1j1r1n4nt5hipzw57m8k32va81nm90k"
+}

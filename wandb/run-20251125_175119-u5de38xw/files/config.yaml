@@ -1,0 +1,136 @@
+_wandb:
+    value:
+        cli_version: 0.23.0
+        e:
+            4j1vxfa696es2hh0y2z4vx6wvz9b0lye:
+                codePath: training_sparse.py
+                codePathLocal: training_sparse.py
+                cpu_count: 4
+                cpu_count_logical: 8
+                disk:
+                    /:
+                        total: "368537759744"
+                        used: "125862060032"
+                email: zeng-h21@mails.tsinghua.edu.cn
+                executable: C:\Users\zengqiang\.conda\envs\AI\python.exe
+                host: LAPTOP-QM4EL0FR
+                memory:
+                    total: "16969424896"
+                os: Windows-10-10.0.19045-SP0
+                program: D:\ZENG_Hui_files\Code\2025\AntiGravityPlay\training_sparse.py
+                python: CPython 3.12.9
+                root: D:\ZENG_Hui_files\Code\2025\AntiGravityPlay
+                startedAt: "2025-11-25T09:51:19.725056Z"
+                writerId: 4j1vxfa696es2hh0y2z4vx6wvz9b0lye
+        m:
+            - "1": step
+              "6":
+                - 3
+              "7": []
+            - "1": epoch
+              "6":
+                - 3
+              "7": []
+            - "2": training/*
+              "5": 1
+              "6":
+                - 1
+              "7": []
+            - "2": validation/*
+              "5": 2
+              "6":
+                - 1
+              "7": []
+            - "2": sparsity/*
+              "5": 1
+              "6":
+                - 1
+              "7": []
+        python_version: 3.12.9
+        t:
+            "1":
+                - 1
+            "2":
+                - 1
+            "3":
+                - 2
+                - 7
+                - 16
+            "4": 3.12.9
+            "5": 0.23.0
+            "8":
+                - 3
+            "12": 0.23.0
+            "13": windows-amd64
+activation_sparsity_ratio:
+    value: 0.25
+adam_beta1:
+    value: 0.9
+adam_beta2:
+    value: 0.95
+adam_eps:
+    value: 0.1
+anneal_end_ratio:
+    value: 0.5
+batch_size:
+    value: 512
+device:
+    value: cpu
+dim_model:
+    value: 64
+enforce_sparsity_on:
+    value: []
+final_L0:
+    value: 0.1
+grad_clip_rms:
+    value: 1
+initial_L0:
+    value: 1
+learning_rate:
+    value: 0.001
+log_every:
+    value: 10
+min_connections:
+    value: 4
+num_epochs:
+    value: 555
+num_heads:
+    value: 2
+num_layers:
+    value: 1
+num_steps:
+    value: 1000
+num_tokens:
+    value: 99
+operation:
+    value: x+y
+prime:
+    value: 97
+save_dir:
+    value: ./checkpoints
+save_every:
+    value: 10000
+save_model:
+    value: true
+seed:
+    value: 42
+seq_len:
+    value: 5
+training_fraction:
+    value: 0.5
+use_L0_lr_scaling:
+    value: true
+use_activation_sparsity:
+    value: true
+use_cosine_decay:
+    value: true
+use_wandb:
+    value: true
+wandb_mode:
+    value: online
+wandb_project:
+    value: sparse_grokking
+warmup_ratio:
+    value: 0.01
+weight_decay:
+    value: 0.1

@@ -1,0 +1,13 @@
+{"time":"2025-11-26T10:20:42.4526242+08:00","level":"INFO","msg":"stream: starting","core version":"0.23.0"}
+{"time":"2025-11-26T10:20:43.0526937+08:00","level":"INFO","msg":"stream: created new stream","id":"xo824qd7"}
+{"time":"2025-11-26T10:20:43.0526937+08:00","level":"INFO","msg":"handler: started","stream_id":"xo824qd7"}
+{"time":"2025-11-26T10:20:43.0598762+08:00","level":"INFO","msg":"stream: started","id":"xo824qd7"}
+{"time":"2025-11-26T10:20:43.0598854+08:00","level":"INFO","msg":"writer: started","stream_id":"xo824qd7"}
+{"time":"2025-11-26T10:20:43.0598854+08:00","level":"INFO","msg":"sender: started","stream_id":"xo824qd7"}
+{"time":"2025-11-26T10:28:28.9739202+08:00","level":"INFO","msg":"api: retrying error","error":"Post \"https://api.wandb.ai/files/zengh17/sparse_vs_dense/xo824qd7/file_stream\": EOF"}
+{"time":"2025-11-26T10:36:40.8618762+08:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-11-26T10:36:41.848814+08:00","level":"INFO","msg":"handler: operation stats","stats":{}}
+{"time":"2025-11-26T10:36:41.8571589+08:00","level":"INFO","msg":"stream: closing","id":"xo824qd7"}
+{"time":"2025-11-26T10:36:41.8571589+08:00","level":"INFO","msg":"handler: closed","stream_id":"xo824qd7"}
+{"time":"2025-11-26T10:36:41.8571589+08:00","level":"INFO","msg":"sender: closed","stream_id":"xo824qd7"}
+{"time":"2025-11-26T10:36:41.8571589+08:00","level":"INFO","msg":"stream: closed","id":"xo824qd7"}

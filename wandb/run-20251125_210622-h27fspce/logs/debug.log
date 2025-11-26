@@ -1,0 +1,26 @@
+2025-11-25 21:06:22,246 INFO    MainThread:24280 [wandb_setup.py:_flush():80] Current SDK version is 0.23.0
+2025-11-25 21:06:22,247 INFO    MainThread:24280 [wandb_setup.py:_flush():80] Configure stats pid to 24280
+2025-11-25 21:06:22,247 INFO    MainThread:24280 [wandb_setup.py:_flush():80] Loading settings from C:\Users\zengqiang\.config\wandb\settings
+2025-11-25 21:06:22,247 INFO    MainThread:24280 [wandb_setup.py:_flush():80] Loading settings from D:\ZENG_Hui_files\Code\2025\AntiGravityPlay\wandb\settings
+2025-11-25 21:06:22,247 INFO    MainThread:24280 [wandb_setup.py:_flush():80] Loading settings from environment variables
+2025-11-25 21:06:22,247 INFO    MainThread:24280 [wandb_init.py:setup_run_log_directory():713] Logging user logs to D:\ZENG_Hui_files\Code\2025\AntiGravityPlay\wandb\run-20251125_210622-h27fspce\logs\debug.log
+2025-11-25 21:06:22,248 INFO    MainThread:24280 [wandb_init.py:setup_run_log_directory():714] Logging internal logs to D:\ZENG_Hui_files\Code\2025\AntiGravityPlay\wandb\run-20251125_210622-h27fspce\logs\debug-internal.log
+2025-11-25 21:06:22,248 INFO    MainThread:24280 [wandb_init.py:init():840] calling init triggers
+2025-11-25 21:06:22,248 INFO    MainThread:24280 [wandb_init.py:init():845] wandb.init called with sweep_config: {}
+config: {'operation': 'x+y', 'prime': 97, 'training_fraction': 0.5, 'num_layers': 2, 'dim_model': 128, 'num_heads': 4, 'batch_size': 512, 'learning_rate': 0.001, 'num_steps': 2000, 'device': 'cpu', 'weight_decay': 1.0, '_wandb': {}}
+2025-11-25 21:06:22,248 INFO    MainThread:24280 [wandb_init.py:init():888] starting backend
+2025-11-25 21:06:24,539 INFO    MainThread:24280 [wandb_init.py:init():891] sending inform_init request
+2025-11-25 21:06:24,568 INFO    MainThread:24280 [wandb_init.py:init():899] backend started and connected
+2025-11-25 21:06:24,587 INFO    MainThread:24280 [wandb_init.py:init():969] updated telemetry
+2025-11-25 21:06:24,588 INFO    MainThread:24280 [wandb_init.py:init():993] communicating run to backend with 90.0 second timeout
+2025-11-25 21:06:25,639 INFO    MainThread:24280 [wandb_init.py:init():1040] starting run threads in backend
+2025-11-25 21:06:25,717 INFO    MainThread:24280 [wandb_run.py:_console_start():2504] atexit reg
+2025-11-25 21:06:25,717 INFO    MainThread:24280 [wandb_run.py:_redirect():2352] redirect: wrap_raw
+2025-11-25 21:06:25,718 INFO    MainThread:24280 [wandb_run.py:_redirect():2421] Wrapping output streams.
+2025-11-25 21:06:25,718 INFO    MainThread:24280 [wandb_run.py:_redirect():2444] Redirects installed.
+2025-11-25 21:06:25,720 INFO    MainThread:24280 [wandb_init.py:init():1080] run started, returning control to user process
+2025-11-25 21:08:55,664 INFO    MainThread:24280 [wandb_run.py:_finish():2270] finishing run zengh17/sparse_vs_dense/h27fspce
+2025-11-25 21:08:55,665 INFO    MainThread:24280 [wandb_run.py:_atexit_cleanup():2469] got exitcode: 0
+2025-11-25 21:08:55,665 INFO    MainThread:24280 [wandb_run.py:_restore():2451] restore
+2025-11-25 21:08:55,666 INFO    MainThread:24280 [wandb_run.py:_restore():2457] restore done
+2025-11-25 21:08:57,856 INFO    MainThread:24280 [wandb_run.py:_footer_sync_info():3853] logging synced files

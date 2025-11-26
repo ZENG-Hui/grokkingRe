@@ -1,0 +1,34 @@
+Using device: cpu
+Loading data: x+y mod 97
+Creating sparse model...
+Model parameters: 422,243
+Initial nonzero: 421,219 (99.76%)
+Training for 200 steps (~20 epochs)
+Epochs:  95%|█████████▌| 19/20 [00:29<00:01,  1.58s/it]
+Epoch 0: val_loss=4.6604, val_acc=0.0115
+Epoch 1: val_loss=4.6499, val_acc=0.0085
+Epoch 2: val_loss=4.6343, val_acc=0.0096
+Epoch 3: val_loss=4.6358, val_acc=0.0087
+Epoch 4: val_loss=4.6110, val_acc=0.0094
+Epoch 5: val_loss=4.6117, val_acc=0.0108
+Epoch 6: val_loss=4.6071, val_acc=0.0100
+Epoch 7: val_loss=4.6027, val_acc=0.0091
+Epoch 8: val_loss=4.5956, val_acc=0.0100
+Epoch 9: val_loss=4.5954, val_acc=0.0104
+Epoch 10: val_loss=4.5954, val_acc=0.0104
+Epoch 11: val_loss=4.5954, val_acc=0.0104
+Epoch 12: val_loss=4.5954, val_acc=0.0104
+Epoch 13: val_loss=4.5954, val_acc=0.0104
+Epoch 14: val_loss=4.5954, val_acc=0.0104
+Epoch 15: val_loss=4.5954, val_acc=0.0104
+Epoch 16: val_loss=4.5954, val_acc=0.0104
+Epoch 17: val_loss=4.5954, val_acc=0.0104
+Epoch 18: val_loss=4.5954, val_acc=0.0104
+Epoch 19: val_loss=4.5954, val_acc=0.0104
+
+==================================================
+Training complete!
+Final nonzero params: 42,211 / 422,243
+Final sparsity: 90.00%
+Compression ratio: 10.0x
+Saved final model to ./checkpoints\final_model.pt

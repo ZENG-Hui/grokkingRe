@@ -1,0 +1,114 @@
+Using device: cpu
+Loading data: x+y mod 97
+Creating sparse model...
+Model parameters: 63,011
+Initial nonzero: 62,755 (99.59%)
+Training for 1000 steps (~100 epochs)
+Epochs:  31%|███       | 31/100 [00:10<00:22,  3.02it/s]
+Epoch 0: val_loss=4.6883, val_acc=0.0117
+Epoch 1: val_loss=4.6720, val_acc=0.0106
+Epoch 2: val_loss=4.6580, val_acc=0.0094
+Epoch 3: val_loss=4.6508, val_acc=0.0091
+Epoch 4: val_loss=4.6449, val_acc=0.0100
+Epoch 5: val_loss=4.6359, val_acc=0.0091
+Epoch 6: val_loss=4.6334, val_acc=0.0125
+Epoch 7: val_loss=4.6263, val_acc=0.0121
+Epoch 8: val_loss=4.6255, val_acc=0.0102
+Epoch 9: val_loss=4.6165, val_acc=0.0121
+Epoch 10: val_loss=4.6169, val_acc=0.0117
+Epoch 11: val_loss=4.6170, val_acc=0.0100
+Epoch 12: val_loss=4.6154, val_acc=0.0096
+Epoch 13: val_loss=4.6119, val_acc=0.0098
+Epoch 14: val_loss=4.6119, val_acc=0.0094
+Epoch 15: val_loss=4.6099, val_acc=0.0098
+Epoch 16: val_loss=4.6115, val_acc=0.0085
+Epoch 17: val_loss=4.6134, val_acc=0.0087
+Epoch 18: val_loss=4.6146, val_acc=0.0098
+Epoch 19: val_loss=4.6136, val_acc=0.0091
+Epoch 20: val_loss=4.6126, val_acc=0.0087
+Epoch 21: val_loss=4.6113, val_acc=0.0089
+Epoch 22: val_loss=4.6129, val_acc=0.0096
+Epoch 23: val_loss=4.6071, val_acc=0.0094
+Epoch 24: val_loss=4.6043, val_acc=0.0096
+Epoch 25: val_loss=4.6009, val_acc=0.0096
+Epoch 26: val_loss=4.6025, val_acc=0.0108
+Epoch 27: val_loss=4.6018, val_acc=0.0119
+Epoch 28: val_loss=4.5994, val_acc=0.0094
+Epoch 29: val_loss=4.5990, val_acc=0.0102
+Epoch 30: val_loss=4.5990, val_acc=0.0104
+Epoch 31: val_loss=4.5986, val_acc=0.0094
+Epoch 32: val_loss=4.5980, val_acc=0.0102
+Epoch 33: val_loss=4.5972, val_acc=0.0119
+Epoch 34: val_loss=4.5967, val_acc=0.0094
+Epoch 35: val_loss=4.5967, val_acc=0.0091
+Epoch 36: val_loss=4.5964, val_acc=0.0102
+Epoch 37: val_loss=4.5967, val_acc=0.0119
+Epoch 38: val_loss=4.5967, val_acc=0.0121
+Epoch 39: val_loss=4.5969, val_acc=0.0121
+Epoch 40: val_loss=4.5968, val_acc=0.0121
+Epoch 41: val_loss=4.5966, val_acc=0.0121
+Epoch 42: val_loss=4.5965, val_acc=0.0121
+Epoch 43: val_loss=4.5965, val_acc=0.0121
+Epoch 44: val_loss=4.5963, val_acc=0.0121
+Epoch 45: val_loss=4.5964, val_acc=0.0121
+Epoch 46: val_loss=4.5964, val_acc=0.0121
+Epoch 47: val_loss=4.5964, val_acc=0.0113
+Epoch 48: val_loss=4.5960, val_acc=0.0113
+Epoch 49: val_loss=4.5959, val_acc=0.0113
+Epoch 50: val_loss=4.5960, val_acc=0.0113
+Epoch 51: val_loss=4.5960, val_acc=0.0113
+Epoch 52: val_loss=4.5960, val_acc=0.0113
+Epoch 53: val_loss=4.5960, val_acc=0.0113
+Epoch 54: val_loss=4.5960, val_acc=0.0113
+Epoch 55: val_loss=4.5960, val_acc=0.0113
+Epoch 56: val_loss=4.5960, val_acc=0.0113
+Epoch 57: val_loss=4.5960, val_acc=0.0113
+Epoch 58: val_loss=4.5960, val_acc=0.0113
+Epoch 59: val_loss=4.5960, val_acc=0.0113
+Epoch 60: val_loss=4.5960, val_acc=0.0113
+Epoch 61: val_loss=4.5960, val_acc=0.0113
+Epoch 62: val_loss=4.5960, val_acc=0.0113
+Epoch 63: val_loss=4.5960, val_acc=0.0113
+Epoch 64: val_loss=4.5960, val_acc=0.0113
+Epoch 65: val_loss=4.5960, val_acc=0.0113
+Epoch 66: val_loss=4.5960, val_acc=0.0113
+Epoch 67: val_loss=4.5960, val_acc=0.0113
+Epoch 68: val_loss=4.5960, val_acc=0.0113
+Epoch 69: val_loss=4.5960, val_acc=0.0113
+Epoch 70: val_loss=4.5960, val_acc=0.0113
+Epoch 71: val_loss=4.5960, val_acc=0.0113
+Epoch 72: val_loss=4.5960, val_acc=0.0113
+Epoch 73: val_loss=4.5960, val_acc=0.0113
+Epoch 74: val_loss=4.5960, val_acc=0.0113
+Epoch 75: val_loss=4.5960, val_acc=0.0113
+Epoch 76: val_loss=4.5960, val_acc=0.0113
+Epoch 77: val_loss=4.5960, val_acc=0.0113
+Epoch 78: val_loss=4.5960, val_acc=0.0113
+Epoch 79: val_loss=4.5960, val_acc=0.0113
+Epoch 80: val_loss=4.5960, val_acc=0.0113
+Epoch 81: val_loss=4.5960, val_acc=0.0113
+Epoch 82: val_loss=4.5960, val_acc=0.0113
+Epoch 83: val_loss=4.5960, val_acc=0.0113
+Epoch 84: val_loss=4.5960, val_acc=0.0113
+Epoch 85: val_loss=4.5960, val_acc=0.0113
+Epoch 86: val_loss=4.5960, val_acc=0.0113
+Epoch 87: val_loss=4.5960, val_acc=0.0113
+Epoch 88: val_loss=4.5960, val_acc=0.0113
+Epoch 89: val_loss=4.5960, val_acc=0.0113
+Epoch 90: val_loss=4.5960, val_acc=0.0113
+Epoch 91: val_loss=4.5960, val_acc=0.0113
+Epoch 92: val_loss=4.5960, val_acc=0.0113
+Epoch 93: val_loss=4.5960, val_acc=0.0113
+Epoch 94: val_loss=4.5960, val_acc=0.0113
+Epoch 95: val_loss=4.5960, val_acc=0.0113
+Epoch 96: val_loss=4.5960, val_acc=0.0113
+Epoch 97: val_loss=4.5960, val_acc=0.0113
+Epoch 98: val_loss=4.5960, val_acc=0.0113
+Epoch 99: val_loss=4.5960, val_acc=0.0113
+
+==================================================
+Training complete!
+Final nonzero params: 6,294 / 63,011
+Final sparsity: 90.01%
+Compression ratio: 10.0x
+Saved final model to ./checkpoints\final_model.pt
