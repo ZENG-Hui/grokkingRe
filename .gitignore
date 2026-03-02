@@ -1,2 +1,28 @@
-# wandb
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Logs
+*.log
+logs/
+monitor/
+DevCPU/
+
+# Wandb
 wandb/
+grokking/wandb/
+
+# Model checkpoints (large binary files)
+checkpoints/
+*.pt
+
+# Scan results (regenerable)
+scan/*.json
+scan/*.png
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
