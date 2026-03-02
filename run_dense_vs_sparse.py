@@ -75,7 +75,7 @@ SHARED_CONFIG = {
 DENSE_SPECIFIC = {
     # === 正则化方法 ===
     "regularization_type": "l2",  # 纯L2正则化（通过weight_decay）
-    "weight_decay": 1.0,          # L2正则化强度
+    "weight_decay": 0.30,          # L2正则化强度
     
     # === TopK权重稀疏配置（Dense不使用）===
     "final_L0": 1.0,              # 100%权重非零（不稀疏）
@@ -89,10 +89,10 @@ DENSE_SPECIFIC = {
 SPARSE_SPECIFIC = {
     # === 正则化方法 ===
     "regularization_type": "l2-topk",  # L2 + Top-K权重稀疏
-    "weight_decay": 1.0,               # L2部分（与Dense一致）
+    "weight_decay": 0.4,               # L2部分（与Dense一致）
     
     # === TopK权重稀疏配置 ===
-    "final_L0": 0.80,              # 目标L0：100%权重非零（对齐测试）
+    "final_L0": 0.40,              # 目标L0：100%权重非零（对齐测试）
     "initial_L0": 1.0,            # 起始L0：100%非零
     "anneal_end_ratio": 0.30,      # L0退火：前X%步数从initial_L0降到final_L0（0=不退火）
     "use_L0_lr_scaling": True,   # 学习率动态缩放：lr × 1/√L0
@@ -102,7 +102,7 @@ SPARSE_SPECIFIC = {
     
     # === AbsTopK激活稀疏配置 ===
     "use_activation_sparsity": True,   # 启用AbsTopK层（测试层本身）
-    "activation_sparsity_ratio": 0.95,  # 保留比例：1.0=保留100%（实际不稀疏）
+    "activation_sparsity_ratio": 1.0,  # 保留比例：1.0=保留100%（实际不稀疏）
                                        # - 训练和推理都生效
                                        # - 后续实验改为0.25=只保留top 25%激活
     "min_connections": 1,              # 每个神经元最小非零权重数
