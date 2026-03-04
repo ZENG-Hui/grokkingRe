@@ -1,0 +1,918 @@
+\documentclass{article}
+
+% if you need to pass options to natbib, use, e.g.:
+\PassOptionsToPackage{numbers, compress}{natbib}
+% before loading neurips_2025
+
+% ready for submission
+\usepackage[final]{neurips_2025}
+
+% to compile a preprint version, e.g., for submission to arXiv, add add the
+% [preprint] option:
+%     \usepackage[preprint]{neurips_2025}
+
+
+% to compile a camera-ready version, add the [final] option, e.g.:
+%     \usepackage[final]{neurips_2025}
+
+
+% to avoid loading the natbib package, add option nonatbib:
+%    \usepackage[nonatbib]{neurips_2025}
+
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts, amsmath}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+\usepackage{graphicx}
+%\usepackage[font=small]{caption}
+\definecolor{mitred}{RGB}{117, 0, 20}
+%\definecolor{mitgrey}{RGB}{139, 149, 158}
+\usepackage{tcolorbox}
+
+\title{Superposition Yields Robust Neural Scaling}
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to LaTeX to determine where to break the
+% lines. Using \AND forces a line break at that point. So, if LaTeX puts 3 of 4
+% authors names on the first line, and the last on the second line, try using
+% \AND instead of \And before the third author name.
+
+\author{%
+  Yizhou Liu, Ziming Liu, and Jeff Gore \\
+  Massachusetts Institute of Technology \\
+  % Cambridge, MA 02139 \\
+  \texttt{\{liuyz, zmliu, gore\}@mit.edu}
+}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+  The success of today's large language models (LLMs) depends on the observation that larger models perform better. However, the origin of this neural scaling law, that loss decreases as a power law with model size, remains unclear. We propose that representation superposition, meaning that LLMs represent more features than they have dimensions, can be a key contributor to loss and cause neural scaling. Based on Anthropic's toy model, we use weight decay to control the degree of superposition, allowing us to systematically study how loss scales with model size. When superposition is weak, the loss follows a power law only if data feature frequencies are power-law distributed. In contrast, under strong superposition, the loss generically scales inversely with model dimension across a broad class of frequency distributions, due to geometric overlaps between representation vectors. We confirmed that open-sourced LLMs operate in the strong superposition regime and have loss scaling inversely with model dimension, and that the Chinchilla scaling laws are also consistent with this behavior. Our results identify representation superposition as a central driver of neural scaling laws, providing insights into questions like when neural scaling laws can be improved and when they will break down.\footnote{Code is available at \url{https://github.com/liuyz0/SuperpositionScaling}}
+\end{abstract}
+
+\section{Introduction}
+\begin{figure}
+  \centering
+  \includegraphics{figures/Fig-1-2.pdf}
+  \caption{Superposition leads to robust and fast power-law loss decay with model size. (a) Illustration of no superposition where a three-dimensional space can at most represent three features without any interference (overlap). (b) Toy model results in the regime of weak superposition, where we set data dimension $n = 10240$ (number of features). The toy model will be introduced; more details are in Appendix~\ref{app:fig1}. (c) Illustration of superposition: there are more features than the dimension of the space. (d) The same toy models in the strong superposition regime show lower losses, which are on power laws with model dimension and have exponents close to 1 (color coding same as panel b). The gray points are from actual LLMs, which have a similar power-law exponent near 1.}
+  \label{fig:abstract}
+\end{figure}
+The remarkable success of large language models (LLMs) has been driven by the empirical observation that increasing model size, training data, and compute consistently leads to better performance \cite{brown2020gpt3,kaplan2020scaling,hoffmann2022chinchilla,henighan2020scaling}. Across a wide range of tasks --- including language understanding \cite{brown2020gpt3,openai2023gpt4,qin2023bardvisual}, math \cite{lewkowycz2022solving,taylor2022galactica,wolfram2023integration,trinh2024alphageometry}, and code generation \cite{chen2021codex,github2022copilot} --- larger models achieve lower loss, higher accuracy, and greater generalization abilities \cite{kaplan2020scaling,rae2021scaling}. This consistent trend, known as neural scaling laws, has been observed across multiple model families and architectures, fueling the development of increasingly large models \cite{kaplan2020scaling, hoffmann2022chinchilla,henighan2020scaling}. These scaling laws have not only shaped the current strategies for building better models but have also raised fundamental questions about why such simple and universal patterns emerge in complex learning systems.
+
+The power-law loss with model size plays a central role in both the practical design and the theoretical understanding of large-scale machine learning systems, yet its origin remains inconclusive \cite{hoffmann2022chinchilla, sharma2022neural,bahri2024explaining,bordelon2020spectrum,bordelon2025feature,maloney2022solvable,hutter2021learning,michaud2023quantization,liu2025physicsskilllearning,hernandez2022scaling,brill2024unifying,spigler2020asymptotic,song2024resourcemodelneuralscaling}. Various explanations have been proposed, drawing from statistical learning theory and empirical phenomenological models, including improved function or manifold approximation in larger models \cite{sharma2022neural,bahri2024explaining}, and enhanced representation or skill learning in larger models \cite{hutter2021learning,michaud2023quantization,liu2025physicsskilllearning,hernandez2022scaling}. In the limit of infinite data, many of these explanations predict a power-law decay of loss with model size, provided the underlying data distribution also follows a power law. The scaling exponents are sensitive to the properties of the data distribution. Moreover, the connection between these mechanistic explanations and the behavior of actual LLMs needs further exploration.
+
+When considering LLMs specifically, it becomes clear that representation or embedding can be a limiting factor, which is closely related to a phenomenon called \textbf{superposition} \cite{arora2018linearalgebraicstructureword,elhage2022superposition}, yet this aspect has not been thoroughly studied. LLMs must learn embedding vectors for tokens, process these representations through transformer layers to predict the next token, and use a final projection (the language model head) to generate the output. Conceptually, fitting functions or manifolds and learning skills or grammars are primarily tasks of the transformer layers, while representation is more directly tied to the embedding matrix and the language model head. To represent more than fifty thousand tokens --- or even more abstract concepts --- within a hidden space of at most a few thousand dimensions, the quality of representations is inevitably constrained by the model dimension or width, contributing to the final loss. Although models can represent more features than their dimensionality would suggest through a mechanism known as superposition \cite{elhage2022superposition}, prior works on neural scaling laws seem to fall in the weak superposition regime implicitly \cite{bahri2024explaining,bordelon2020spectrum,bordelon2025feature,maloney2022solvable,hutter2021learning,michaud2023quantization}, which may be less relevant to the regime where LLMs operate. This gap leads us to study
+\begin{tcolorbox}[colframe=mitred, opacityback=0.9, title=Question: How will superposition influence the loss scaling with model dimension (width)?]
+Varying the degree of superposition and data structure, when is the loss a power law? And if the loss is a power law, what will the exponent be?
+\end{tcolorbox}
+
+We adopt a toy model construction similar to \cite{elhage2022superposition} to study how superposition affects neural scaling laws. In the toy model, representations are learned by recovering data, each composed of multiple latent features. These features in data have different frequencies of occurrence, reflecting their relative importance. Weak superposition means that only the most frequent features are perfectly represented, while the others are ignored. As illustrated in Figure~\ref{fig:abstract}a, the first three of six features are represented in the three-dimensional space without interference, and the remaining three are omitted. We find that in the weak superposition regime, the scaling of loss with model dimension depends sensitively on how feature frequency decays with rank: the loss follows a power law with model size only if the feature frequencies themselves follow a power law, provided that $m$ is sufficiently large (Figure~\ref{fig:abstract}b). By contrast, strong superposition allows many more features to be represented, albeit with overlap in the representation (Figure~\ref{fig:abstract}c). In this regime, the model displays a robust behavior: loss scales inversely with model dimension across different data frequency distributions (Figure~\ref{fig:abstract}d). Remarkably, we find that actual LLMs follow a similar scaling. We summarize our contributions as
+\begin{tcolorbox}[colframe=mitred, opacityback=0.9, title=Main results/messages]
+$\bullet$ Loss in the weak superposition regime depends on summing frequencies of ignored features, which is a power law if frequencies follow a power law. 
+
+$\bullet$ In the strong superposition regime, loss arises from the interference between representations and can have robust ``one over width" scaling because of the geometry.
+
+$\bullet$ LLMs exhibit strong superposition and agree quantitatively with our toy model predictions.
+\end{tcolorbox}
+
+The rest of the paper will elaborate on the takeaways. In Section~\ref{sec:method}, we introduce the toy model, describe the data sampling procedure, and explain how we control the degree of superposition. Section~\ref{sec:results} presents the detailed results. In Section~\ref{sec:relate}, we compare our findings to related works. Finally, Section~\ref{sec:discussion} summarizes our conclusions and discusses limitations and future directions.
+
+\section{Methods}\label{sec:method}
+\begin{figure}
+  \centering
+  \includegraphics{figures/Fig-2-2.pdf}
+  \caption{Toy model of superposition. (a) Architecture and loss of the toy model. (b and c) A row of the matrix $W$, denoted by $W_i$, is the representation of feature $i$. (b) No superposition represented the most frequent features, i.e., the first three ($n=6$ features in $m=3$ dimensional space), without interference. In the frequency-rank plot, height means feature $i$'s frequency $p_i$, and color means the $i$th row vector's norm $\|W_i\|_2$. (c) With superposition, features are all represented, while the representations $W_i$ overlap.}
+  \label{fig:toy}
+\end{figure}
+To understand the relationship between superposition and data structure, we need a toy model to represent data features simple enough yet not simpler --- two key principles need to be reflected, (i) there are more features to represent than the dimension of the model, and (ii) features occur in data with different frequencies. Later, we will discuss how the loss due to representation studied here may affect the overall final loss in LLMs.
+
+We adopt the toy model of superposition from Anthropic \cite{elhage2022superposition} (an autoencoder) with minor modifications (Figure~\ref{fig:toy}a). Input $x \in \mathbb{R}^n$ is a vector with data dimension $n$ being the number of atomic (or irreducible) features. Each element $x_i$ in $x$ is interpreted as the activation of this sample at feature $i$, which follows
+\begin{equation}
+    x_i = u_i v_i,~u_i \sim \mathrm{Bernoulli}(p_i)~\&~v_i\sim U(0,2).
+    \label{eq:sample}
+\end{equation}
+Here, $u_i$ sampled from a Bernoulli distribution controls whether the feature $i$ is activated, and $v_i$ sampled from a uniform distribution controls the activation strength once feature $i$ is activated. All samples are i.i.d. The frequency of feature $i$ to appear in the data is $p_i$. Without loss of generality, we make the indices of features the same as their frequency or importance rank. The data structure is then about how $p_i$ decreases with rank $i$. The expected number of activations in one input will be referred to as activation density: $E = \sum_{i=1}^n p_i$. The model learns hidden representations by recovering the data, which cannot be done perfectly because the model dimension $m$ is much smaller than the number of possible features in the data $n$. The trainable parameters are a weight matrix $W \in \mathbb{R}^{n\times m}$ and a bias vector $b\in \mathbb{R}^{n}$. The weight matrix embeds data $x$ into a hidden space with dimension $m$, $h = W^T x$, with $m\ll n$. In practice, we fix $n$ as a large number and change the model dimension $m$. We use $W$ to read out the embedding, where $y = \mathrm{ReLU}(Wh + b)$. The loss is defined as the difference between the recovered $y$ and the original $x$, $L = \langle \|y - x\|_2^2 \rangle_x$, where $\langle \cdot \rangle_x$ means average over $x$ distribution.
+
+We can now formally introduce superposition. Note that $W_i$ is the representation of feature $i$ in the hidden space, where we use $W_i$ to denote the $i$th row of the $W$ matrix. We emphasize the following
+\begin{tcolorbox}[colframe=mitred, opacityback=0.9, title=Key concepts]
+$\bullet$ Feature frequency: $p_i$ is the probability that feature $i$ is activated (non-zero) in a sample, which is assumed to decrease with $i$. 
+
+$\bullet$ Sparsity: We say features are sparse when $E / n$ is small.
+
+$\bullet$ The feature $i$ is represented (in the hidden space) when $W_i$ is non-zero.
+\end{tcolorbox}
+No superposition ideally means the first $m$ rows of $W$ form an orthogonal basis (i.e., the first $m$ most important features represented perfectly) and the rest of the rows are zero (i.e., the rest of the features ignored or lost), as illustrated in Figure~\ref{fig:toy}b. Superposition means that there are more than $m$ rows in $W$ with non-zero norms (Figure~\ref{fig:toy}c).
+
+We next summarize important facts of this toy model \cite{elhage2022superposition}:
+\begin{tcolorbox}[colframe=mitred, opacityback=0.9, title=Preliminaries]
+Superposition cannot lead to lower losses in a linear model (without ReLU function) due to the large amount of interference. ReLU and negative biases can cancel off interference, realizing error correction. With this non-linearity, superposition can be preferred when feature frequencies are more even (better not to ignore features) and features are sparse in data (error correction is easier).
+\end{tcolorbox}
+We can see that in Figure~\ref{fig:abstract}, where features are sparse in data, the losses in the strong superposition regime are indeed much smaller than those in the weak superposition regime across several feature frequency distributions. 
+
+\begin{figure}
+  \centering
+  \includegraphics{figures/Fig-3-3.pdf}
+  \caption{Weight decay can tune the degree of superposition. (a) Positive weight decay ($\gamma = 1$ in the figure) has $\|W_i\|_2$ near 0 or 1, with frequent features more likely to be represented (color means $\|W_i\|_2$ in frequency-rank plots). Negative weight decay ($\gamma = -1$) has $\|W_i\|_2$ around $1$. We show results when $\alpha = 1,~m = 100$, yet the claim is generally true. (b) For all models, small weight decays lead to strong superposition, and large weight decays lead to no superposition ($\phi_{1/2}\approx m/n$). More data in Appendix~\ref{app:fig3}.}
+  \label{fig:wd}
+\end{figure}
+If one regime is more preferred, we want to approach it more quickly in training. If it is not preferred, we also want to study the scaling behaviors scientifically in that regime. 
+To this end, we introduce a decoupled weight decay (or growth) term in training to tune the degree of superposition:
+\begin{equation}
+    W_{i,t+1} = \left\{ 
+    \begin{aligned}
+        &W_{i,t} - \eta_t \gamma W_{i,t},~ \gamma \geq 0, \\
+        &W_{i,t} - \eta_t \gamma W_{i,t} (1 / \| W_{i,t} \|_2 - 1),~ \gamma < 0,
+    \end{aligned}
+    \right.
+    \label{eq:wd}
+\end{equation}
+where $\eta_t$ is the learning rate and $W{i,t}$ is the $i$th row of the weight matrix at step $t$ (vector operations are element-wise). For weight decay $\gamma < 0$, the update corresponds to gradient descent on $(\|W_{i,t}\|_2 - 1)^2$, encouraging unit-norm rows. We implement this weight decay in AdamW \cite{loshchilov2018decoupled} optimizer with a warm-up and cosine decay learning rate schedule (details in Appendix~\ref{app:toytrain}). At each training step, we sample new data. 
+
+We find that the weight decay can robustly control superposition. 
+We first see that important features tend to be represented (associated $\|W_i\|_2>0$), and norms of $W_i$ become bimodal, clustering near 0 or 1 (Figure~\ref{fig:wd}a). This allows us to define the fraction of represented features as
+\begin{equation}
+    \phi_{1/2} = |\{ i : \|W_i \|_2 > 1/2 \}| / n,
+    \label{eq:phihalf}
+\end{equation}
+namely, the fraction of rows with norm larger than $1/2$.\footnote{In theory, we should use $0$ as the threshold. The choice, $1/2$, may minimize misclassifications since norms are near $0$ or $1$. Our result is robust to this threshold since norms are very concentrated.} We found that weight decay can tune superposition for all models we trained, with small weight decay $\gamma$ giving strong superposition, i.e., $\phi_{1/2} \approx 1 \gg m/n$, and large weight decay corresponding to weak superposition, i.e., $\phi_{1/2} \sim m/n$ (Figure~\ref{fig:wd}b). The ability of weight decay to tune superposition is robust to feature frequency distributions (Appendix~\ref{app:fig3}). We can then systematically study scaling behaviors in different regimes.
+
+The toy model differs from LLMs in architecture, data, and loss. Since we focus on representations rather than next-token prediction, we omit transformer layers. Conceptually, LLMs map a document to a token, with inputs and outputs in different spaces, while the toy model operates within a single shared space. Despite this, the toy model captures key aspects of language structure through engineered sparsity and feature importance, making its data structure aligned with that of LLMs at a high level. While LLMs use cross-entropy loss and the toy model uses squared error, we can show that this does not affect the scaling behaviors (Appendix~\ref{app:crossentropy}). Thus, the toy model is a suitable abstraction for studying representation-limited scaling.
+
+\section{Results}\label{sec:results}
+
+For a systematic scan, we set $p_i \propto 1/i^\alpha $ in this section and can vary the \textbf{data exponent} $\alpha$ to change how skewed $p_i$ is.\footnote {The word or phrase frequency in natural language follows Zipf's law, which is a power law ($\alpha = 1$).} The \textbf{activation density} $E$ is set as $1$, whose value can be shown to not affect the scaling (Appendix~\ref{app:fig7}). We fix \textbf{data dimension} $n = 1000$, vary \textbf{model dimension} $m$ from $10$ to $100$, and sweep \textbf{weight decay} $\gamma$ from $-1$ to $1$. We fit final test losses as a power law, $L \propto 1 / m^{\alpha_m}$, and call $\alpha_m$ the \textbf{model exponent}. More details on hyperparameters are in Appendix~\ref{app:small}.
+
+\subsection{Weak superposition}
+\begin{figure}
+  \centering
+  \includegraphics{figures/Fig-4-4.pdf}
+  \caption{Loss at weak superposition can be well described by the frequency sum of ignored features. (a) Observation and theory at weak superposition (i.e., Equation~(\ref{eq:unlearn}) as a function of number of represented features, $\phi_{1/2}n$) agree when weight decay $\gamma$ is positive. (b) For those closest to the ideal no superposition case, we expect $\alpha_m = \alpha -1$, which is close to measured values. Error bars are standard errors. Details in Appendix~\ref{app:fig5}.}
+  \label{fig:weak}
+\end{figure}
+
+We seek to understand when loss follows a power law with model dimension, and what determines the exponent when it does in the weak superposition regime.
+Consider an idealized case where the top $\phi_{1/2} n$ most frequent features are perfectly represented (no overlap), where $\phi_{1/2}$ is the fraction of represented features. 
+The optimal biases are $b_i = 0$ for $i\leq \phi_{1/2} n$ and $b_i = \langle x_i \rangle$ for $i > \phi_{1/2} n$ \cite{elhage2022superposition}.
+The loss can then be written as:
+\begin{equation}
+L = \sum_{i>\phi_{1/2} n} \langle (x_i - \langle x_i \rangle)^2 \rangle =  \sum_{i>\phi_{1/2} n} (\langle v^2 \rangle p_i -\langle v \rangle^2 p_i^2) \approx \langle v^2 \rangle \sum_{i>\phi_{1/2} n} p_i.
+\label{eq:unlearn}
+\end{equation}
+The last approximation is right when $p_i \ll 1$ for $i>\phi_{1/2} n$ and $p_i^2$ terms are negligible. We use the definition of $x_i = u_i v_i$, where $v \sim U(0,2)$, giving $\langle v^2 \rangle = 4/3$. We can use the integral $\int_{\phi_{1/2} n}^n p_i \mathrm{d}i$ to estimate the summation, yielding an expression that depends on the number of represented, $\phi_{1/2} n$, and the data exponent, $\alpha$ (Appendix~\ref{app:fig5}). We find that, in the weak superposition regime, the actual losses closely match this prediction (Figure~\ref{fig:weak}a). Focusing on cases closest to the ideal no-superposition scenario, where $\phi_{1/2} n = m$ and the first $m$ features are represented, we observe that such cases occur when $\alpha > 1$ and yield a model exponent $\alpha_m \approx \alpha - 1$ (Figure~\ref{fig:weak}b). This matches the theoretical expectation that $\int_m^n p_i \mathrm{d}i \propto m^{-\alpha + 1}$ when $n \gg m$ and $\alpha > 1$. Thus, in the weak superposition regime, loss scaling is well described by the contribution of unlearned features, that is, the total frequency of features not represented by the model.
+
+We can now answer our Question in the weak superposition regime.
+\begin{tcolorbox}[colframe=mitred, opacityback=0.9, title={Result 1: ``Power law in, power law out" in the weak superposition regime}]
+The loss is governed by a sum of frequencies of less frequent and not represented features. Ideally, there are model dimension $m$ most important features being represented. If feature frequencies follow a power law, $p_i \propto 1/i^\alpha$ with $\alpha > 1$, the loss or the summation starting at $m$ will be a power law with $m$ with exponent $\alpha - 1$.
+\end{tcolorbox}
+This finding of the specific toy model agrees with previous works with very different settings \cite{bahri2024explaining,bordelon2020spectrum,bordelon2025feature,maloney2022solvable,hutter2021learning,michaud2023quantization}, where some power-law skill importance or spectrum is assumed.
+
+\subsection{Strong superposition}
+\begin{figure}
+  \centering
+  \includegraphics{figures/Fig-5-2.pdf}
+  \caption{Loss scaling at strong superposition is explained via geometry. (a) The row norm distribution is bimodal around $1$. (b) The more frequent the features are, the more likely their norms are greater than $1$.
+  (c) Variance of squared overlaps for features with $\|W_i\|_2>1$ is smaller than that of random unit vectors, i.e., $\frac{2(m-1)}{m^2(m+2)}$. Overlaps are calculated using directions $W_i/\|W_i\|_2$. We show the measured variances ($\gamma = -0.55$) divided by the above theory value for random vectors.
+  (d) The features with $\|W_i\|_2>1$ have $1/m$ mean squared overlaps, where we plotted all the data when $\gamma<0$.
+  (e) At strong superposition ($\gamma<0$), $\alpha_m = 1$ if feature frequencies are flat ($\alpha$ small) due to isotropic vector geometry. But $\alpha_m \approx 2(\alpha -1 )$ if the feature frequencies are skewed ($\alpha$ large). Error bars are standard errors. More details in Appendix~\ref{app:fig6}.}
+  \label{fig:strong}
+\end{figure}
+We next turn to the strong superposition regime. Consider the case where only feature $j$ is activated. The output $y_j$ has activation $\sim W_i \cdot W_j$, leading to a loss that scales as squared overlaps $(W_i \cdot W_j)^2$ due to the definition of loss. The loss arises from the non-zero overlaps between representation vectors. We cannot solve the weight matrix $W$ in this regime. The section goes back and forth between theoretical ansatz and experimental observations to understand the high-level behaviors.
+
+We start by considering relatively even feature frequencies, where trained $W_i$ are expected to be isotropic. One simplest theoretical ansatz of isotropic vectors is i.i.d. vectors uniformly on the unit sphere. In $\mathbb{R}^m$, the squared overlap of two such random vectors follows $\mathrm{Beta}(\frac{1}{2},\frac{m-1}{2})$ distribution, and therefore has mean $1/m$ and variance $\frac{2(m-1)}{m^2(m+2)} \sim 2/m^2$. The squared overlaps for isotropic random vectors typically obey $1/m$ scaling.
+
+The actual trained $W_i$ have structures whose norms are bimodal near $1$ (Figure~\ref{fig:strong}a), and more important features tend to have larger vector norm (Figure~\ref{fig:strong}b). We want to understand how such a structure will change the scaling of overlaps. It turns out that for better error correction (using bias to cancel interference), the model needs to minimize the maximum overlap rather than the sum of squared overlaps. Consider $\nu$ unit vectors $w_i \in \mathbb{R}^m$ with $\nu \ge m$. It can be shown that \cite{welch1974lower}
+\begin{equation}
+    \max_{i\neq j} | w_i \cdot w_j | \ge \sqrt{\frac{\nu - m}{m (\nu -1)}} \equiv \kappa.
+\end{equation}
+The lower bound, $\kappa \approx \sqrt{1/m}$ when $\nu \gg m$. The bound is met when the vectors form an equal angle tight frame (ETF) \cite{casazza2012survey,strohmer2003grassmannian,fickus2012real}, which has no variance in absolute overlaps and appears in contexts such as quantum measurements \cite{renes2004symmetric,liu2021relating,liu2021quantifying,liu2022total} and neural collapse \cite{papyan2020prevalence,tirer2022extended}. ETFs in real spaces can only exist if $\nu \le \frac{m(m+1)}{2}$ \cite{casazza2012survey,strohmer2003grassmannian,fickus2012real}. We find that the $W_i$ with $\|W_i\| > 1$ associated with important features tend to be ETF-like (Figure~\ref{fig:strong}, c and d): the variance of squared overlaps is smaller than that of random vectors and can be near 0 for even feature frequencies (small $\alpha$); the mean of squared overlaps collapse on $1/m \approx \kappa^2$. 
+Being ETF or ETF-like can help error correction and reduce loss values, but would not change the typical scaling with $m$ if the number of vectors is much larger than $m$. Similar to ETFs, whose number of vectors is bounded, the number of vectors $W_i$ with $\|W_i\| > 1$ is around $m^2/2$ (Appendix~\ref{app:fig6}), and the less important features tend not to be represented (norm lower than 1). Vectors of these less important features cannot be explained with a simple theoretical ansatz. Yet, combining the lessons from random vectors and ETF, we expect the squared overlaps to scale as $1/m$ robustly for isotropic vectors (confirmed in Appendix~\ref{app:fig6}). Considering all the overlaps when feature frequencies are even, we then predict the loss to scale as $1/m$, which is true (Figure~\ref{fig:strong}e).
+
+When the feature frequencies are skewed (large $\alpha$), we find that the model exponent $\alpha_m$ increases with $\alpha$ and becomes greater than $1$. Vectors being non-isotropic, i.e., important features having much smaller overlaps, may lead to larger $\alpha_m$. To illustrate this idea, we conjecture an extreme situation where the $m^2/2$ most important features can be ETF-like and contribute negligible loss compared to the less important ones. In the worst case (Appendix~\ref{app:losstheory}), the less important features lead to a loss proportional to $\sum_{i = m^2/2}^n p_i \sim m^{-2(\alpha -1)}$, i.e., $\alpha_m = 2(\alpha -1)$, which is close to observations (Figure~\ref{fig:strong}e). The real configuration of $W_i$ is more complicated than this simple conjecture, requiring advanced future studies on when $\alpha_m$ loses robustness and how it depends on feature frequencies sensitively then. To conclude the section, we have
+\begin{tcolorbox}[colframe=mitred, opacityback=0.9, title={Result 2: Geometric origin of $1/m$ loss scaling ($\alpha_m = 1$) at strong superposition}]
+For even feature frequencies, vectors $W_i$ tend to be isotropic in space with squared overlaps scaling like $1/m$ when $n\gg m$, leading to the robust $1/m$ power-law loss. For skewed feature frequencies, representation vectors are heterogeneous in space, making loss sensitive to feature frequencies, where it might need power-law frequencies to have power-law losses.
+\end{tcolorbox}
+
+\subsection{LLMs}
+\begin{figure}
+  \centering
+  \includegraphics{figures/Fig-6-4.pdf}
+  \caption{Superposition may explain the neural scaling law observed in actual LLMs. We evaluate four open-sourced model classes, Opt \cite{zhang2022opt}, GPT2 \cite{radford2019language}, Qwen \cite{qwen2.5}, and Pythia \cite{biderman2023pythia}, which have model sizes from around 100M to 70B (evaluation details in Appendix~\ref{app:LLMs}). (a) We found the mean square overlaps of $W_i / \|W_i \|_2$ roughly follow $1/m$ scaling, where $W$ is the language model head. (b) The model class is reflected by color as panel a, while we use shapes for evaluation datasets \cite{merity2016pointer,gao2020pile,raffel2020exploring,zhu2015aligning}. The loss related to model size is fitted as a power law, yielding empirical $\alpha_m = 0.91\pm 0.04$ close to $1$. More analysis in Appendix~\ref{app:fig8}.}
+  \label{fig:LLMs}
+\end{figure}
+
+Finally, we explore how our findings might be relevant to real LLMs \cite{zhang2022opt,radford2019language,qwen2.5,biderman2023pythia}. As a naive mapping, we treat tokens as atomic features, with data dimension $n$ equal to the vocabulary size. The model dimension $m$ for LLMs is known. We analyze the language model head, denoted by the weight matrix $W$. Through the norm and interference distributions of the rows of $W$, we claim LLMs are in superposition (Appendix~\ref{app:fig8}). If we measure token frequency, it follows a power law with exponent $\alpha$ close to $1$ (Appendix~\ref{app:fig8}). We conclude, based on the knowledge from toy models, that LLMs operate in a superposition regime, and expect loss to be related to squared overlaps $\sim 1/m$. We next calculated the mean squared overlaps of normalized rows $W_i/\| W_i\|_2$, and found they roughly obey $1/m$ scaling (Figure~\ref{fig:LLMs}a). We argue that cross-entropy loss, given that the overlaps are small in absolute value, can be expanded and approximately scales as the mean square overlaps (Appendix~\ref{app:crossentropy}). We therefore expect the loss of representation-limited LLMs to have $1/m$ scaling. LLM losses are close to a linear function of $1/m$ (Appendix~\ref{app:fig8}). Yet when $m\to \infty$, the extrapolation of losses does not hit $0$. The non-zero intersection can be due to intrinsic uncertainty in language. Increasing model sizes decreases ``wrong" interferences but cannot eliminate uncertainty in the data. So, as in previous papers where loss is decomposed into model size part, dataset size part, and a constant \cite{hoffmann2022chinchilla}, we fit our loss values by the following,
+\begin{equation}
+    L = C_m / m^{\alpha_m} + L_{\backslash m},
+\end{equation}
+where the model size part $C_m / m^{\alpha_m}$ is universal (model size is a function of $m$), and $L_{\backslash m}$ contains loss irrelevant to model size, depending on the evaluation dataset and model class. The fitting yields $\alpha_m = 0.91 \pm 0.04$ (Figure~\ref{fig:LLMs}b). We inferred from the Chinchilla models \cite{hoffmann2022chinchilla} that due to model size $N\propto m^{2.52\pm0.03}$ (Appendix~\ref{app:fig8}), $\alpha_m = (2.52\pm0.03)\times \alpha_N = 0.88 \pm 0.06$, where $\alpha_N = 0.35\pm 0.02$ \cite{besiroglu2024chinchilla} is the power-law exponent of loss with model size. The exponents $\alpha_m$ from LLMs are close to 1. We highlight the finding as
+\begin{tcolorbox}[colframe=mitred, opacityback=0.9, title=Result 3: Superposition is an important mechanism behind LLM neural scaling laws]
+LLMs operate in the strong superposition regime. The squared overlaps of token representations scale as $1/m$, token frequencies are flat ($\alpha = 1$), and the model size relevant loss scales closely to $1/m$, agreeing with the toy model prediction.
+\end{tcolorbox}
+
+\section{Related works}\label{sec:relate}
+
+Neural scaling laws were first characterized empirically \cite{kaplan2020scaling}, demonstrating that for LLMs, the cross-entropy loss improves predictably as a power-law with increased model size (parameters), dataset size, or compute, over multiple orders of magnitude. This finding is built on earlier observations (e.g. \cite{hestness2017deep}) that deep learning performance scales in a smooth power-law fashion with data and model growth. Many works showed the surprisingly universal nature of such scaling behaviors across architectures and tasks \cite{kaplan2020scaling,hoffmann2022chinchilla,henighan2020scaling}, directing further development of LLMs.
+
+Several heuristic toy models have been proposed to explain neural scaling laws. One common view is that models aim to fit data manifolds or functions, and the scaling exponents depend strongly on the structure of the data \cite{sharma2022neural,bahri2024explaining}. Another group of models assumes the network learns discrete features or skills \cite{hutter2021learning,michaud2023quantization}, whose importance follows a power-law distribution, giving results the same as ours in the weak superposition regime. One toy model predicts that loss scales inversely with model width \cite{song2024resourcemodelneuralscaling}, arguing that parameters independently perform the same task with noise, and the scaling follows from the central limit theorem. However, this model applies in the overparameterized cases and may be less relevant to LLMs.
+
+More formal approaches rely on similar heuristics. The scaling behavior depends on how the dataset size and model size approach infinity. When the dataset is fixed and model size grows to infinity, the system is variance-limited, and loss scales as $1/m$ by central limit theorem arguments \cite{bahri2024explaining}. When the dataset size grows to infinity first, the loss scaling enters the resolution-limited regime. In linear models or kernel methods, this leads to $\alpha_m = \alpha' - 1$ \cite{bahri2024explaining,bordelon2020spectrum,bordelon2025feature,maloney2022solvable}, seemingly consistent with our weak superposition regime. Here, $\alpha'$ is the exponent of the power-law decay of kernel eigenvalues, which can be seen as abstract feature importance. Considering neural tangent kernels, $\alpha'$ depends on both data and the model configuration. Our work may be framed as mechanistically showing that $\alpha' = \alpha$ ($\alpha$ is the intrinsic data exponent) when models have no superposition, and $\alpha'$ is something else when models have strong superposition, which is new. The resolution-limited regime has also been described as fitting the data manifold \cite{bahri2024explaining}. 
+
+Our toy model is based on Anthropic’s model of superposition \cite{elhage2022superposition} (an autoencoder), with modifications to the data sampling. The original study explored how data structure influences superposition but did not explicitly control it. Related models have appeared in compressed sensing \cite{donoho2006compressed,candes2006robust,baraniuk2007compressive,ganguli2012compressed,advani2016statistical} and neural information processing \cite{olshausen1996emergence,babadi2014sparseness}, yet with distinct contexts and objectives. Besides representation, people also studied calculation in superposition \cite{hanni2024mathematical,adler2024complexity}.
+
+\section{Discussion}\label{sec:discussion}
+
+Our work is built on observations of the toy model and analysis without rigorously solving the toy model. We are thus limited to explaining deeper behaviors in the toy model. Our analysis of LLMs suggests they are in the strong superposition regime, but the underlying reasons were not studied in detail. We believe one reason is that features are sparse in language, as the number of tokens required to predict one token is much less than the total number of tokens. The softmax function may also be important since it is strong at error correction, giving superposition an advantage.
+
+Neural scaling laws also include scaling laws with dataset size and with training steps, which we did not study. At each step, a fixed number of new data points are used for optimization. So, we expect the scaling with the total data amount and that with training steps will be the same, similar to the results at weak superposition \cite{michaud2023quantization}. However, in the strong superposition regime, data or training step scaling is related to angle distribution and how angles between representations evolve, which cannot be easily explained without rigorous solving.
+
+We focused on representation loss, yet LLMs should also have losses due to parsing or processing in the transformer layers. We imagine that the loss associated with model size can be written as
+\begin{equation}
+    C_m / m^{\alpha_m} = f_m(m) + f_\ell (\ell),
+\end{equation}
+where $\ell$ is the depth of the LLM, $f_m$ and $f_\ell$ are two functions capturing the loss due to representation and parsing, respectively. A future direction is to study the parsing-limited scaling (i.e, $f_\ell (\ell)$ function) independently. It is also plausible that the observed scaling of inference time \cite{snell2024scalingllmtesttimecompute} is connected to this parsing-limited regime. We here write the equality because $\ell$ depends on $m$ in LLMs \cite{zhang2022opt,radford2019language,qwen2.5,biderman2023pythia}. Given model size $N$, $m$ and $\ell$ are constrained (roughly, $N\propto m^2 \ell$). There is an optimal $m$-$\ell$ relationship such that the loss $f_m(m) + f_\ell (\ell)$ can be minimized given $N$ \cite{levine2020depth}. At this optimal $m$-$\ell$ relationship, $f_m(m)$ and $f_\ell (\ell)$ should be balanced. Therefore, we expect $f_\ell (\ell)$ to be similar to $f_m(m)$. And if $f_m(m) \sim 1/m$ due to superposition and $f_\ell (\ell)$ is similar, we can measure an empirical $\alpha_m \approx 1$ from data, which is true. Or, if the width-limited loss is much larger, we can also observe that the total loss due to model size has $\alpha_m \approx 1$. We conclude that superposition in any case is an important mechanism underlying neural scaling laws.
+
+Beyond explaining existing phenomena, our results may offer guidance for future LLM development and training strategies:
+\vspace{-5pt}
+\begin{tcolorbox}[colframe=mitred, opacityback=0.9]
+    Assuming our explanation of width scaling is correct, we ask \textbf{can we change the loss scaling with width to be faster than power laws, or to have larger exponents}? The answer is \textbf{no} for natural languages but may be \textbf{yes} for domain tasks with super skewed feature frequencies. Another question is \textbf{when the scaling law will stop}? Based on our naive connection between features and tokens, the answer is that when the model dimension reaches the vocabulary size, the loss limited by width will deviate from a power law and vanish. However, the vocabulary size may set a lower bound for the true number of independent things in language, then the power law with width may continue for a longer time.
+\end{tcolorbox}
+
+Recognizing that superposition benefits LLMs, encouraging superposition could enable smaller models to match the performance of larger ones (with less superposition) and make training more efficient. Architectures such as nGPT \cite{loshchilov2025ngpt}, which constrain hidden states and weight matrix rows to the unit sphere (promoting superposition), demonstrate improved performance. Optimizers that stabilize training without weight decay have also shown promising results \cite{liu2025focus}, potentially due to enhanced superposition. Yet, these improvements may be related to altering coefficients in the neural scaling laws rather than the exponents. We also acknowledge that encouraging superposition may cause difficulties for the mechanistic interpretation of models and AI safety \cite{elhage2022superposition,bereska2024mechanistic}.
+
+As a side note, with the same pre-training loss, LLMs with different degrees of superposition may exhibit differences in emergent abilities such as reasoning or trainability via reinforcement learning \cite{deepseekai2025deepseekr1}, requiring future studies.
+
+In conclusion, we studied when loss can be a power law and what the exponent should be with different data properties and degrees of superposition. We found that geometric interference at strong superposition may explain the LLM neural scaling laws observed \cite{hoffmann2022chinchilla}. Our results contribute to a deeper understanding of modern artificial intelligence systems, which also open various directions for future research. We hope our insights will support the continued development and training of more capable and efficient LLMs.
+
+\begin{ack}
+We are grateful for feedback and suggestions from Yasaman Bahri, Cengiz Pehlevan, Surya Ganguli, Blake Bordelon, Daniel Kunin, and the anonymous reviewers. The authors acknowledge the MIT Office of Research Computing and Data for providing high performance computing resources that have contributed to the research results reported within this paper. J. G. thanks the Sloan Foundation for funding. The authors declare no competing interests.
+\end{ack}
+
+\bibliographystyle{unsrt}
+\bibliography{refs}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{NeurIPS Paper Checklist}
+
+\begin{enumerate}
+
+\item {\bf Claims}
+    \item[] Question: Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?
+    \item[] Answer: \answerYes{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: The claims match theoretical and experimental results.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the abstract and introduction do not include the claims made in the paper.
+        \item The abstract and/or introduction should clearly state the claims made, including the contributions made in the paper and important assumptions and limitations. A No or NA answer to this question will not be perceived well by the reviewers. 
+        \item The claims made should match theoretical and experimental results, and reflect how much the results can be expected to generalize to other settings. 
+        \item It is fine to include aspirational goals as motivation as long as it is clear that these goals are not attained by the paper. 
+    \end{itemize}
+
+\item {\bf Limitations}
+    \item[] Question: Does the paper discuss the limitations of the work performed by the authors?
+    \item[] Answer: \answerYes{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: We start our Discussion section by discussing limitations.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the paper has no limitation while the answer No means that the paper has limitations, but those are not discussed in the paper. 
+        \item The authors are encouraged to create a separate "Limitations" section in their paper.
+        \item The paper should point out any strong assumptions and how robust the results are to violations of these assumptions (e.g., independence assumptions, noiseless settings, model well-specification, asymptotic approximations only holding locally). The authors should reflect on how these assumptions might be violated in practice and what the implications would be.
+        \item The authors should reflect on the scope of the claims made, e.g., if the approach was only tested on a few datasets or with a few runs. In general, empirical results often depend on implicit assumptions, which should be articulated.
+        \item The authors should reflect on the factors that influence the performance of the approach. For example, a facial recognition algorithm may perform poorly when image resolution is low or images are taken in low lighting. Or a speech-to-text system might not be used reliably to provide closed captions for online lectures because it fails to handle technical jargon.
+        \item The authors should discuss the computational efficiency of the proposed algorithms and how they scale with dataset size.
+        \item If applicable, the authors should discuss possible limitations of their approach to address problems of privacy and fairness.
+        \item While the authors might fear that complete honesty about limitations might be used by reviewers as grounds for rejection, a worse outcome might be that reviewers discover limitations that aren't acknowledged in the paper. The authors should use their best judgment and recognize that individual actions in favor of transparency play an important role in developing norms that preserve the integrity of the community. Reviewers will be specifically instructed to not penalize honesty concerning limitations.
+    \end{itemize}
+
+\item {\bf Theory assumptions and proofs}
+    \item[] Question: For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?
+    \item[] Answer: \answerYes{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: Assumptions are clearly stated.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the paper does not include theoretical results. 
+        \item All the theorems, formulas, and proofs in the paper should be numbered and cross-referenced.
+        \item All assumptions should be clearly stated or referenced in the statement of any theorems.
+        \item The proofs can either appear in the main paper or the supplemental material, but if they appear in the supplemental material, the authors are encouraged to provide a short proof sketch to provide intuition. 
+        \item Inversely, any informal proof provided in the core of the paper should be complemented by formal proofs provided in appendix or supplemental material.
+        \item Theorems and Lemmas that the proof relies upon should be properly referenced. 
+    \end{itemize}
+
+    \item {\bf Experimental result reproducibility}
+    \item[] Question: Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper (regardless of whether the code and data are provided or not)?
+    \item[] Answer: \answerYes{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: We provide all details sufficient to reproduce.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the paper does not include experiments.
+        \item If the paper includes experiments, a No answer to this question will not be perceived well by the reviewers: Making the paper reproducible is important, regardless of whether the code and data are provided or not.
+        \item If the contribution is a dataset and/or model, the authors should describe the steps taken to make their results reproducible or verifiable. 
+        \item Depending on the contribution, reproducibility can be accomplished in various ways. For example, if the contribution is a novel architecture, describing the architecture fully might suffice, or if the contribution is a specific model and empirical evaluation, it may be necessary to either make it possible for others to replicate the model with the same dataset, or provide access to the model. In general. releasing code and data is often one good way to accomplish this, but reproducibility can also be provided via detailed instructions for how to replicate the results, access to a hosted model (e.g., in the case of a large language model), releasing of a model checkpoint, or other means that are appropriate to the research performed.
+        \item While NeurIPS does not require releasing code, the conference does require all submissions to provide some reasonable avenue for reproducibility, which may depend on the nature of the contribution. For example
+        \begin{enumerate}
+            \item If the contribution is primarily a new algorithm, the paper should make it clear how to reproduce that algorithm.
+            \item If the contribution is primarily a new model architecture, the paper should describe the architecture clearly and fully.
+            \item If the contribution is a new model (e.g., a large language model), then there should either be a way to access this model for reproducing the results or a way to reproduce the model (e.g., with an open-source dataset or instructions for how to construct the dataset).
+            \item We recognize that reproducibility may be tricky in some cases, in which case authors are welcome to describe the particular way they provide for reproducibility. In the case of closed-source models, it may be that access to the model is limited in some way (e.g., to registered users), but it should be possible for other researchers to have some path to reproducing or verifying the results.
+        \end{enumerate}
+    \end{itemize}
+
+
+\item {\bf Open access to data and code}
+    \item[] Question: Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results, as described in supplemental material?
+    \item[] Answer: \answerYes{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: We submit our code in the supplementary material.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that paper does not include experiments requiring code.
+        \item Please see the NeurIPS code and data submission guidelines (\url{https://nips.cc/public/guides/CodeSubmissionPolicy}) for more details.
+        \item While we encourage the release of code and data, we understand that this might not be possible, so “No” is an acceptable answer. Papers cannot be rejected simply for not including code, unless this is central to the contribution (e.g., for a new open-source benchmark).
+        \item The instructions should contain the exact command and environment needed to run to reproduce the results. See the NeurIPS code and data submission guidelines (\url{https://nips.cc/public/guides/CodeSubmissionPolicy}) for more details.
+        \item The authors should provide instructions on data access and preparation, including how to access the raw data, preprocessed data, intermediate data, and generated data, etc.
+        \item The authors should provide scripts to reproduce all experimental results for the new proposed method and baselines. If only a subset of experiments are reproducible, they should state which ones are omitted from the script and why.
+        \item At submission time, to preserve anonymity, the authors should release anonymized versions (if applicable).
+        \item Providing as much information as possible in supplemental material (appended to the paper) is recommended, but including URLs to data and code is permitted.
+    \end{itemize}
+
+
+\item {\bf Experimental setting/details}
+    \item[] Question: Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer, etc.) necessary to understand the results?
+    \item[] Answer: \answerYes{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: We explained these details in our Appendices.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the paper does not include experiments.
+        \item The experimental setting should be presented in the core of the paper to a level of detail that is necessary to appreciate the results and make sense of them.
+        \item The full details can be provided either with the code, in appendix, or as supplemental material.
+    \end{itemize}
+
+\item {\bf Experiment statistical significance}
+    \item[] Question: Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?
+    \item[] Answer: \answerYes{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: We included error bars.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the paper does not include experiments.
+        \item The authors should answer "Yes" if the results are accompanied by error bars, confidence intervals, or statistical significance tests, at least for the experiments that support the main claims of the paper.
+        \item The factors of variability that the error bars are capturing should be clearly stated (for example, train/test split, initialization, random drawing of some parameter, or overall run with given experimental conditions).
+        \item The method for calculating the error bars should be explained (closed form formula, call to a library function, bootstrap, etc.)
+        \item The assumptions made should be given (e.g., Normally distributed errors).
+        \item It should be clear whether the error bar is the standard deviation or the standard error of the mean.
+        \item It is OK to report 1-sigma error bars, but one should state it. The authors should preferably report a 2-sigma error bar than state that they have a 96\% CI, if the hypothesis of Normality of errors is not verified.
+        \item For asymmetric distributions, the authors should be careful not to show in tables or figures symmetric error bars that would yield results that are out of range (e.g. negative error rates).
+        \item If error bars are reported in tables or plots, The authors should explain in the text how they were calculated and reference the corresponding figures or tables in the text.
+    \end{itemize}
+
+\item {\bf Experiments compute resources}
+    \item[] Question: For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?
+    \item[] Answer: \answerYes{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: We provide this information in the Appendices.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the paper does not include experiments.
+        \item The paper should indicate the type of compute workers CPU or GPU, internal cluster, or cloud provider, including relevant memory and storage.
+        \item The paper should provide the amount of compute required for each of the individual experimental runs as well as estimate the total compute. 
+        \item The paper should disclose whether the full research project required more compute than the experiments reported in the paper (e.g., preliminary or failed experiments that didn't make it into the paper). 
+    \end{itemize}
+    
+\item {\bf Code of ethics}
+    \item[] Question: Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics \url{https://neurips.cc/public/EthicsGuidelines}?
+    \item[] Answer: \answerYes{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: We followed the code of ethics.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the authors have not reviewed the NeurIPS Code of Ethics.
+        \item If the authors answer No, they should explain the special circumstances that require a deviation from the Code of Ethics.
+        \item The authors should make sure to preserve anonymity (e.g., if there is a special consideration due to laws or regulations in their jurisdiction).
+    \end{itemize}
+
+
+\item {\bf Broader impacts}
+    \item[] Question: Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?
+    \item[] Answer: \answerNA{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: Our work is theoretical, with no obvious social impact.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that there is no societal impact of the work performed.
+        \item If the authors answer NA or No, they should explain why their work has no societal impact or why the paper does not address societal impact.
+        \item Examples of negative societal impacts include potential malicious or unintended uses (e.g., disinformation, generating fake profiles, surveillance), fairness considerations (e.g., deployment of technologies that could make decisions that unfairly impact specific groups), privacy considerations, and security considerations.
+        \item The conference expects that many papers will be foundational research and not tied to particular applications, let alone deployments. However, if there is a direct path to any negative applications, the authors should point it out. For example, it is legitimate to point out that an improvement in the quality of generative models could be used to generate deepfakes for disinformation. On the other hand, it is not needed to point out that a generic algorithm for optimizing neural networks could enable people to train models that generate Deepfakes faster.
+        \item The authors should consider possible harms that could arise when the technology is being used as intended and functioning correctly, harms that could arise when the technology is being used as intended but gives incorrect results, and harms following from (intentional or unintentional) misuse of the technology.
+        \item If there are negative societal impacts, the authors could also discuss possible mitigation strategies (e.g., gated release of models, providing defenses in addition to attacks, mechanisms for monitoring misuse, mechanisms to monitor how a system learns from feedback over time, improving the efficiency and accessibility of ML).
+    \end{itemize}
+    
+\item {\bf Safeguards}
+    \item[] Question: Does the paper describe safeguards that have been put in place for responsible release of data or models that have a high risk for misuse (e.g., pretrained language models, image generators, or scraped datasets)?
+    \item[] Answer: \answerNA{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: We do not have such risks.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the paper poses no such risks.
+        \item Released models that have a high risk for misuse or dual-use should be released with necessary safeguards to allow for controlled use of the model, for example by requiring that users adhere to usage guidelines or restrictions to access the model or implementing safety filters. 
+        \item Datasets that have been scraped from the Internet could pose safety risks. The authors should describe how they avoided releasing unsafe images.
+        \item We recognize that providing effective safeguards is challenging, and many papers do not require this, but we encourage authors to take this into account and make a best faith effort.
+    \end{itemize}
+
+\item {\bf Licenses for existing assets}
+    \item[] Question: Are the creators or original owners of assets (e.g., code, data, models), used in the paper, properly credited and are the license and terms of use explicitly mentioned and properly respected?
+    \item[] Answer: \answerYes{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: We properly cited the datasets and LLMs analyzed. 
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the paper does not use existing assets.
+        \item The authors should cite the original paper that produced the code package or dataset.
+        \item The authors should state which version of the asset is used and, if possible, include a URL.
+        \item The name of the license (e.g., CC-BY 4.0) should be included for each asset.
+        \item For scraped data from a particular source (e.g., website), the copyright and terms of service of that source should be provided.
+        \item If assets are released, the license, copyright information, and terms of use in the package should be provided. For popular datasets, \url{paperswithcode.com/datasets} has curated licenses for some datasets. Their licensing guide can help determine the license of a dataset.
+        \item For existing datasets that are re-packaged, both the original license and the license of the derived asset (if it has changed) should be provided.
+        \item If this information is not available online, the authors are encouraged to reach out to the asset's creators.
+    \end{itemize}
+
+\item {\bf New assets}
+    \item[] Question: Are new assets introduced in the paper well documented and is the documentation provided alongside the assets?
+    \item[] Answer: \answerNA{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: The paper does not release new assets.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the paper does not release new assets.
+        \item Researchers should communicate the details of the dataset/code/model as part of their submissions via structured templates. This includes details about training, license, limitations, etc. 
+        \item The paper should discuss whether and how consent was obtained from people whose asset is used.
+        \item At submission time, remember to anonymize your assets (if applicable). You can either create an anonymized URL or include an anonymized zip file.
+    \end{itemize}
+
+\item {\bf Crowdsourcing and research with human subjects}
+    \item[] Question: For crowdsourcing experiments and research with human subjects, does the paper include the full text of instructions given to participants and screenshots, if applicable, as well as details about compensation (if any)? 
+    \item[] Answer: \answerNA{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: The paper does not involve crowdsourcing nor research with human subjects.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the paper does not involve crowdsourcing nor research with human subjects.
+        \item Including this information in the supplemental material is fine, but if the main contribution of the paper involves human subjects, then as much detail as possible should be included in the main paper. 
+        \item According to the NeurIPS Code of Ethics, workers involved in data collection, curation, or other labor should be paid at least the minimum wage in the country of the data collector. 
+    \end{itemize}
+
+\item {\bf Institutional review board (IRB) approvals or equivalent for research with human subjects}
+    \item[] Question: Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?
+    \item[] Answer: \answerNA{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: The paper does not involve crowdsourcing nor research with human subjects.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the paper does not involve crowdsourcing nor research with human subjects.
+        \item Depending on the country in which research is conducted, IRB approval (or equivalent) may be required for any human subjects research. If you obtained IRB approval, you should clearly state this in the paper. 
+        \item We recognize that the procedures for this may vary significantly between institutions and locations, and we expect authors to adhere to the NeurIPS Code of Ethics and the guidelines for their institution. 
+        \item For initial submissions, do not include any information that would break anonymity (if applicable), such as the institution conducting the review.
+    \end{itemize}
+
+\item {\bf Declaration of LLM usage}
+    \item[] Question: Does the paper describe the usage of LLMs if it is an important, original, or non-standard component of the core methods in this research? Note that if the LLM is used only for writing, editing, or formatting purposes and does not impact the core methodology, scientific rigorousness, or originality of the research, declaration is not required.
+    %this research? 
+    \item[] Answer: \answerNA{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: The core method development in this research does not involve LLMs as any important, original, or non-standard components.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the core method development in this research does not involve LLMs as any important, original, or non-standard components.
+        \item Please refer to our LLM policy (\url{https://neurips.cc/Conferences/2025/LLM}) for what should or should not be described.
+    \end{itemize}
+
+\end{enumerate}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\appendix
+
+\section{Theoretical analysis}
+
+\subsection{Toy model loss}\label{app:losstheory}
+
+We provide a simple analysis for toy model loss scaling. The expected loss in the weak superposition regime is well explained by Equation~(\ref{eq:unlearn}). We do not need to repeat it here.
+
+In the strong superposition regime, we consider an even special data sampling, where data $x$ is sampled such that each data point has and only has one activated feature. The frequency for feature $i$ to be activated is still $p_i$. After determining which feature is activated, say $i$, we still sample $x_i$ as $v_i$ from $U(0,2)$. This sampling is different from the experiments. Yet, since we learned that activation density does not affect scaling exponent (Figure~\ref{fig:density}), we expected this analysis to predict at least the scaling exponent. Under the assumptions, we have
+\begin{equation}
+    L = \sum_{i=1}^n p_i \Big\langle \sum_{j\neq i} \mathrm{ReLU}^2(W_j\cdot W_i v_i + b_j) + (\mathrm{ReLU}(W_i\cdot W_i v_i + b_i) - v_i)^2\Big\rangle_{v_i}.
+    \label{eq:strongloss}
+\end{equation}
+We are unable to solve for the optimal $W$ and $b$ such that this loss $L$ is minimized. Yet, it is easy to see that we want $\|W_i\|_2^2$ to be close to $1$, $W_j\cdot W_i$ to be as small as possible, and $b_j$ to be small negative values of the same order of magnitude as $W_i \cdot W_j$, such that the interference terms $\mathrm{ReLU}(W_j\cdot W_i v_i + b_j)$ may vanish and the recovered feature value $\mathrm{ReLU}(W_i\cdot W_i v_i + b_i)$ can be close to the real one $v_i$.
+
+For convenience, based on the observation that the vector norms are bimodal around $1$ in the strong superposition regime, we define strongly represented features as those that have $\|W_i\|_2 > 1$, which are more frequent and ETF-like, and weakly represented ones for those with $\|W_i\|_2 < 1$. We can quantify the fraction of strongly represented as
+\begin{equation}
+    \phi_1 = |\{ i : \|W_i \|_2 > 1 \}| / n,
+\end{equation}
+which significantly exceeds $m/n$ and is around the ETF expectation $m^2 / 2n$ (Figure~\ref{fig:numberofstrong}).
+
+We now review our conjectured extreme configuration, consisting of strongly represented and weakly represented features. The first $\phi_1 n$ most important features are considered to be strongly represented, whose absolute overlap with any other representation scales as $\sqrt{1/m}$. The rest of the features are weakly represented and squeezed into a small angle such that they have small overlaps with the strongly represented, while they can have large overlaps with each other. With such a configuration, the first $\phi_1 n$ terms in the summation of Equation~(\ref{eq:strongloss}) will scale as $1/m$ since each term $\langle \cdots \rangle_{v_i}$ scales as $1/m$. The rest of the terms in Equation~(\ref{eq:strongloss}), in the worst scenario that the terms $\langle \cdots \rangle_{v_i}$ do not decrease obviously with $m$, will be proportional to $\sum_{i=\phi_i n}^n p_i$. If the strongly represented features dominate, we can have $1/m$ scaling for the loss. On the contrary, when the weakly represented dominate, we expect the loss to have scaling like $\sum_{i=\phi_i n}^n p_i$. More specifically, if $p_i \sim 1 / i^\alpha$ ($\alpha >1$) and we use $m^2/2$ to approximate $\phi_i n$, the loss scales as $1 / m^{2(\alpha -1)}$.
+
+\subsection{Cross-entropy loss}\label{app:crossentropy}
+
+We provide the reason why cross-entropy loss also scales as squared overlaps. We consider the last hidden state after going through the normalization layer is $W_i / \|W_i \|_2$, such that the output should be the $i$th token. By constructing such an example, we ignore possible loss due to parsing but focus on the loss just due to representation. The loss from this data point is 
+\begin{equation}
+    L = -\ln \frac{e^{\|W_i \|_2}}{\sum_j e^{W_i \cdot W_j / \|W_i\|_2}} = \ln \Big[ 1 + \sum_{j\neq i} e^{W_i \cdot W_j / \|W_i\|_2 - \|W_i \|_2} \Big].
+\end{equation}
+We assume that $W_i \cdot W_j / \|W_i\|_2$ is much smaller than $1$ since we know the overlap scale as $1/m$. We then approximate the loss via Taylor expansion
+\begin{equation}
+    L = \ln \Big[ 1 + (n-1)e^{- \|W_i \|_2} + \sum_{j\neq i}[W_i \cdot W_j / \|W_i\|_2 + (W_i \cdot W_j / \|W_i\|_2)^2 / 2] e^{- \|W_i \|_2} \Big].
+\end{equation}
+In the first thought, the summation $\sum_{j\neq i}W_i \cdot W_j$ should be zero since there are positive and negative overlaps distributed evenly if the vectors span the whole space. But in language, one sentence can have different continuations, connecting different tokens. For example, both putting ``cats" or ``dogs" after ``I like" are legit. The existence of data ``I like" then will tend to squeeze different tokens closer to each other. The summation $W_i \cdot W_j$ should be a small positive constant $\epsilon_{D,i}$ related to the correlation in data. The reason we keep the second-order term is clear now as they are the lowest order terms related to model sizes. We keep expanding the $\ln$ function and have
+\begin{equation}
+    L = (n-1)e^{- \|W_i \|_2} + \frac{\epsilon_{D,i}e^{- \|W_i \|_2}}{\|W_i\|_2}+ \frac{1}{2}\sum_{j\neq i}\left(\frac{W_i \cdot W_j}{ \|W_i\|_2}\right)^2e^{- \|W_i \|_2}.
+\end{equation}
+The part related to the model size is mainly
+\begin{equation}
+    L_m = \frac{1}{2}\sum_{j\neq i}\left(\frac{W_i \cdot W_j}{ \|W_i\|_2}\right)^2e^{- \|W_i \|_2}.
+\end{equation}
+In this construction, one can see that once $\|W_i \|_2$ is sufficiently large, the loss can be arbitrarily low, which does not happen in reality. The reason is still related to the intrinsic uncertainty in language data. If one sentence can have different continuations, we need in the hidden space, a region that can lead to large probabilities over different tokens. However, when the norm is too large, one will find that the hidden space is sharply separated --- each hidden state yields high probability only on one token. We then expect the norm $\| W_i \|_2$ to be as large as possible such that $n e^{-\| W_i \|_2}$ is small while $\| W_i \|_2$ is upper bounded by intrinsic data uncertainty. Therefore, $\| W_i \|_2$ should not depend on model size much (verified in Appendix~\ref{app:fig8}). The loss related to model size $L_m$ then scales as $1/m$ since the cosine similarity scales as $\sqrt{1/m}$ and $L_m$ is related to the squared cosine similarity in the lowest order approximation.
+
+\section{Toy model training}\label{app:toytrain}
+In this Appendix, we explain how we trained the toy models and obtained raw data. There are two classes of toy models trained. The first one is a large toy model with data dimension $n = 10240$, which is reported in Figure~\ref{fig:abstract} and Figure~\ref{fig:phenomena} to show scaling behavior across around two orders of magnitude. The other toy model class is small toy models fixing $n = 1000$, such that we can scan more hyperparameters. Figures~\ref{fig:wd}, \ref{fig:weak}, \ref{fig:strong}, \ref{fig:density}, and \ref{fig:phenomena} use small toy models. 
+
+\subsection{Large toy models}\label{app:large}
+
+
+We implemented a neural network experiment to study the scaling of feature representation and recovery. The toy model is defined as a two-layer neural network with ReLU activation (see Figure~\ref{fig:toy}).
+
+The hyperparameters are give as follows.
+\begin{itemize}
+    \item Data dimension $n$: 10240
+    \item Model dimension $m$: Varied exponentially from $2^3$ to $2^{10}$
+    \item Batch size: 2048 (tested up to $8192$, which does not affect final loss)
+    \item Total training steps: 20000 (tested up to $80000$, which does not affect final loss)
+    \item Learning rate: Initially set to 0.02, scaled according to hidden dimension
+    \item Weight decay: $-1.0$ for strong superposition, and $0.1$ for weak superposition
+    \item Device: Training performed using one V100 GPU, with floating-point precision (FP32)
+\end{itemize}
+
+Data points $x$ were synthetically generated at each training step according to Equation~(\ref{eq:sample}) to simulate feature occurrence frequencies. We considered three distributions with activation density $E = 1$:
+\begin{itemize}
+    \item Exponential: $p_i \propto e^{-i/400}$
+    \item Power-law: $p_i \propto i^{-1.2}$
+    \item Linear: $p_i \propto n - i$
+\end{itemize}
+
+We employed the AdamW optimizer with distinct learning rates and weight decay settings for the weight matrix $W$ and bias vector $b$. Specifically, for weight matrix $W$, learning rate was scaled as $\text{lr} \times (8/m)^{0.25}$ with specified weight decay. And for bias vector $b$, a learning rate of $2.0/m$ was used with no weight decay. A cosine decay learning rate schedule with a warm-up phase (5\% of total steps) was implemented. At each training step, input data batches were dynamically generated based on the selected probability distribution. The final test loss is calculated across newly sampled data with a size being $100$ times the batch size. 
+
+The model and optimizer were compiled and executed on a CUDA-enabled GPU for efficient training. After training, weight matrices $W$ and training losses were stored and analyzed.
+
+Final outputs, including weight matrices and training loss histories, were saved in PyTorch format for subsequent analysis and visualization.
+
+This setup provided a structured exploration of feature representation scaling under varying dimensions and distributions, crucial for understanding superposition and scaling laws in neural networks.
+
+The code can be found in \texttt{exp-17.py}.
+
+\subsection{Small toy models}\label{app:small}
+
+We conducted numerical simulations using a neural network model designed for feature recovery. The objective was to analyze the model's behavior across various conditions involving feature frequency skewness (controlled by data exponent \(\alpha\)), model dimensions, and weight decay parameters.
+
+In the small toy models reported in Figures~\ref{fig:wd}, \ref{fig:weak}, \ref{fig:strong}, \ref{fig:density}, and \ref{fig:phenomena}, we set the hyperparameters as
+\begin{itemize}
+    \item Feature dimension \( n \): Fixed at 1000.
+    \item Hidden dimension \( m \): Varied logarithmically between 10 and 100 , across 6 distinct sizes, i.e., $m = 10,  15,  25,  39,  63, 100$.
+    \item Batch size: 2048.
+    \item Training steps: 20000 steps for each condition.
+    \item Learning rate: Initialized at \(1 \times 10^{-2}\), dynamically adjusted using cosine decay scheduling with a warm-up phase of 2000 steps.
+    \item Weight decay: Explored systematically from -1.0 to 1.0, in increments of 0.22 approximately (10 discrete values).
+    \item Data exponent \(\alpha\): Ranged linearly from 0 to 2, with 17 discrete steps.
+\end{itemize}
+In Figure~\ref{fig:density}, we fix data exponent \(\alpha = 1\) while scan $9$ activation densities linearly from $1$ to the maximal value $\sum_{i=1}^n 1/i$. All other settings are the same.
+
+Synthetic data was generated for each batch based on a power-law probability distribution, defined as:
+\[
+p_i \propto \frac{1}{i^{\alpha}} \quad \text{where} \quad i \in \{1, 2, \dots, n\}
+\]
+with the condition \(\sum_i p_i = E\). Each element of the batch data \(x\) was randomly activated based on this probability, then scaled by a uniform random value between 0 and 2.
+
+At each training step, input batches were regenerated, and the learning rate was updated following the cosine decay schedule described above.
+
+The training performance was evaluated using Mean Squared Error (MSE) loss computed between the network output and input batch data at every step. Final weights were saved for further analysis. The final test loss is calculated across newly sampled data with a size being $100$ times the batch size. 
+
+The simulations were performed in parallel using 96 CPU cores, where each core executed one distinct parameter combination defined by the weight decay and data exponent values. Or, in Figure~\ref{fig:density}, the parameter combination is defined by weight decay and activation density values.
+
+Loss histories and trained weight matrices were saved separately for post-experiment analysis. Files were systematically indexed to indicate the corresponding experimental parameters. This detailed setup facilitated a comprehensive investigation of model behavior under diverse training and data distribution conditions.
+
+The code can be found in \texttt{exp-10.py}, \texttt{exp-10-3.py}, and \texttt{exp-15.py}.
+
+\section{LLM evaluation}\label{app:LLMs}
+
+\subsection{Overlap analysis}\label{app:LLMover}
+We analyzed the row overlaps of the language model head weight matrices among various large language models (LLMs) to investigate the geometric properties of their hidden spaces.
+
+We selected models from the following families, varying widely in parameter count:
+\begin{itemize}
+    \item OPT (from OPT-125m to OPT-66b)
+    \item Qwen2.5 (from 0.5B to 72B)
+    \item GPT-2 (GPT2, GPT2-Medium, GPT2-Large, GPT2-XL)
+    \item Pythia (from 70m to 12B)
+\end{itemize}
+
+
+Weights were downloaded directly from Hugging Face model repositories. For each model, the weight matrix or language modeling head was normalized by its row norms:
+\[
+W_i \leftarrow \frac{W_i}{\|W_i\|_2 + \epsilon}, \quad \epsilon = 10^{-9},
+\]
+where $\epsilon$ is for numerical stability.
+
+We computed the pairwise absolute cosine overlaps between all normalized vectors using batch-wise computations for efficiency. The overlap between embedding vectors \(W_i\) and \(W_j\) is given by:
+\[
+\text{overlap}(W_i, W_j) = \left|\frac{W_i \cdot W_j}{\|W_i\|_2 \|W_j\|_2}\right|.
+\]
+To handle large embedding matrices efficiently, overlaps were computed in batches (size of 8192 vectors).
+
+We calculated two key statistics for the overlaps within each model:
+\begin{itemize}
+    \item Mean Overlap: The average of absolute overlaps for all unique vector pairs:
+    \[
+    \text{mean\_overlap} = \frac{\sum_{i<j} \text{overlap}(W_i, W_j)}{n(n-1)/2}
+    \]
+    \item Overlap Variance: Calculated as:
+    \[
+    \text{variance\_overlap} = \frac{\sum_{i<j} (\text{overlap}(W_i, W_j) - \text{mean\_overlap})^2}{n(n-1)/2}
+    \]
+\end{itemize}
+From these values, we can calculate mean square overlaps as $\text{mean\_overlap}^2 + \text{variance\_overlap}$.
+
+The calculations were accelerated using GPU resources (CUDA-enabled) to efficiently handle computations involving extremely large matrices.
+
+Results including mean overlaps, variances, and matrix dimensions were recorded for comparative analysis across model sizes and architectures.
+
+The code is in \texttt{overlap-0.py}.
+
+\subsection{Evaluation loss}\label{app:LLMloss}
+
+This experiment aims to evaluate multiple large language models (LLMs) efficiently using model parallelism and dataset streaming techniques. The models were assessed on standard text datasets to measure their predictive performance systematically.
+
+Models were selected from Hugging Face and evaluated using a model-parallel setup:
+\begin{itemize}
+    \item OPT series
+    \item Qwen2.5 series
+    \item GPT-2 series
+    \item Pythia series
+\end{itemize}
+
+We used the following publicly available datasets for evaluation:
+\begin{itemize}
+    \item Wikitext-103: Standard English language modeling dataset.
+    \item Pile-10k: A subset of The Pile, designed for diverse textual data.
+    \item C4: Colossal Clean Crawled Corpus, containing large-scale web text.
+    \item BookCorpus: Large-scale collection of books used for unsupervised learning.
+\end{itemize}
+
+Datasets were streamed directly, efficiently sampling 10000 text segments with a maximum sequence length of 2048 tokens (\(\sim 2 \times 10^7\) tokens).
+
+Texts from datasets were tokenized using the respective model-specific tokenizers. Tokenization involved truncation and manual padding to uniform batch lengths. Specifically, padding tokens were assigned an ID of 0, and label padding utilized a special token (-100) to ensure they did not contribute to loss computations.
+
+Each model was loaded using Hugging Face’s AutoModelForCausalLM with model parallelism enabled, allowing the evaluation of large models that exceed single-GPU memory limits. Evaluations were conducted in batches, employing a DataLoader with a custom collate function for optimized memory use.
+
+The model’s predictive performance was assessed by computing loss values internally shifted by the Hugging Face library, suitable for causal language modeling. 
+
+Model parallelism was implemented to efficiently distribute computations across multiple GPUs, leveraging CUDA-enabled hardware.
+
+For each model and each dataset, we run one evaluation and save the evaluation losses.
+
+Random seeds and deterministic sampling ensured reproducible dataset selections, though explicit seed settings were noted as commented options within the implementation.
+
+Evaluation results, including loss metrics and potentially intermediate model states, were systematically stored for detailed post-analysis.
+
+The code is in \texttt{cali-1.py}.
+
+\subsection{Token frequency}\label{app:token}
+The purpose of this analysis is to compare token frequencies generated by different tokenizers across several widely-used textual datasets. Understanding these frequencies helps in assessing the representational capacity and efficiency of tokenizers used by various large language models.
+
+
+We considered the same four datasets mentioned for LLM evaluation. And we use four different tokenizers from the four model classes we evaluated.
+
+Each tokenizer processed textual data from the specified datasets, streaming data directly to efficiently handle large-scale inputs. A target of 1,000,000 tokens per tokenizer-dataset pair was set to ensure sufficient statistical representativeness.
+
+For each dataset-tokenizer combination:
+\begin{enumerate}
+    \item Text samples were streamed directly from the datasets.
+    \item Text was tokenized without adding special tokens (e.g., EOS).
+    \item Token frequencies were counted and accumulated until the target token count (1 million tokens) was reached.
+    \item Token frequencies were saved as JSON files for subsequent detailed analyses.
+\end{enumerate}
+
+Token frequency data was systematically stored for each tokenizer and dataset combination, enabling comparative analyses of token distributions. The data files provide foundational insights into tokenizer efficiency and coverage across diverse textual domains.
+
+The code is in \texttt{token-freq-0.py}.
+
+\section{Figure details and supplementary results}
+
+Here, we show how to process the raw data obtained from toy models or LLMs to generate results seen in the main text. Some supplementary analysis is also conducted to support the main text arguments.
+
+
+\subsection{Figure 1}\label{app:fig1}
+
+The toy models reported in Figure~\ref{fig:abstract} are large toy models with data dimension $n = 10240$ explained in Appendix~\ref{app:large}. After obtaining the final losses, we directly plot them with respect to the model dimension $m$. Error bars are calculated as the standard deviation of losses over 100 batches. The error bars are smaller than the dots (Figure~\ref{fig:abstract}, b and d).
+
+When we are fitting the loss in log-log as a line, we choose the linear part to fit. If the loss versus model dimension curve is obviously not a line, we fit the whole curve as a line and output the $R^2$ value as a measure of how non-linear it is. Specifically, we fit the last five points for the power-law decay feature case in the weak superposition regime (yellow data in Figure~\ref{fig:abstract}b). Other cases in the weak superposition regime are fitted to a line with all data. In the strong superposition regime, when feature frequency decreases as a power law or as a linear function, we fit the data as a line starting from the third point (yellow and green in Figure~\ref{fig:abstract}d). And for exponential decay feature frequencies, we fit all the data with a line. In the strong superposition regime, the measure model exponent $\alpha_m$ are close to $1$: $1.01\pm 0.05$ (exponential decay), $1.0\pm 0.1$ (power-law decay), and $0.89 \pm 0.05$ (linear decay).
+
+The LLM data are copied from Figure~\ref{fig:LLMs}b, with slope $-0.91\pm0.04$ being close to $1$ as well. We will explain details about Figure~\ref{fig:LLMs} later.
+
+\begin{figure}
+  \centering
+  \includegraphics[width = \textwidth]{figures/Fig-1-s-1.png}
+  \caption{Row norm distributions for large toy models. There are 6 rows of panels. Rows 1 and 2 correspond to the power-law feature frequency. Rows 3 and 4 correspond to the exponential feature frequency. Rows 5 and 6 correspond to the exponential feature frequency. In the two rows that correspond to the same feature frequency, the upper row is at strong superposition and the lower one is at weak superposition. The 8 columns from left to right correspond to different model dimensions $m$ from small to large.}
+  \label{fig:normlargetoy}
+\end{figure}
+
+We also output the weight matrix $W$ for these large toy models (Figure~\ref{fig:normlargetoy}). They follow the same pattern that in the weak superposition regime, row norms are bimodal and are either close to $0$ or $1$, making $0.5$ a good separation point for measuring how many features are represented. And in the strong superposition regime, the row norms are distributed near $1$, and $1$ is a good separation point for the two peaks, i.e., the peak greater than 1 refers to strongly represented features which are more important, and the peak smaller than 1 corresponds to the weakly represented.
+
+\begin{figure}
+  \centering
+  \includegraphics{figures/Fig-1-s-2.pdf}
+  \caption{Large toy models agree with theoretical expectations. We use blue, yellow, and green for exponential, power-law, and linear feature frequencies, respectively. Dots correspond to the weak superposition regime, and squares to the strong superposition regime. (a) The fraction of represented features is $1$ for strong superposition, and is close to $m/n$ (black dashed line). (b) The expected number of activated but unlearned features well describes the loss at weak superposition. The dashed line is where the actual loss is the same as the predicted one. (c) In the strong superposition regime, the number of strongly represented features is much larger than $m$ but bounded by some value around $m^2/2$. The slowly growing dashed line is $m/n$, and the fast growing dashed line is $\min\{1, m^2/2n\}$. (d) The mean squared overlap of strongly represented features is close to $\kappa^2$, which is close to $1/m$, given that the number of strongly represented features is much larger than $m$.}
+  \label{fig:analysislarge}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics{figures/Fig-4-3.pdf}
+  \caption{Rich scaling phenomena arise when we change the degree of superposition and data structures. (a) In the same experiments ($n = 10240$) in Figure~\ref{fig:abstract}, where $p_i \propto \exp(-i/400)$ (blue), $p_i \propto 1/i^{1.2}$ (yellow), and $p_i \propto n - i$ (green), we use $\gamma = -1$ to reach strong superposition and $\gamma=0.1$ for weak superposition. R-squared value of the fitting is used to measure how likely the fitted part is a power law (Figure~\ref{fig:rsquaresmall}). R-squared values closer to 1 mean that the data are more similar to a power law. We found that at strong superposition, power laws are robust across different underlying feature distributions. Yet, at weak superposition, only power-law feature frequencies can lead to power-law losses. (b) When changing superposition by weight decay and varying feature frequency decay by $\alpha$ given $p_i \propto 1/ i^\alpha$, we found roughly three distinct behaviors. For (b), $n =1000$ and $m = 10,  15,  25,  39,  63, 100$.}
+  \label{fig:phenomena}
+\end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[width = 0.45\textwidth]{figures/Fig-4-s-1.pdf}
+  \caption{R squared values for fitting loss as a power law with model dimension. Data are from the small toy models with data dimension $n = 1000$.}
+  \label{fig:rsquaresmall}
+\end{figure}
+
+We can analyze the large toy model in the same way as what has been done in Figure~\ref{fig:weak} and \ref{fig:strong}. The fraction of represented features $\phi_{1/2}$ is calculated, which is 1 in the strong superposition regime, while it is close to $m/n$ in the weak superposition regime (Figure~\ref{fig:analysislarge}a). 
+
+With the measured $\phi_{1/2}$, we can estimate the loss due to unlearned features, $\langle v^2\rangle\sum_{i = \phi_{1/2}n}^n p_i$. This theoretical value agrees well with the actual loss in the weak superposition regime (Figure~\ref{fig:analysislarge}b). 
+
+In the strong superposition regime, the fraction of strongly represented features is calculated, agreeing with the expectation that the number of strongly represented features is much larger than $m$ but bounded by some value around $m^2/2$ (Figure~\ref{fig:analysislarge}c). 
+
+At the end, we see that the mean square overlap of the strongly represented is close to the characterized value $\kappa^2$ (Figure~\ref{fig:analysislarge}d), which scales as $1/m$ since the number of the strongly represented is much larger than $m$.
+
+In Figure~\ref{fig:abstract}, we set weight decay $\gamma = -1$ to have strong superposition and $\gamma = 0.1$ to have weak superposition. We compute $R$ squared values from linear fits in log-log plots to quantify scaling behavior, assessing how closely the loss follows a power law to model dimension. We can see that at strong superposition, the losses are close to power laws, regardless of the underlying feature frequencies, yet the loss is a power law at weak superposition if the feature frequency $p_i$ is a power law with rank $i$ (Figure~\ref{fig:phenomena}a). For a systematic scan, we next set $p_i \propto 1/i^\alpha $ and can vary the data exponent $\alpha$ to change how fast $p_i$ decays consistently. Assuming a power-law form for the final test loss, $L \propto 1 / m^{\alpha_m}$, we extract the model exponent $\alpha_m$ from the empirical fit. We fit the loss with a power law in all cases. The fitted $\alpha_m$ reveals how fast losses decay, even in the regime where the loss should not be a power law. Roughly, three distinct patterns emerge: (1) under weak superposition (positive $\gamma$, yellow box in Figure~\ref{fig:phenomena}b), $\alpha_m$ is small, indicating slow loss decay; (2) under strong superposition and a wide range of small data exponents (red box), $\alpha_m$ remains robustly near 1; (3) for strong superposition with large data exponents (blue box), $\alpha_m$ increases with $\alpha$. By interpreting these three patterns, we aim to understand when loss follows a power law with model dimension, and what determines the exponent when it does.
+
+Figure~\ref{fig:phenomena}a reports the $R^2$ values from the fitting, where the raw data comes from training large toy models (Appendix~\ref{app:large}). When we are fitting the loss in log-log as a line, we choose the linear part to fit. If the loss versus model dimension curve is obviously not a line, we fit the whole curve as a line and output the $R^2$ value as a measure of how non-linear it is. Specifically, we fit the last five points for the power-law decay feature case in the weak superposition regime (yellow data in Figure~\ref{fig:abstract}b). Other cases in the weak superposition regime are fitted to a line with all data. In the strong superposition regime, when feature frequency decreases as a power law or as a linear function, we fit the data as a line starting from the third point (yellow and green in Figure~\ref{fig:abstract}d).
+
+And from the raw data of small toy models (Appendix~\ref{app:small}), we can fit the model exponent $\alpha_m$ directly and plot it as a function of $\gamma$ and $\alpha$ as in Figure~\ref{fig:phenomena}b. 
+
+The fitting in Figure~\ref{fig:phenomena}b does not care whether the loss versus model dimension curve is a power law or not. We provide the $R$ squared values for the fitting here (Figure~\ref{fig:rsquaresmall}). The closer $R$ squared values are to $1$, the better the data can be thought to be a power law (a line in log-log plot). In the strong superposition regime, the $R$ squared values suggest the data are close to be power-law. While in the weak superposition regime, data may not be power-law, especially when $\gamma$ is too large. When $\alpha$ is smaller than $1$, it is not a power law in theory. The $R$ squared values are not too small since the loss decay is very slow, and a line in log-log plot is still a good approximation. When $\alpha >1$ and $\gamma \approx 1$, the number of represented features can be smaller than $m$ or even non-increasing. Too large weight decay still makes the configuration of the representation be in no superposition. However, it destroys some feature representations that can exist, making the configuration far from the ideal case where $m$ features are represented. So, we may not see power laws when weight decay is too strong.
+
+\subsection{Figure 2}
+
+Figure~\ref{fig:toy} introduced the toy model and the concept of superposition without real data. The $W$ matrix we used to show superposition in Figure~\ref{fig:toy}c is obtained by optimizing the square of off-diagonal terms of the normalized $W$, i.e., each row is normalized to have norm 1 first.
+
+\subsection{Figure 3}\label{app:fig3}
+
+In Figure~\ref{fig:wd}, we reported results from the trained small toy models with data dimension $n = 1000$, whose detailed hyperparameters are in Appendix~\ref{app:small}.
+
+We showed results at data exponent $\alpha = 1$ in Figure~\ref{fig:wd}. The results are obtained at $m =100$, $\gamma = -1$ for panel a, and at different $m$ and $\gamma$ for panel b. We showed that the more frequent features tend to have larger norms or to be better represented. And the norm distribution is very bimodal. We here show that it is true that the norm is around $1$ or $0$ for various $\alpha$ and model sizes $m$ and degrees of superposition (Figures~\ref{fig:normsmallweak} and \ref{fig:normsmallstrong}). The fraction of represented, $\phi_{1/2}$, can be calculated directly.
+
+\begin{figure}
+  \centering
+  \includegraphics[width = 0.75\textwidth]{figures/Fig-3-s-2.png}
+  \caption{Row norm distribution at weak superposition ($\gamma = 0.55$) shows that the rows either are close to zero or have norm close to 1, making $0.5$ a good separation. The 17 rows of panels from top to down correspond to 17 $\alpha$ from 0 to 2. And the 6 columns from left to right correspond to $m = 10,  15,  25,  39,  63, 100$.}
+  \label{fig:normsmallweak}
+\end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[width = 0.75\textwidth]{figures/Fig-3-s-1.png}
+  \caption{Row norm distribution at strong superposition ($\gamma = -0.55$) shows that the rows have norm close to 1. And density at $1$ is very low, making $1$ a good separation point for two groups of row norms. The 17 rows of panels from top to down correspond to 17 $\alpha$ from 0 to 2. And the 6 columns from left to right correspond to $m = 10,  15,  25,  39,  63, 100$.}
+  \label{fig:normsmallstrong}
+\end{figure}
+
+Here, we provide the heat map of $\phi_{1/2}$ at different $m$ as a function of $\alpha$ and $\gamma$ (Figure~\ref{fig:phihalfs}). The pattern is robust, suggesting weight decay is a good tool to change the degree of superposition regardless of data properties and model sizes.
+
+\begin{figure}
+  \centering
+  \includegraphics[width = \textwidth]{figures/Fig-3-s-3.png}
+  \caption{Fraction of represented features as a function of $\gamma$ (x-axis) and $\alpha$ (y-axis). The 6 columns from left to right correspond to $m = 10,  15,  25,  39,  63, 100$. The colorbar is $\phi_{1/2}$ where purple means $1$ and white means $0$.}
+  \label{fig:phihalfs}
+\end{figure}
+
+\subsection{Sparsity does not affect scaling behaviors in our tests}\label{app:fig7}
+\begin{figure}
+  \centering
+  \includegraphics{figures/Fig-7-2.pdf}
+  \caption{Activation density does not affect scaling exponents in our tests. (a) Loss is roughly proportional to activation density given the degree of superposition ($m = 63$, $n = 1000$). (b) So, $E$ will only affect the coefficient but not the exponent when considering the power law with model dimension. We plot the evidence $\alpha_m \approx 1$ at strong superposition.}
+  \label{fig:density}
+\end{figure}
+
+We studied the effect of the number of expected activated features or activation density $E$, which was set to $1$. By fixing data exponent $\alpha = 1$, which will be shown to be relevant to natural language, we can scan different superposition degrees and activation densities. Since $p_i \leq 1$ is required, which is equivalent to $p_1\leq 1$, we have $E \leq \sum_{i=1}^n 1/i^\alpha$, setting the upper bound for our scanning. We found that loss is approximately proportional to activation density $E$ (Figure~\ref{fig:density}a). This fact suggests that the power law exponent should not change, which we confirmed (Figure~\ref{fig:density}b). Under a controlled superposition degree, activation density linearly increases loss and thus does not affect the scaling exponents in our experiments.
+
+Once obtaining the small toy models scanning activation density and keeping $\alpha = 1$, we can plot the loss as a function of activation density $E$ in Figure~\ref{fig:density}. The linear fitting is also straightforward. We chose one $\gamma$ to show in the main text. Here, we present the whole picture that, with any weight decay tested, the model exponent is robust to the change of activation density (Figure~\ref{fig:robustE}).
+
+\begin{figure}
+  \centering
+  \includegraphics[width = 0.45\textwidth]{figures/fig7b.pdf}
+  \caption{Model exponent is robust to activation density at different levels of superposition. The colorbar encodes weight decay as in the main text. Error bars are standard errors.}
+  \label{fig:robustE}
+\end{figure}
+
+\subsection{Figure 4}\label{app:fig5}
+
+In Figure~\ref{fig:weak}a, we plot the raw losses from small toy model experiments (hyperparameters in Appendix~\ref{app:small}). The theoretical value of loss is approximated by an integral $\int_{n\phi_{1/2}}^n 1/i^{\alpha} \mathrm{d}i$, which is
+\begin{equation}
+    L = \left\{ 
+    \begin{aligned}
+        &\frac{\phi_{1/2}^{1-\alpha} - 1}{1 - n^{1-\alpha}}n^{1-\alpha},~ \alpha \neq 1, \\
+        &-\frac{\ln \phi_{1/2}}{\ln n},~ \alpha = 1.
+    \end{aligned}
+    \right.
+\end{equation}
+
+To quantify how much the learned weight matrix deviates from the ideal no superposition structure, we construct a reference matrix and compute a norm difference. Specifically, we first create an $n$-by-$n$ zero matrix called base, and then insert an identity matrix of size $m$ in its top-left corner. This padded identity matrix serves as a reference for the perfect recovery of the first $m$ features. We then compute the matrix product $WW^T$ from the learned weights and compare it to this reference using the matrix 2-norm. The resulting value reflects the ambiguity or interference in the learned representations. We store this norm in the ambiguity tensor at the location indexed by the current task and model width. Given a weight decay and data exponent, we have 6 ambiguity values since we have 6 $m$ values. We calculate maximum ambiguity among these 6 models, and choose the 9 cases with the smallest maximum ambiguity to plot in Figure~\ref{fig:weak}b. One can see that when weight decay is near $0.5$, the models are closest to the ideal no superposition case where the first $m$ features are represented perfectly. Smaller weight decay may not be sufficient to eliminate superposition, and larger weight decay can suppress features that, in principle, can be represented perfectly.
+
+\subsection{Figure 5}\label{app:fig6}
+\begin{figure}
+  \centering
+  \includegraphics[width = 0.45\textwidth]{figures/fig6a.pdf}
+  \caption{Fraction of strongly represented features ($\| W_i\|_2>1$) at strong superposition ($\gamma = -1$) is around $\min\{1, m^2/2n\}$ (fast increasing dashed line), which is much larger than $m$ (slowly increasing dashed line). Colorbar means $\alpha$ as the main text.}
+  \label{fig:numberofstrong}
+\end{figure}
+For convenience, based on the observation that the vector norms are bimodal around $1$ in the strong superposition regime, we define strongly represented features as those that have $\|W_i\|_2 > 1$, which are more frequent and ETF-like, and weakly represented ones for those with $\|W_i\|_2 < 1$. We can quantify the fraction of strongly represented as
+\begin{equation}
+    \phi_1 = |\{ i : \|W_i \|_2 > 1 \}| / n,
+\end{equation}
+which significantly exceeds $m/n$ and is around the ETF upper bound $m^2 / 2n$ (Figure~\ref{fig:numberofstrong}). The group of vectors $\| W_i\|_2$ with norm greater than 1 or the strongly represented features then roughly agree with ETF properties: small variance, $1/m$ mean squared overlaps, and a limited number of vectors.
+
+Figure~\ref{fig:strong} studies the results from small toy models (Appendix~\ref{app:small}) focusing on the strong superposition regime. For the strongly represented fraction, $\phi_1$, we can directly compute based on the definition and the obtained weight matrices. We showed a row norm distribution at $m = 15$, $\alpha = 1$, and $\gamma = -0.78$ in Figure~\ref{fig:strong} panels a and b. Here, we provide more data to show that 1 is a natural separation point in norm to determine which are strongly represented and which are weakly represented (Figure~\ref{fig:normsmallstrong}).
+
+Once select the rows with norm greater than 1, we can calculate their mean and variance of squared overlaps based on normalized rows $W_i / \| W_i\|_2$ (Figure~\ref{fig:strong}, c and d). We argue that after training, the vectors will be more similar to ETFs than to random initialization. This is studied via the variance of overlaps. ETFs, in theory, have zero variance. We find that the majority of the overlap variances are much smaller than the random initialization, especially when features have similar frequencies, which agrees with the expectation. The cases where the actual variance is greater than that of the random vectors have large $\alpha$, roughly correspond to the cases where $\alpha_m$ deviates from $1$ --- ETF-like configuration no longer dominates. This is intuitive that when $\alpha$ is too large, the heterogeneity of overlaps will become large --- it is better to let more frequent features occupy larger angle space. We argue that the large variance at large $\alpha$ does not mean the configuration tends to be random, but tends to be something more closely related to the frequency distribution of the features.
+
+Our explanations based on the strongly and weakly represented features capture the basic trend that when $\alpha$ is getting large, the more important features will have larger angle space and the loss decay will be more related to the data exponent. However, this theory is oversimplified, where the strongly represented all have small overlaps and the weakly represented all have large overlaps. The real situation may be more like the angle occupied by one feature decreases continuously as the frequency decreases. As suggested by Figure~\ref{fig:strong}c, overlap variance within the strongly represented is greater when $\alpha$ is larger. To be more precise about the overlap distribution as well as the exponent $\alpha_m$ when $\alpha$ is large, we cannot use simple theoretical expectations like ETFs but have to solve the toy model.
+
+\begin{figure}
+  \centering
+  \includegraphics[width = 0.45\textwidth]{figures/allover.pdf}
+  \caption{The mean squared overlap over all the $W_i$ vectors in the strong superposition regime ($\gamma = -1$). Although the value may be higher than $1/m$ (the dashed line), the scaling is robustly $1/m$. Colorbar means $\alpha$ as the main text.}
+  \label{fig:allover}
+\end{figure}
+
+We also provide evidence that overlaps of all the vectors (Figure~\ref{fig:allover}). We see that some of the mean square overlaps are larger than $1/m$ instead of being on the line $1/m$. However, all the mean values follow $1/m$ scaling even for large $\alpha$ cases where the vectors are no longer isotropic. We emphasize that for even frequencies and isotropic vectors, since squared overlaps scale as $1/m$, the loss should scale as $1/m$.
+
+\begin{figure}
+  \centering
+  \includegraphics[width = 0.45\textwidth]{figures/Fig-6-s-3.pdf}
+  \caption{Small toy models with $m$ from $50$ to $150$ (such that $m^2/2>n$) in the strong superposition regime yield similar $\alpha_m$ around 1 when $\alpha$ is small and a slightly smaller $\alpha_m$ (smaller than $2(\alpha -1)$) when $\alpha$ is large. We copied Figure~\ref{fig:strong}e and made the points transparent for comparison. The non-transparent points are from small toy models with $m$ from $50$ to $150$. $\alpha_m = 1$ is the horizontal line, $\alpha_m = 2(\alpha -1 )$ is the fast increasing dashed line, and $\alpha_m = \alpha -1$ is the slowly increasing dashed line. Error bars are standard errors. The colorbar encodes weight decay as in the main text.}
+  \label{fig:largem}
+\end{figure}
+
+After fitting $\alpha_m$ of the trained small toy models (Appendix~\ref{app:small}), we plotted the $\alpha_m$ corresponding to the second to the fourth smallest weight decays in Figure~\ref{fig:strong}e. We also copied from Figure~\ref{fig:weak}b and plotted the ideal weak superposition case in Figure~\ref{fig:strong}e. One question we had is that if $m^2/2$ is always greater than $n$, in our analysis, all vectors can be strongly represented, what should $\alpha_m$ be? We trained the small toy models again as in Appendix~\ref{app:small} but with $m$ from $50$ to $150$. We found that in the strong superposition regime, the $\alpha_m$ is still around $1$ when $\alpha$ is smaller than $1.5$, and $\alpha_m$ still increases a little while smaller than $2(\alpha -1)$ when $\alpha$ is larger than $1.5$ (Figure~\ref{fig:largem}). When $m^2/2n >1$ is always true, the vectors can be put into a configuration where all overlaps are small and scale as $\sqrt{1/m}$, such that $\alpha_m$ should be closer to $1$. However, as mentioned before, our picture that the strongly represented have nearly uniform absolute overlaps is oversimplified. In the real situation, more frequent features have smaller or even faster decaying overlaps. Therefore, when $\alpha$ is too large, a weighted sum of squared overlaps, weighting the more frequent features more, can decrease faster than the average decaying speed $1/m$. Again, we need to solve the toy model faithfully to uncover the rigorous relation between $\alpha_m$ and $\alpha$ and argue the robustness of $\alpha_m$ from theory.
+
+\subsection{Figure 6}\label{app:fig8}
+
+After obtaining the overlaps as described in Appendix~\ref{app:LLMover}, we directly plot the raw data in Figure~\ref{fig:LLMs}a. The data are quite noisy, and we did not fit the data with a line. 
+
+We argued that the LLMs are in the strong superposition regime since all tokens are represented. Figure~\ref{fig:optnorm} shows a typical row norm distribution of LLM (opt, 125M parameters \cite{zhang2022opt}). We showed the mean, minimum, and maximum row norms of all the LLMs studied in Figure~\ref{fig:LLMnorms}. From the non-zero minimum norms and the fact $n \gg m$, we confirm LLMs are in strong superposition. As mentioned in the analysis in Appendix~\ref{app:crossentropy}, we argue that the row norm of LLMs should not depend on $m$ but controlled more by the intrinsic data property of language, which is also verified to be valid (Figure~\ref{fig:LLMnorms}).
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width = 0.45\textwidth]{figures/Fig-8-s-1.png}
+  \caption{Row norm distribution of the language model head of OPT-125M.}
+  \label{fig:optnorm}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics{figures/Fig-8-s-2.pdf}
+  \caption{LLMs are in strong superposition based on the non-zero norms of the representation vectors. (a) OPT models. (b) Qwen2.5 models. (c) GPT-2 models. (d) Pythia models. The dots with error bars are mean values, and the error bar is the standard deviation of norms. Red small points are the maximum values, and dark small points are the minimum values. The mean norm value as a characteristic row norm does not depend on model size much as expected (Appendix~\ref{app:crossentropy}).}
+  \label{fig:LLMnorms}
+\end{figure}
+
+We obtain the evaluation loss of each model on each dataset as described in Appendix~\ref{app:LLMloss}. We fit our loss values by the formula,
+\[
+    L = C_m / m^{\alpha_m} + L_{\backslash m},
+\]
+where $C_m / m^{\alpha_m}$ is universal and $L_{\backslash m}$ is a constant depending on the dataset and model class. There are in total $16$ different $L_{\backslash m}$ since we have $4$ different model classes and 4 datasets. In our fitting model, there are in total $18$ parameters. We use Adam to minimize the mean square error between the predicted loss by the above function and the real loss. All losses obtained are used in optimization. The code is in \texttt{nonlinearfit-3.ipynb}.
+
+We provide the raw data, losses, as a function of $1/m$ (Figure~\ref{fig:rawloss}). The losses looks like a line with $1/m$ in one model class and with the same dataset. And the slope of the line seems to be universal. These two points support us in proposing the formula above, where $C_m / m^{\alpha_m}$ is universal. The intersections are different depending on the dataset and model class, corresponding to different $L_{\backslash m}$.
+
+\begin{figure}
+  \centering
+  \includegraphics{figures/Fig-8-s-3.pdf}
+  \caption{Raw evaluation losses as a function of inverse model dimension.}
+  \label{fig:rawloss}
+\end{figure}
+
+We obtained the token frequencies as described in Appendix~\ref{app:token}. Given the raw data, we sort the token frequency and obtain the frequency-rank plot. We sample 1000 (this number does not matter once it is large, 10000 gives the same result) points uniformly in the $\log_{10}$(Rank), and fit the frequency-rank as a power law, or a line in log-log plot. Results show that the data exponent fitted $\alpha$ is close to $1$ regardless of the dataset or the tokenizer (Figure~\ref{fig:token}).
+
+\begin{figure}
+  \centering
+  \includegraphics[width = \textwidth]{figures/Fig-8-s-4.png}
+  \caption{Taking tokens as atomic features, their frequencies indeed follow a power law, and the measured data exponent $\alpha$ is close to 1. The four rows from top to bottom correspond to four tokenziers, Pythia, OPT, Qwen2.5, and GPT-2, respectively. And the four columns from left to right correspond to four datasets analyzed, wikitext, C4, the Pile, and Bookcorpus, respectively.}
+  \label{fig:token}
+\end{figure}
+
+We study the relationship between model dimension $m$ and model size $N$ (number of parameters). For the four open-sourced models we analyzed \cite{zhang2022opt,radford2019language,qwen2.5,biderman2023pythia}, we can see that $N\sim m^3$, especially when $m$ is large. If we fit the $N$-$m$ relation by a power law while assuming a universal exponent but different coefficients depending on the model class, we obtain an exponent of $2.51$ (Figure~\ref{fig:modelsize}a). For the Chinchilla model reported in \cite{hoffmann2022chinchilla}, we find $N$ is also close to a power law with the model dimension, and the fitted exponent is $2.52\pm 0.03$ (Figure~\ref{fig:modelsize}b).
+
+\begin{figure}
+  \centering
+  \includegraphics{figures/Fig-8-s-5.pdf}
+  \caption{The model size is approximately a power law with model dimension. (a) The four model classes we analyzed \cite{zhang2022opt,radford2019language,qwen2.5,biderman2023pythia}. (b) The Chinchilla models \cite{hoffmann2022chinchilla}.}
+  \label{fig:modelsize}
+\end{figure}
+
+\end{document}

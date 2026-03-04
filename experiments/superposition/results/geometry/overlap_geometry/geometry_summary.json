@@ -1,0 +1,1972 @@
+{
+  "dense_baseline": {
+    "token_embed": {
+      "name": "token_embed",
+      "shape": [
+        99,
+        128
+      ],
+      "norm": {
+        "mean_norm": 1.6380648612976074,
+        "std_norm": 0.08469208329916,
+        "min_norm": 1.47507905960083,
+        "max_norm": 1.8526010513305664,
+        "median_norm": 1.641956090927124,
+        "frac_above_half": 1.0,
+        "frac_above_one": 1.0,
+        "n_rows": 99
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007531135808676481,
+        "var_sq_overlap": 0.00011086324957432225,
+        "mean_abs_overlap": 0.06915288418531418,
+        "max_abs_overlap": 0.2974076569080353,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 99,
+        "n_cols": 128
+      }
+    },
+    "attn_Q_block0": {
+      "name": "attn_Q_block0",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.5051417946815491,
+        "std_norm": 0.09782664477825165,
+        "min_norm": 0.27654361724853516,
+        "max_norm": 0.769129753112793,
+        "median_norm": 0.5076113343238831,
+        "frac_above_half": 0.53125,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.65314120054245,
+        "var_sq_overlap": 0.05268688499927521,
+        "mean_abs_overlap": 0.786118745803833,
+        "max_abs_overlap": 0.970298171043396,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_K_block0": {
+      "name": "attn_K_block0",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.32025256752967834,
+        "std_norm": 0.05604882910847664,
+        "min_norm": 0.21881505846977234,
+        "max_norm": 0.8071334362030029,
+        "median_norm": 0.31227976083755493,
+        "frac_above_half": 0.015625,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.19565042853355408,
+        "var_sq_overlap": 0.0741717591881752,
+        "mean_abs_overlap": 0.3482787013053894,
+        "max_abs_overlap": 0.9340367317199707,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_V_block0": {
+      "name": "attn_V_block0",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.19104239344596863,
+        "std_norm": 0.018854180350899696,
+        "min_norm": 0.14978553354740143,
+        "max_norm": 0.24846991896629333,
+        "median_norm": 0.18883058428764343,
+        "frac_above_half": 0.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.029268627986311913,
+        "var_sq_overlap": 0.0015455895336344838,
+        "mean_abs_overlap": 0.13741880655288696,
+        "max_abs_overlap": 0.625284731388092,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_O_block0": {
+      "name": "attn_O_block0",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.21656307578086853,
+        "std_norm": 0.022407300770282745,
+        "min_norm": 0.1596554070711136,
+        "max_norm": 0.27393680810928345,
+        "median_norm": 0.21653464436531067,
+        "frac_above_half": 0.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.03868294507265091,
+        "var_sq_overlap": 0.0025933338329195976,
+        "mean_abs_overlap": 0.15906044840812683,
+        "max_abs_overlap": 0.6794759035110474,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "ffn_up_block0": {
+      "name": "ffn_up_block0",
+      "shape": [
+        128,
+        512
+      ],
+      "norm": {
+        "mean_norm": 0.22038930654525757,
+        "std_norm": 0.0368049181997776,
+        "min_norm": 0.16086313128471375,
+        "max_norm": 0.3406756520271301,
+        "median_norm": 0.2120305746793747,
+        "frac_above_half": 0.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.06431004405021667,
+        "var_sq_overlap": 0.005755830556154251,
+        "mean_abs_overlap": 0.20944377779960632,
+        "max_abs_overlap": 0.7350593209266663,
+        "welch_bound": 0.0,
+        "one_over_m": 0.001953125,
+        "random_var": 7.584864991184339e-06,
+        "n_rows": 128,
+        "n_cols": 512
+      }
+    },
+    "ffn_down_block0": {
+      "name": "ffn_down_block0",
+      "shape": [
+        128,
+        512
+      ],
+      "norm": {
+        "mean_norm": 0.22038930654525757,
+        "std_norm": 0.0368049181997776,
+        "min_norm": 0.16086313128471375,
+        "max_norm": 0.3406756520271301,
+        "median_norm": 0.2120305746793747,
+        "frac_above_half": 0.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.06431004405021667,
+        "var_sq_overlap": 0.005755830556154251,
+        "mean_abs_overlap": 0.20944377779960632,
+        "max_abs_overlap": 0.7350593209266663,
+        "welch_bound": 0.0,
+        "one_over_m": 0.001953125,
+        "random_var": 7.584864991184339e-06,
+        "n_rows": 128,
+        "n_cols": 512
+      }
+    },
+    "attn_Q_block1": {
+      "name": "attn_Q_block1",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.6986649632453918,
+        "std_norm": 0.06952769309282303,
+        "min_norm": 0.5614269375801086,
+        "max_norm": 0.9288018345832825,
+        "median_norm": 0.7049804925918579,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.880953311920166,
+        "var_sq_overlap": 0.001580114709213376,
+        "mean_abs_overlap": 0.9383458495140076,
+        "max_abs_overlap": 0.9780797362327576,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_K_block1": {
+      "name": "attn_K_block1",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.41625022888183594,
+        "std_norm": 0.015818452462553978,
+        "min_norm": 0.37533003091812134,
+        "max_norm": 0.48339352011680603,
+        "median_norm": 0.41256821155548096,
+        "frac_above_half": 0.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.3369221091270447,
+        "var_sq_overlap": 0.09049197286367416,
+        "mean_abs_overlap": 0.5303688645362854,
+        "max_abs_overlap": 0.9631800651550293,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_V_block1": {
+      "name": "attn_V_block1",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.22032269835472107,
+        "std_norm": 0.03670045733451843,
+        "min_norm": 0.14766287803649902,
+        "max_norm": 0.3506680130958557,
+        "median_norm": 0.21604126691818237,
+        "frac_above_half": 0.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.08197016268968582,
+        "var_sq_overlap": 0.011609096080064774,
+        "mean_abs_overlap": 0.22827783226966858,
+        "max_abs_overlap": 0.80850750207901,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_O_block1": {
+      "name": "attn_O_block1",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.1641167849302292,
+        "std_norm": 0.018323024734854698,
+        "min_norm": 0.12674954533576965,
+        "max_norm": 0.22967825829982758,
+        "median_norm": 0.164249449968338,
+        "frac_above_half": 0.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.055513110011816025,
+        "var_sq_overlap": 0.0049087731167674065,
+        "mean_abs_overlap": 0.19213567674160004,
+        "max_abs_overlap": 0.7349379062652588,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "ffn_up_block1": {
+      "name": "ffn_up_block1",
+      "shape": [
+        512,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.3914351165294647,
+        "std_norm": 0.07997189462184906,
+        "min_norm": 0.26392436027526855,
+        "max_norm": 0.6893268823623657,
+        "median_norm": 0.3684350848197937,
+        "frac_above_half": 0.111328125,
+        "frac_above_one": 0.0,
+        "n_rows": 512
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.03495294973254204,
+        "var_sq_overlap": 0.004602613393217325,
+        "mean_abs_overlap": 0.13912898302078247,
+        "max_abs_overlap": 0.9232592582702637,
+        "welch_bound": 0.07662141663581953,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 512,
+        "n_cols": 128
+      }
+    },
+    "ffn_down_block1": {
+      "name": "ffn_down_block1",
+      "shape": [
+        128,
+        512
+      ],
+      "norm": {
+        "mean_norm": 0.4968542456626892,
+        "std_norm": 0.06368745863437653,
+        "min_norm": 0.3714355528354645,
+        "max_norm": 0.8276910185813904,
+        "median_norm": 0.48683932423591614,
+        "frac_above_half": 0.4375,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.018029550090432167,
+        "var_sq_overlap": 0.0005993398372083902,
+        "mean_abs_overlap": 0.10802166908979416,
+        "max_abs_overlap": 0.5041251182556152,
+        "welch_bound": 0.0,
+        "one_over_m": 0.001953125,
+        "random_var": 7.584864991184339e-06,
+        "n_rows": 128,
+        "n_cols": 512
+      }
+    },
+    "output_proj": {
+      "name": "output_proj",
+      "shape": [
+        99,
+        128
+      ],
+      "norm": {
+        "mean_norm": 2.0197243690490723,
+        "std_norm": 0.22573857009410858,
+        "min_norm": 0.4749179184436798,
+        "max_norm": 2.131070137023926,
+        "median_norm": 2.051786184310913,
+        "frac_above_half": 0.9797979593276978,
+        "frac_above_one": 0.9797979593276978,
+        "n_rows": 99
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.05036766827106476,
+        "var_sq_overlap": 0.004679057747125626,
+        "mean_abs_overlap": 0.1786969006061554,
+        "max_abs_overlap": 0.989459216594696,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 99,
+        "n_cols": 128
+      }
+    }
+  },
+  "sparse_L0_0.10": {
+    "token_embed": {
+      "name": "token_embed",
+      "shape": [
+        99,
+        128
+      ],
+      "norm": {
+        "mean_norm": 1.1244795322418213,
+        "std_norm": 0.13792893290519714,
+        "min_norm": 0.7612767815589905,
+        "max_norm": 1.4363272190093994,
+        "median_norm": 1.1208295822143555,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.8181818127632141,
+        "n_rows": 99
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.00824231281876564,
+        "var_sq_overlap": 0.00020567415049299598,
+        "mean_abs_overlap": 0.06431207805871964,
+        "max_abs_overlap": 0.41862139105796814,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 99,
+        "n_cols": 128
+      }
+    },
+    "attn_Q_block0": {
+      "name": "attn_Q_block0",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.7057859301567078,
+        "std_norm": 0.026094229891896248,
+        "min_norm": 0.6432918310165405,
+        "max_norm": 0.7714357376098633,
+        "median_norm": 0.7065399289131165,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007954311557114124,
+        "var_sq_overlap": 0.00012474939285311848,
+        "mean_abs_overlap": 0.07121682912111282,
+        "max_abs_overlap": 0.31339961290359497,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_K_block0": {
+      "name": "attn_K_block0",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.7071598768234253,
+        "std_norm": 0.024024836719036102,
+        "min_norm": 0.6480128169059753,
+        "max_norm": 0.7531579732894897,
+        "median_norm": 0.7085970044136047,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007535080425441265,
+        "var_sq_overlap": 0.00010797247523441911,
+        "mean_abs_overlap": 0.0695885643362999,
+        "max_abs_overlap": 0.32029059529304504,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_V_block0": {
+      "name": "attn_V_block0",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.7082171440124512,
+        "std_norm": 0.026950815692543983,
+        "min_norm": 0.6412137746810913,
+        "max_norm": 0.7980486154556274,
+        "median_norm": 0.7073475122451782,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.0076727718114852905,
+        "var_sq_overlap": 0.00011400439689168707,
+        "mean_abs_overlap": 0.0701238289475441,
+        "max_abs_overlap": 0.34262141585350037,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_O_block0": {
+      "name": "attn_O_block0",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.57753986120224,
+        "std_norm": 0.02487827092409134,
+        "min_norm": 0.5043867826461792,
+        "max_norm": 0.656486451625824,
+        "median_norm": 0.5763458609580994,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.00801787432283163,
+        "var_sq_overlap": 0.00012575389700941741,
+        "mean_abs_overlap": 0.07148681581020355,
+        "max_abs_overlap": 0.3216533958911896,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "ffn_up_block0": {
+      "name": "ffn_up_block0",
+      "shape": [
+        128,
+        512
+      ],
+      "norm": {
+        "mean_norm": 0.5785685181617737,
+        "std_norm": 0.01184662152081728,
+        "min_norm": 0.5478472709655762,
+        "max_norm": 0.6097792387008667,
+        "median_norm": 0.5782422423362732,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.0019424486672505736,
+        "var_sq_overlap": 7.728082891844679e-06,
+        "mean_abs_overlap": 0.03503544256091118,
+        "max_abs_overlap": 0.17643588781356812,
+        "welch_bound": 0.0,
+        "one_over_m": 0.001953125,
+        "random_var": 7.584864991184339e-06,
+        "n_rows": 128,
+        "n_cols": 512
+      }
+    },
+    "ffn_down_block0": {
+      "name": "ffn_down_block0",
+      "shape": [
+        128,
+        512
+      ],
+      "norm": {
+        "mean_norm": 0.5785685181617737,
+        "std_norm": 0.01184662152081728,
+        "min_norm": 0.5478472709655762,
+        "max_norm": 0.6097792387008667,
+        "median_norm": 0.5782422423362732,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.0019424486672505736,
+        "var_sq_overlap": 7.728082891844679e-06,
+        "mean_abs_overlap": 0.03503544256091118,
+        "max_abs_overlap": 0.17643588781356812,
+        "welch_bound": 0.0,
+        "one_over_m": 0.001953125,
+        "random_var": 7.584864991184339e-06,
+        "n_rows": 128,
+        "n_cols": 512
+      }
+    },
+    "attn_Q_block1": {
+      "name": "attn_Q_block1",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.709140956401825,
+        "std_norm": 0.025926116853952408,
+        "min_norm": 0.6478849649429321,
+        "max_norm": 0.7736639976501465,
+        "median_norm": 0.7068743705749512,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007909787818789482,
+        "var_sq_overlap": 0.00012436351971700788,
+        "mean_abs_overlap": 0.07103310525417328,
+        "max_abs_overlap": 0.33413368463516235,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_K_block1": {
+      "name": "attn_K_block1",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.7099825143814087,
+        "std_norm": 0.02780992165207863,
+        "min_norm": 0.6476698517799377,
+        "max_norm": 0.7902593612670898,
+        "median_norm": 0.7101490497589111,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007909334264695644,
+        "var_sq_overlap": 0.00011659342999337241,
+        "mean_abs_overlap": 0.07142548263072968,
+        "max_abs_overlap": 0.31205248832702637,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_V_block1": {
+      "name": "attn_V_block1",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.7022831439971924,
+        "std_norm": 0.029780656099319458,
+        "min_norm": 0.6320856213569641,
+        "max_norm": 0.7908948659896851,
+        "median_norm": 0.7044438123703003,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007640979252755642,
+        "var_sq_overlap": 0.0001156885118689388,
+        "mean_abs_overlap": 0.06979066133499146,
+        "max_abs_overlap": 0.34390637278556824,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_O_block1": {
+      "name": "attn_O_block1",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.5758147835731506,
+        "std_norm": 0.020920906215906143,
+        "min_norm": 0.5093026757240295,
+        "max_norm": 0.6270776987075806,
+        "median_norm": 0.577179491519928,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007925757206976414,
+        "var_sq_overlap": 0.0001262430305359885,
+        "mean_abs_overlap": 0.0709904208779335,
+        "max_abs_overlap": 0.3251924514770508,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "ffn_up_block1": {
+      "name": "ffn_up_block1",
+      "shape": [
+        512,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.5763014554977417,
+        "std_norm": 0.02274872362613678,
+        "min_norm": 0.5038569569587708,
+        "max_norm": 0.6530389785766602,
+        "median_norm": 0.5768412947654724,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 512
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007791117765009403,
+        "var_sq_overlap": 0.00011994851956842467,
+        "mean_abs_overlap": 0.07052496075630188,
+        "max_abs_overlap": 0.3957098424434662,
+        "welch_bound": 0.07662141663581953,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 512,
+        "n_cols": 128
+      }
+    },
+    "ffn_down_block1": {
+      "name": "ffn_down_block1",
+      "shape": [
+        128,
+        512
+      ],
+      "norm": {
+        "mean_norm": 0.5763782262802124,
+        "std_norm": 0.010638559237122536,
+        "min_norm": 0.5531259179115295,
+        "max_norm": 0.6006094813346863,
+        "median_norm": 0.5774276852607727,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.0019405349157750607,
+        "var_sq_overlap": 7.503852430090774e-06,
+        "mean_abs_overlap": 0.03526083379983902,
+        "max_abs_overlap": 0.2322872132062912,
+        "welch_bound": 0.0,
+        "one_over_m": 0.001953125,
+        "random_var": 7.584864991184339e-06,
+        "n_rows": 128,
+        "n_cols": 512
+      }
+    },
+    "output_proj": {
+      "name": "output_proj",
+      "shape": [
+        99,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.572971761226654,
+        "std_norm": 0.023632295429706573,
+        "min_norm": 0.513620138168335,
+        "max_norm": 0.6241976618766785,
+        "median_norm": 0.5736748576164246,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 99
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007904297672212124,
+        "var_sq_overlap": 0.0001266671170014888,
+        "mean_abs_overlap": 0.0707603469491005,
+        "max_abs_overlap": 0.32155585289001465,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 99,
+        "n_cols": 128
+      }
+    }
+  },
+  "sparse_L0_0.20": {
+    "token_embed": {
+      "name": "token_embed",
+      "shape": [
+        99,
+        128
+      ],
+      "norm": {
+        "mean_norm": 1.4031981229782104,
+        "std_norm": 0.11425668746232986,
+        "min_norm": 1.1472798585891724,
+        "max_norm": 1.68805730342865,
+        "median_norm": 1.426638126373291,
+        "frac_above_half": 1.0,
+        "frac_above_one": 1.0,
+        "n_rows": 99
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.00815401691943407,
+        "var_sq_overlap": 0.0001472404255764559,
+        "mean_abs_overlap": 0.07134547829627991,
+        "max_abs_overlap": 0.3896365165710449,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 99,
+        "n_cols": 128
+      }
+    },
+    "attn_Q_block0": {
+      "name": "attn_Q_block0",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.7073979377746582,
+        "std_norm": 0.0275905542075634,
+        "min_norm": 0.6493532657623291,
+        "max_norm": 0.7777283191680908,
+        "median_norm": 0.7071824073791504,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007914591580629349,
+        "var_sq_overlap": 0.00012061924644513056,
+        "mean_abs_overlap": 0.07106496393680573,
+        "max_abs_overlap": 0.32203003764152527,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_K_block0": {
+      "name": "attn_K_block0",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.7111796736717224,
+        "std_norm": 0.02951287291944027,
+        "min_norm": 0.6474772691726685,
+        "max_norm": 0.7759765982627869,
+        "median_norm": 0.7084200978279114,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007693814113736153,
+        "var_sq_overlap": 0.00011559506674529985,
+        "mean_abs_overlap": 0.06999266892671585,
+        "max_abs_overlap": 0.3245292901992798,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_V_block0": {
+      "name": "attn_V_block0",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.7069764733314514,
+        "std_norm": 0.030090702697634697,
+        "min_norm": 0.6363831758499146,
+        "max_norm": 0.7900152802467346,
+        "median_norm": 0.706910252571106,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007826748304069042,
+        "var_sq_overlap": 0.00012206000974401832,
+        "mean_abs_overlap": 0.07065941393375397,
+        "max_abs_overlap": 0.3546214997768402,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_O_block0": {
+      "name": "attn_O_block0",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.5737781524658203,
+        "std_norm": 0.025118360295891762,
+        "min_norm": 0.49740689992904663,
+        "max_norm": 0.6578803062438965,
+        "median_norm": 0.573447048664093,
+        "frac_above_half": 0.9921875,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.008075332269072533,
+        "var_sq_overlap": 0.00013110677537042648,
+        "mean_abs_overlap": 0.07162752002477646,
+        "max_abs_overlap": 0.35178253054618835,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "ffn_up_block0": {
+      "name": "ffn_up_block0",
+      "shape": [
+        128,
+        512
+      ],
+      "norm": {
+        "mean_norm": 0.5773659944534302,
+        "std_norm": 0.01127713918685913,
+        "min_norm": 0.550399124622345,
+        "max_norm": 0.606095016002655,
+        "median_norm": 0.5772674679756165,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.0019486363744363189,
+        "var_sq_overlap": 7.920088137325365e-06,
+        "mean_abs_overlap": 0.03506077453494072,
+        "max_abs_overlap": 0.16414374113082886,
+        "welch_bound": 0.0,
+        "one_over_m": 0.001953125,
+        "random_var": 7.584864991184339e-06,
+        "n_rows": 128,
+        "n_cols": 512
+      }
+    },
+    "ffn_down_block0": {
+      "name": "ffn_down_block0",
+      "shape": [
+        128,
+        512
+      ],
+      "norm": {
+        "mean_norm": 0.5773659944534302,
+        "std_norm": 0.01127713918685913,
+        "min_norm": 0.550399124622345,
+        "max_norm": 0.606095016002655,
+        "median_norm": 0.5772674679756165,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.0019486363744363189,
+        "var_sq_overlap": 7.920088137325365e-06,
+        "mean_abs_overlap": 0.03506077453494072,
+        "max_abs_overlap": 0.16414374113082886,
+        "welch_bound": 0.0,
+        "one_over_m": 0.001953125,
+        "random_var": 7.584864991184339e-06,
+        "n_rows": 128,
+        "n_cols": 512
+      }
+    },
+    "attn_Q_block1": {
+      "name": "attn_Q_block1",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.7029021978378296,
+        "std_norm": 0.027845248579978943,
+        "min_norm": 0.6084883213043213,
+        "max_norm": 0.7582353949546814,
+        "median_norm": 0.704448401927948,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.0076745967380702496,
+        "var_sq_overlap": 0.00011553252261364833,
+        "mean_abs_overlap": 0.0697953850030899,
+        "max_abs_overlap": 0.34511199593544006,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_K_block1": {
+      "name": "attn_K_block1",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.7063727378845215,
+        "std_norm": 0.029044972732663155,
+        "min_norm": 0.6234743595123291,
+        "max_norm": 0.7812323570251465,
+        "median_norm": 0.7046594023704529,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007815519347786903,
+        "var_sq_overlap": 0.00012236693874001503,
+        "mean_abs_overlap": 0.0705750584602356,
+        "max_abs_overlap": 0.3407951295375824,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_V_block1": {
+      "name": "attn_V_block1",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.703349232673645,
+        "std_norm": 0.03066261112689972,
+        "min_norm": 0.6113156676292419,
+        "max_norm": 0.7848748564720154,
+        "median_norm": 0.7042418718338013,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007705643307417631,
+        "var_sq_overlap": 0.00011231948155909777,
+        "mean_abs_overlap": 0.07028678804636002,
+        "max_abs_overlap": 0.3234805464744568,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_O_block1": {
+      "name": "attn_O_block1",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.5792616009712219,
+        "std_norm": 0.021179668605327606,
+        "min_norm": 0.5335305333137512,
+        "max_norm": 0.6280322074890137,
+        "median_norm": 0.5782157182693481,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.008013667538762093,
+        "var_sq_overlap": 0.00013039786426816136,
+        "mean_abs_overlap": 0.07141955941915512,
+        "max_abs_overlap": 0.35519054532051086,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "ffn_up_block1": {
+      "name": "ffn_up_block1",
+      "shape": [
+        512,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.576751708984375,
+        "std_norm": 0.02226543426513672,
+        "min_norm": 0.5118303894996643,
+        "max_norm": 0.6589652299880981,
+        "median_norm": 0.5762143135070801,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 512
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007801797706633806,
+        "var_sq_overlap": 0.00011932836787309498,
+        "mean_abs_overlap": 0.07058898359537125,
+        "max_abs_overlap": 0.384281724691391,
+        "welch_bound": 0.07662141663581953,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 512,
+        "n_cols": 128
+      }
+    },
+    "ffn_down_block1": {
+      "name": "ffn_down_block1",
+      "shape": [
+        128,
+        512
+      ],
+      "norm": {
+        "mean_norm": 0.5770713686943054,
+        "std_norm": 0.012072728946805,
+        "min_norm": 0.5467761158943176,
+        "max_norm": 0.6097988486289978,
+        "median_norm": 0.5769760608673096,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.0020226933993399143,
+        "var_sq_overlap": 8.05385298008332e-06,
+        "mean_abs_overlap": 0.03602635860443115,
+        "max_abs_overlap": 0.16639477014541626,
+        "welch_bound": 0.0,
+        "one_over_m": 0.001953125,
+        "random_var": 7.584864991184339e-06,
+        "n_rows": 128,
+        "n_cols": 512
+      }
+    },
+    "output_proj": {
+      "name": "output_proj",
+      "shape": [
+        99,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.5758504271507263,
+        "std_norm": 0.02604318968951702,
+        "min_norm": 0.52204829454422,
+        "max_norm": 0.6479177474975586,
+        "median_norm": 0.5741053223609924,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 99
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007841307669878006,
+        "var_sq_overlap": 0.00012053985119564459,
+        "mean_abs_overlap": 0.07064206898212433,
+        "max_abs_overlap": 0.3072913885116577,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 99,
+        "n_cols": 128
+      }
+    }
+  },
+  "sparse_L0_0.50": {
+    "token_embed": {
+      "name": "token_embed",
+      "shape": [
+        99,
+        128
+      ],
+      "norm": {
+        "mean_norm": 1.6322240829467773,
+        "std_norm": 0.0868477150797844,
+        "min_norm": 1.435417890548706,
+        "max_norm": 1.8048924207687378,
+        "median_norm": 1.6341972351074219,
+        "frac_above_half": 1.0,
+        "frac_above_one": 1.0,
+        "n_rows": 99
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007880370132625103,
+        "var_sq_overlap": 0.00012085957860108465,
+        "mean_abs_overlap": 0.0706859603524208,
+        "max_abs_overlap": 0.30107253789901733,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 99,
+        "n_cols": 128
+      }
+    },
+    "attn_Q_block0": {
+      "name": "attn_Q_block0",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.7049272656440735,
+        "std_norm": 0.030155833810567856,
+        "min_norm": 0.5875612497329712,
+        "max_norm": 0.7771008610725403,
+        "median_norm": 0.7040342092514038,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007825758308172226,
+        "var_sq_overlap": 0.00011722224007826298,
+        "mean_abs_overlap": 0.07065697759389877,
+        "max_abs_overlap": 0.2999776601791382,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_K_block0": {
+      "name": "attn_K_block0",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.7090597748756409,
+        "std_norm": 0.028997138142585754,
+        "min_norm": 0.6438535451889038,
+        "max_norm": 0.7809886336326599,
+        "median_norm": 0.7090253829956055,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007944715209305286,
+        "var_sq_overlap": 0.00012312960461713374,
+        "mean_abs_overlap": 0.0714922770857811,
+        "max_abs_overlap": 0.37561577558517456,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_V_block0": {
+      "name": "attn_V_block0",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.7062686681747437,
+        "std_norm": 0.0289304181933403,
+        "min_norm": 0.634740948677063,
+        "max_norm": 0.7911479473114014,
+        "median_norm": 0.7073246240615845,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.0077388957142829895,
+        "var_sq_overlap": 0.00011832577729364857,
+        "mean_abs_overlap": 0.07001757621765137,
+        "max_abs_overlap": 0.32843318581581116,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_O_block0": {
+      "name": "attn_O_block0",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.5765297412872314,
+        "std_norm": 0.02332502044737339,
+        "min_norm": 0.5237825512886047,
+        "max_norm": 0.6451613903045654,
+        "median_norm": 0.5783455967903137,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007956176064908504,
+        "var_sq_overlap": 0.0001246736792381853,
+        "mean_abs_overlap": 0.07121675461530685,
+        "max_abs_overlap": 0.35017186403274536,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "ffn_up_block0": {
+      "name": "ffn_up_block0",
+      "shape": [
+        128,
+        512
+      ],
+      "norm": {
+        "mean_norm": 0.5778881311416626,
+        "std_norm": 0.012030544690787792,
+        "min_norm": 0.5473569631576538,
+        "max_norm": 0.6093233823776245,
+        "median_norm": 0.577610194683075,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.0019639418460428715,
+        "var_sq_overlap": 7.690093298151623e-06,
+        "mean_abs_overlap": 0.03535211831331253,
+        "max_abs_overlap": 0.16941231489181519,
+        "welch_bound": 0.0,
+        "one_over_m": 0.001953125,
+        "random_var": 7.584864991184339e-06,
+        "n_rows": 128,
+        "n_cols": 512
+      }
+    },
+    "ffn_down_block0": {
+      "name": "ffn_down_block0",
+      "shape": [
+        128,
+        512
+      ],
+      "norm": {
+        "mean_norm": 0.5778881311416626,
+        "std_norm": 0.012030544690787792,
+        "min_norm": 0.5473569631576538,
+        "max_norm": 0.6093233823776245,
+        "median_norm": 0.577610194683075,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.0019639418460428715,
+        "var_sq_overlap": 7.690093298151623e-06,
+        "mean_abs_overlap": 0.03535211831331253,
+        "max_abs_overlap": 0.16941231489181519,
+        "welch_bound": 0.0,
+        "one_over_m": 0.001953125,
+        "random_var": 7.584864991184339e-06,
+        "n_rows": 128,
+        "n_cols": 512
+      }
+    },
+    "attn_Q_block1": {
+      "name": "attn_Q_block1",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.7130210399627686,
+        "std_norm": 0.0288690235465765,
+        "min_norm": 0.6404104828834534,
+        "max_norm": 0.7960571050643921,
+        "median_norm": 0.713516354560852,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.0077229514718055725,
+        "var_sq_overlap": 0.00011854877811856568,
+        "mean_abs_overlap": 0.07030382007360458,
+        "max_abs_overlap": 0.38518226146698,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_K_block1": {
+      "name": "attn_K_block1",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.7050318717956543,
+        "std_norm": 0.025935938581824303,
+        "min_norm": 0.634132444858551,
+        "max_norm": 0.7674596905708313,
+        "median_norm": 0.7034505009651184,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.008069918490946293,
+        "var_sq_overlap": 0.00013265669986139983,
+        "mean_abs_overlap": 0.07143858820199966,
+        "max_abs_overlap": 0.35271885991096497,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_V_block1": {
+      "name": "attn_V_block1",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.7075625658035278,
+        "std_norm": 0.031100371852517128,
+        "min_norm": 0.6238534450531006,
+        "max_norm": 0.7873440384864807,
+        "median_norm": 0.7095731496810913,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007801027037203312,
+        "var_sq_overlap": 0.00012158046592958272,
+        "mean_abs_overlap": 0.07045362889766693,
+        "max_abs_overlap": 0.3353460431098938,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_O_block1": {
+      "name": "attn_O_block1",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.5784516930580139,
+        "std_norm": 0.023220235481858253,
+        "min_norm": 0.5120113492012024,
+        "max_norm": 0.6378920078277588,
+        "median_norm": 0.5762302279472351,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.00792945921421051,
+        "var_sq_overlap": 0.0001268527121283114,
+        "mean_abs_overlap": 0.0710582286119461,
+        "max_abs_overlap": 0.37296056747436523,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "ffn_up_block1": {
+      "name": "ffn_up_block1",
+      "shape": [
+        512,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.5770547389984131,
+        "std_norm": 0.022682858631014824,
+        "min_norm": 0.5091797113418579,
+        "max_norm": 0.634579062461853,
+        "median_norm": 0.577577531337738,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 512
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007832231000065804,
+        "var_sq_overlap": 0.0001196577213704586,
+        "mean_abs_overlap": 0.07078690081834793,
+        "max_abs_overlap": 0.39787036180496216,
+        "welch_bound": 0.07662141663581953,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 512,
+        "n_cols": 128
+      }
+    },
+    "ffn_down_block1": {
+      "name": "ffn_down_block1",
+      "shape": [
+        128,
+        512
+      ],
+      "norm": {
+        "mean_norm": 0.5766912698745728,
+        "std_norm": 0.011418597772717476,
+        "min_norm": 0.5434831976890564,
+        "max_norm": 0.604598879814148,
+        "median_norm": 0.57506263256073,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.0019071210408583283,
+        "var_sq_overlap": 7.128367997211171e-06,
+        "mean_abs_overlap": 0.035019777715206146,
+        "max_abs_overlap": 0.16493168473243713,
+        "welch_bound": 0.0,
+        "one_over_m": 0.001953125,
+        "random_var": 7.584864991184339e-06,
+        "n_rows": 128,
+        "n_cols": 512
+      }
+    },
+    "output_proj": {
+      "name": "output_proj",
+      "shape": [
+        99,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.5790594220161438,
+        "std_norm": 0.021313779056072235,
+        "min_norm": 0.527677059173584,
+        "max_norm": 0.6379610300064087,
+        "median_norm": 0.5793203711509705,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 99
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.0076710921712219715,
+        "var_sq_overlap": 0.00011627760977717116,
+        "mean_abs_overlap": 0.06995543092489243,
+        "max_abs_overlap": 0.3199154734611511,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 99,
+        "n_cols": 128
+      }
+    }
+  },
+  "sparse_L0_0.80": {
+    "token_embed": {
+      "name": "token_embed",
+      "shape": [
+        99,
+        128
+      ],
+      "norm": {
+        "mean_norm": 1.6425917148590088,
+        "std_norm": 0.08746273815631866,
+        "min_norm": 1.4519494771957397,
+        "max_norm": 1.8354971408843994,
+        "median_norm": 1.6509931087493896,
+        "frac_above_half": 1.0,
+        "frac_above_one": 1.0,
+        "n_rows": 99
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007573045324534178,
+        "var_sq_overlap": 0.00011311259731883183,
+        "mean_abs_overlap": 0.06939450651407242,
+        "max_abs_overlap": 0.3243175446987152,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 99,
+        "n_cols": 128
+      }
+    },
+    "attn_Q_block0": {
+      "name": "attn_Q_block0",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.7045848965644836,
+        "std_norm": 0.028314365074038506,
+        "min_norm": 0.6486687064170837,
+        "max_norm": 0.7789965271949768,
+        "median_norm": 0.7058264017105103,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.008118011988699436,
+        "var_sq_overlap": 0.0001321877061855048,
+        "mean_abs_overlap": 0.07202526181936264,
+        "max_abs_overlap": 0.44155728816986084,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_K_block0": {
+      "name": "attn_K_block0",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.711397111415863,
+        "std_norm": 0.02831903286278248,
+        "min_norm": 0.6337961554527283,
+        "max_norm": 0.7848939299583435,
+        "median_norm": 0.7084158062934875,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007969945669174194,
+        "var_sq_overlap": 0.00012831865751650184,
+        "mean_abs_overlap": 0.07124175131320953,
+        "max_abs_overlap": 0.3702736496925354,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_V_block0": {
+      "name": "attn_V_block0",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.7030370831489563,
+        "std_norm": 0.030203433707356453,
+        "min_norm": 0.6324843168258667,
+        "max_norm": 0.8092156648635864,
+        "median_norm": 0.703613817691803,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007847846485674381,
+        "var_sq_overlap": 0.00012038506247336045,
+        "mean_abs_overlap": 0.07072968780994415,
+        "max_abs_overlap": 0.3618572950363159,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_O_block0": {
+      "name": "attn_O_block0",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.5719999074935913,
+        "std_norm": 0.02337176911532879,
+        "min_norm": 0.49496811628341675,
+        "max_norm": 0.6310921907424927,
+        "median_norm": 0.5722683668136597,
+        "frac_above_half": 0.9921875,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.008085071109235287,
+        "var_sq_overlap": 0.00012823179713450372,
+        "mean_abs_overlap": 0.07171497493982315,
+        "max_abs_overlap": 0.3213072419166565,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "ffn_up_block0": {
+      "name": "ffn_up_block0",
+      "shape": [
+        128,
+        512
+      ],
+      "norm": {
+        "mean_norm": 0.5775561332702637,
+        "std_norm": 0.011602013371884823,
+        "min_norm": 0.5416261553764343,
+        "max_norm": 0.6115906834602356,
+        "median_norm": 0.577134907245636,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.00198854086920619,
+        "var_sq_overlap": 8.083282409643289e-06,
+        "mean_abs_overlap": 0.03552835434675217,
+        "max_abs_overlap": 0.17304158210754395,
+        "welch_bound": 0.0,
+        "one_over_m": 0.001953125,
+        "random_var": 7.584864991184339e-06,
+        "n_rows": 128,
+        "n_cols": 512
+      }
+    },
+    "ffn_down_block0": {
+      "name": "ffn_down_block0",
+      "shape": [
+        128,
+        512
+      ],
+      "norm": {
+        "mean_norm": 0.5775561332702637,
+        "std_norm": 0.011602013371884823,
+        "min_norm": 0.5416261553764343,
+        "max_norm": 0.6115906834602356,
+        "median_norm": 0.577134907245636,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.00198854086920619,
+        "var_sq_overlap": 8.083282409643289e-06,
+        "mean_abs_overlap": 0.03552835434675217,
+        "max_abs_overlap": 0.17304158210754395,
+        "welch_bound": 0.0,
+        "one_over_m": 0.001953125,
+        "random_var": 7.584864991184339e-06,
+        "n_rows": 128,
+        "n_cols": 512
+      }
+    },
+    "attn_Q_block1": {
+      "name": "attn_Q_block1",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.7053527235984802,
+        "std_norm": 0.026829011738300323,
+        "min_norm": 0.6442462801933289,
+        "max_norm": 0.7757418751716614,
+        "median_norm": 0.7055212259292603,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.0078102098777890205,
+        "var_sq_overlap": 0.00011445675045251846,
+        "mean_abs_overlap": 0.07072587311267853,
+        "max_abs_overlap": 0.34042254090309143,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_K_block1": {
+      "name": "attn_K_block1",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.7090524435043335,
+        "std_norm": 0.028153114020824432,
+        "min_norm": 0.6395787000656128,
+        "max_norm": 0.7761210799217224,
+        "median_norm": 0.7082635164260864,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.00782234687358141,
+        "var_sq_overlap": 0.00012120893370592967,
+        "mean_abs_overlap": 0.07053875178098679,
+        "max_abs_overlap": 0.3040464222431183,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_V_block1": {
+      "name": "attn_V_block1",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.7071122527122498,
+        "std_norm": 0.03126287832856178,
+        "min_norm": 0.6287596821784973,
+        "max_norm": 0.7985801696777344,
+        "median_norm": 0.709282398223877,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007913668639957905,
+        "var_sq_overlap": 0.00012642178626265377,
+        "mean_abs_overlap": 0.07113217562437057,
+        "max_abs_overlap": 0.34156081080436707,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "attn_O_block1": {
+      "name": "attn_O_block1",
+      "shape": [
+        128,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.5762013792991638,
+        "std_norm": 0.022724738344550133,
+        "min_norm": 0.5191693305969238,
+        "max_norm": 0.6381670236587524,
+        "median_norm": 0.573868989944458,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.008000167086720467,
+        "var_sq_overlap": 0.00012847749167121947,
+        "mean_abs_overlap": 0.07118621468544006,
+        "max_abs_overlap": 0.3215375244617462,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 128,
+        "n_cols": 128
+      }
+    },
+    "ffn_up_block1": {
+      "name": "ffn_up_block1",
+      "shape": [
+        512,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.5763438940048218,
+        "std_norm": 0.022331010550260544,
+        "min_norm": 0.5169358253479004,
+        "max_norm": 0.6394601464271545,
+        "median_norm": 0.5759957432746887,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 512
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.00781094329431653,
+        "var_sq_overlap": 0.00011969907063758001,
+        "mean_abs_overlap": 0.07065118849277496,
+        "max_abs_overlap": 0.41497159004211426,
+        "welch_bound": 0.07662141663581953,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 512,
+        "n_cols": 128
+      }
+    },
+    "ffn_down_block1": {
+      "name": "ffn_down_block1",
+      "shape": [
+        128,
+        512
+      ],
+      "norm": {
+        "mean_norm": 0.5776233077049255,
+        "std_norm": 0.010534320957958698,
+        "min_norm": 0.5531015992164612,
+        "max_norm": 0.6088928580284119,
+        "median_norm": 0.576835036277771,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 128
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.0019212818006053567,
+        "var_sq_overlap": 7.293096587090986e-06,
+        "mean_abs_overlap": 0.03502826392650604,
+        "max_abs_overlap": 0.1702524870634079,
+        "welch_bound": 0.0,
+        "one_over_m": 0.001953125,
+        "random_var": 7.584864991184339e-06,
+        "n_rows": 128,
+        "n_cols": 512
+      }
+    },
+    "output_proj": {
+      "name": "output_proj",
+      "shape": [
+        99,
+        128
+      ],
+      "norm": {
+        "mean_norm": 0.5778502821922302,
+        "std_norm": 0.022844495251774788,
+        "min_norm": 0.5101537108421326,
+        "max_norm": 0.6335088014602661,
+        "median_norm": 0.5774173140525818,
+        "frac_above_half": 1.0,
+        "frac_above_one": 0.0,
+        "n_rows": 99
+      },
+      "overlap": {
+        "mean_sq_overlap": 0.007479452062398195,
+        "var_sq_overlap": 0.00010591636237222701,
+        "mean_abs_overlap": 0.06904598325490952,
+        "max_abs_overlap": 0.340901255607605,
+        "welch_bound": 0.0,
+        "one_over_m": 0.0078125,
+        "random_var": 0.00011925330528846153,
+        "n_rows": 99,
+        "n_cols": 128
+      }
+    }
+  }
+}
