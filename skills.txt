@@ -1,0 +1,13 @@
+# Skills installed from ClawHub
+# Usage: openclaw skill install <slug>
+agent-memory-system-new@1.0.0
+autonomous-tasks@5.5.3
+feishu-card@1.4.11
+feishu-chat@1.1.1
+find-skills@0.1.0
+subagent-driven-development@0.1.0
+task-decomposer@1.0.0
+using-superpowers@0.1.0
+
+# Plugins (npm)
+# @openclaw/feishu@2026.3.1

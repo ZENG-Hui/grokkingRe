@@ -26,3 +26,15 @@ scan/*.png
 .vscode/
 .DS_Store
 Thumbs.db
+*.swp
+*~
+
+# Skills (installed from ClawHub, can be reinstalled)
+skills/
+
+# Runtime state
+.openclaw/
+.clawhub/
+
+# Agent server (lives on HG dev machine)
+agent_server.py
