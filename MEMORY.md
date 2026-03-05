@@ -37,7 +37,10 @@ _Last updated: 2026-03-05_
 ## Infrastructure
 
 - Proxy: 172.29.4.175:22222 (colleague's, lightweight use only — git sync only)
-- GitHub: deepteneral account, SSH via socat proxy
+- GitHub: deepteneral account, SSH via socat proxy; **HTTPS + PAT for soul repo push**
+- GitHub PAT: stored at `~/.openclaw/github_pat.txt`（Fine-grained, 90 天有效期）
+- **Soul repo:** `github.com/deepteneral/soul`（私有），备份身份/记忆/成长记录
+  - Commit 格式：`YYYY-MM-DD: 更新要点小结`
 - Cron: Daily token report at UTC 16:00 (Beijing midnight)
 - **HG 开发机:** agent_server + opencode，通过 HTTP API 远程操作
   - URL: `https://yinghuo-hg.deepseek.com/zenghui/dev-cpu/agent-server`
