@@ -29,7 +29,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-from model import Transformer
+from core.model import Transformer
 
 CKPT_DIR = SCRIPT_DIR / "results" / "checkpoints"
 OUT_DIR = SCRIPT_DIR / "results" / "geometry" / "activations"

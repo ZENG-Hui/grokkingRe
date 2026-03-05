@@ -1,7 +1,13 @@
+import sys
+import os
+
+# Add project root to path so core package is importable
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 from argparse import ArgumentParser
 
-from data import ALL_OPERATIONS
-from training import main
+from core.data import ALL_OPERATIONS
+from core.training import main
 
 if __name__ == "__main__":
     parser = ArgumentParser()

@@ -11,12 +11,15 @@ import numpy as np
 from pathlib import Path
 from copy import deepcopy
 
-# Add current directory to path to allow imports
-sys.path.insert(0, str(Path(__file__).parent))
+# Add project root and current directory to path
+ROOT = Path(__file__).resolve().parent.parent.parent
+SCRIPT_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(SCRIPT_DIR))
 
 # Import configurations and training function
 from run_dense_vs_sparse import SHARED_CONFIG, SPARSE_SPECIFIC, WANDB_CONFIG
-from config_sparse import SparseTrainingConfig
+from core.config_sparse import SparseTrainingConfig
 import training_sparse
 
 class WandbProxy:

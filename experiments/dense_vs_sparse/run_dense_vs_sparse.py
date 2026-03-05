@@ -19,7 +19,10 @@ import argparse
 import os
 import time
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent))
+ROOT = Path(__file__).resolve().parent.parent.parent
+SCRIPT_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(SCRIPT_DIR))
 
 # ============================================================
 # 📝 共有配置区 - 在这里修改实验参数
@@ -149,7 +152,7 @@ def run_dense_training(run_id: str):
     print("="*60)
     print("Starting dense training...", flush=True)
     
-    from training import main as dense_main
+    from core.training import main as dense_main
     from argparse import Namespace
     
     args = Namespace(**SHARED_CONFIG, **DENSE_SPECIFIC)
@@ -158,7 +161,7 @@ def run_dense_training(run_id: str):
     print(f"Run ID: {run_id}", flush=True)
     print("Training in progress (this may take several minutes)...", flush=True)
     
-    import training
+    from core import training
     orig = training.wandb.init
     def custom_init(*a, **k):
         # 添加时间戳和run_id标识,避免重名覆盖
@@ -201,7 +204,7 @@ def run_sparse_training(run_id: str):
     print("Starting sparse training...", flush=True)
     
     from training_sparse import main as sparse_main
-    from config_sparse import SparseTrainingConfig
+    from core.config_sparse import SparseTrainingConfig
     import training_sparse
     
     config = SparseTrainingConfig(

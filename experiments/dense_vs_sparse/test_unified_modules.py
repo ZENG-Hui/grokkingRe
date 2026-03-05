@@ -12,6 +12,9 @@ import torch
 import sys
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(ROOT))
+
 print("="*60)
 print("Testing Unified Configuration Modules")
 print("="*60)
@@ -19,7 +22,7 @@ print("="*60)
 # Test 1: Model with different norm types
 print("\n1️⃣ Testing model.py with norm_type parameter...")
 try:
-    from model import Transformer, RMSNorm
+    from core.model import Transformer, RMSNorm
     
     # Test LayerNorm (default)
     model_ln = Transformer(
@@ -59,7 +62,7 @@ except Exception as e:
 # Test 2: LR Scheduler
 print("\n2️⃣ Testing lr_scheduler.py...")
 try:
-    from lr_scheduler import (
+    from core.lr_scheduler import (
         get_unified_lr_scheduler,
         get_L0_scaled_lr,
         calculate_current_L0,

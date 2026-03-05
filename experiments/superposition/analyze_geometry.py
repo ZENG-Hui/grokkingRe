@@ -55,8 +55,8 @@ def load_model_from_checkpoint(ckpt_path: str, model_type: str = "sparse"):
     ckpt = torch.load(ckpt_path, map_location='cpu')
 
     if model_type == "sparse":
-        from config_sparse import SparseTrainingConfig
-        from model_sparse import create_sparse_model
+        from core.config_sparse import SparseTrainingConfig
+        from core.model_sparse import create_sparse_model
 
         if 'config' in ckpt and isinstance(ckpt['config'], SparseTrainingConfig):
             config = ckpt['config']
@@ -68,7 +68,7 @@ def load_model_from_checkpoint(ckpt_path: str, model_type: str = "sparse"):
         model.load_state_dict(state, strict=False)
 
     elif model_type == "dense":
-        from model import Transformer
+        from core.model import Transformer
 
         config = ckpt.get('config', None)
         if config and hasattr(config, 'num_layers'):

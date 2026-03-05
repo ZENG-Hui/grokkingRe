@@ -16,12 +16,13 @@ from pathlib import Path
 import sys
 
 # Add project root to path
-sys.path.insert(0, str(Path(__file__).parent))
+ROOT = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(ROOT))
 
-from model_sparse import SparseTransformer
-from model import Transformer
-from config_sparse import SparseTrainingConfig
-from data import get_data
+from core.model_sparse import SparseTransformer
+from core.model import Transformer
+from core.config_sparse import SparseTrainingConfig
+from core.data import get_data
 
 def load_model(checkpoint_path, device):
     print(f"Loading checkpoint from {checkpoint_path}...")

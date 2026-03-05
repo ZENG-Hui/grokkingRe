@@ -11,6 +11,11 @@
     python visualize_sparsity.py --model checkpoints/final_model.pt
 """
 
+import sys
+from pathlib import Path as _Path
+ROOT = _Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(ROOT))
+
 import torch
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -18,8 +23,8 @@ import numpy as np
 from pathlib import Path
 import argparse
 
-from model_sparse import SparseTransformer
-from config_sparse import SparseTrainingConfig
+from core.model_sparse import SparseTransformer
+from core.config_sparse import SparseTrainingConfig
 
 
 def load_model(checkpoint_path: str):

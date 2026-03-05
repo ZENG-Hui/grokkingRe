@@ -45,6 +45,11 @@ CUSTOM_SETTINGS = {
 # 以下代码无需修改
 # ============================================================
 
+import sys
+from pathlib import Path
+ROOT = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(ROOT))
+
 from math import ceil
 import os
 import torch
@@ -53,10 +58,10 @@ from tqdm import tqdm
 import wandb
 from typing import Optional
 
-from data import get_data
-from model_sparse import create_sparse_model
-from config_sparse import SparseTrainingConfig, get_config
-from sparse_utils import (
+from core.data import get_data
+from core.model_sparse import create_sparse_model
+from core.config_sparse import SparseTrainingConfig, get_config
+from core.sparse_utils import (
     enforce_weight_sparsity,
     get_target_L0,
     get_sparse_lr,

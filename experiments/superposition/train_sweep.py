@@ -140,10 +140,10 @@ def compute_geometry_snapshot(model):
 
 def train_and_save(label: str, overrides: dict):
     """Train one model with full history tracking."""
-    from data import get_data
-    from model import Transformer
-    from lr_scheduler import get_unified_lr_scheduler, clip_grad_rms, calculate_current_L0
-    from sparse_utils import enforce_weight_sparsity
+    from core.data import get_data
+    from core.model import Transformer
+    from core.lr_scheduler import get_unified_lr_scheduler, clip_grad_rms, calculate_current_L0
+    from core.sparse_utils import enforce_weight_sparsity
 
     config = {**SHARED, **overrides}
 

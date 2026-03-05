@@ -3,10 +3,10 @@ import torch
 from tqdm import tqdm
 import wandb
 
-from data import get_data
-from model import Transformer
-from lr_scheduler import get_unified_lr_scheduler, clip_grad_rms, calculate_current_L0
-from sparse_utils import enforce_weight_sparsity
+from .data import get_data
+from .model import Transformer
+from .lr_scheduler import get_unified_lr_scheduler, clip_grad_rms, calculate_current_L0
+from .sparse_utils import enforce_weight_sparsity
 
 def main(args: dict):
     # logging
