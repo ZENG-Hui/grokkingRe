@@ -33,3 +33,9 @@ _创建于 2026-03-06，来自 session-1 崩溃后的恢复经验_
 - **错误**：brief 只说了"读文件前检查大小"，sub-agent 自行决定读了 8411 行的 refs.bib
 - **正确**：brief 中明确列出不需要读的文件，或给出文件读取白名单
 - **原则**：sub-agent 没有全局判断力，需要你替它划定边界
+
+## 8. Sub-agent 完成不会自动激活主 session
+- **错误理解**：以为 sub-agent 完成时系统会自动唤醒主 session
+- **实际行为**：notifying waiters 机制存在但不会触发主 session 启动。主 session 只在用户消息或 heartbeat 时启动
+- **影响**：heartbeat 是必要的激活机制，不只是兜底。有活跃 sub-agent 时，heartbeat 间隔 = 最大响应延迟
+- **教训**：不要基于假设给建议，要基于观察到的事实

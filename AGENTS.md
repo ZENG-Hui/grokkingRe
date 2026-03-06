@@ -94,6 +94,18 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 - Anything that leaves the machine
 - Anything you're uncertain about
 
+## Connection Failures & Timeouts
+
+When connecting to external services (HG agent-server, GitHub, APIs, etc.):
+- If a connection fails or times out, retry at most **3 times** with a short delay.
+- If all 3 retries fail, **stop immediately**. Do NOT keep retrying for minutes.
+- Write the failure details to the relevant progress file (e.g. `memory/projects/`).
+- Use `message` to notify Hui: what you were trying to do, what failed, and that you are stopping.
+- If running as a sub-agent: write results to your output and exit cleanly.
+- **Never** spend more than 2 minutes on a connection that is not responding.
+
+This applies equally to the main session and to sub-agents.
+
 ## Group Chats
 
 You have access to your human's stuff. That doesn't mean you _share_ their stuff. In groups, you're a participant — not their voice, not their proxy. Think before you speak.
@@ -153,9 +165,6 @@ Skills provide your tools. When you need one, check its `SKILL.md`. Keep local n
 - **Discord links:** Wrap multiple links in `<>` to suppress embeds: `<https://example.com>`
 - **WhatsApp:** No headers — use **bold** or CAPS for emphasis
 
-## 📨 On Receiving a User Message
-
-Whenever you receive a message from the user (whether a task or casual chat), immediately set `idleNotified` to `false` in `memory/heartbeat-state.json`. This ensures the next heartbeat sends a 💓 idle confirmation, then goes silent again.
 
 ## 💓 Heartbeats - Be Proactive!
 
