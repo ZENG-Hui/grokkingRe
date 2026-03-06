@@ -1,0 +1,189 @@
+{
+  "meta": {
+    "lastTouchedVersion": "2026.2.26",
+    "lastTouchedAt": "2026-03-04T13:12:32.461Z"
+  },
+  "auth": {
+    "profiles": {
+      "anthropic:default": {
+        "provider": "anthropic",
+        "mode": "api_key"
+      }
+    }
+  },
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "deepseek": {
+        "baseUrl": "https://api.deepseek.com/v1",
+        "apiKey": "REDACTED",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "deepseek-chat",
+            "name": "DeepSeek Chat",
+            "reasoning": false,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0.28,
+              "output": 0.42,
+              "cacheRead": 0.028,
+              "cacheWrite": 0
+            },
+            "contextWindow": 128000,
+            "maxTokens": 8192,
+            "compat": {
+              "supportsDeveloperRole": false
+            }
+          },
+          {
+            "id": "deepseek-reasoner",
+            "name": "DeepSeek Reasoner",
+            "reasoning": true,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0.28,
+              "output": 0.42,
+              "cacheRead": 0.028,
+              "cacheWrite": 0
+            },
+            "contextWindow": 128000,
+            "maxTokens": 65536,
+            "compat": {
+              "supportsDeveloperRole": false
+            }
+          }
+        ]
+      },
+      "hfai": {
+        "baseUrl": "https://proxy-public.high-five-ai.xyz:8443",
+        "apiKey": "REDACTED",
+        "api": "anthropic-messages",
+        "models": [
+          {
+            "id": "cloudsway-claude-opus-4.6-cache",
+            "name": "Opus 4.6",
+            "reasoning": false,
+            "input": [
+              "text",
+              "image"
+            ],
+            "cost": {
+              "input": 5,
+              "output": 50,
+              "cacheRead": 0.5,
+              "cacheWrite": 6.25
+            },
+            "contextWindow": 200000,
+            "maxTokens": 32000
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "hfai/cloudsway-claude-opus-4.6-cache",
+        "fallbacks": [
+          "deepseek/deepseek-chat"
+        ]
+      },
+      "models": {
+        "anthropic/claude-opus-4-6": {}
+      },
+      "workspace": "/root/.openclaw/workspace",
+      "compaction": {
+        "mode": "safeguard"
+      },
+      "maxConcurrent": 4,
+      "subagents": {
+        "maxConcurrent": 8
+      },
+      "heartbeat": {
+        "every": "10m",
+        "prompt": "MANDATORY: First call the read tool to read HEARTBEAT.md. Then execute EVERY step listed in it in exact order, including all conditional logic. The conditions in HEARTBEAT.md (such as when to skip message or when to reply HEARTBEAT_OK) are authoritative. Do NOT reply HEARTBEAT_OK until the correct step says so.",
+        "ackMaxChars": 300
+      }
+    }
+  },
+  "bindings": [
+    {
+      "agentId": "main",
+      "match": {
+        "channel": "feishu",
+        "accountId": "default"
+      }
+    }
+  ],
+  "messages": {
+    "ackReactionScope": "all"
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto",
+    "restart": true,
+    "ownerDisplay": "raw"
+  },
+  "session": {
+    "dmScope": "per-channel-peer"
+  },
+  "channels": {
+    "feishu": {
+      "enabled": true,
+      "appId": "cli_a922983e81785cca",
+      "appSecret": "REDACTED",
+      "domain": "feishu",
+      "groupPolicy": "open"
+    }
+  },
+  "gateway": {
+    "port": 18788,
+    "mode": "local",
+    "bind": "loopback",
+    "auth": {
+      "mode": "token",
+      "token": "REDACTED"
+    },
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    },
+    "nodes": {
+      "denyCommands": [
+        "camera.snap",
+        "camera.clip",
+        "screen.record",
+        "calendar.add",
+        "contacts.add",
+        "reminders.add"
+      ]
+    }
+  },
+  "plugins": {
+    "entries": {
+      "feishu": {
+        "enabled": true
+      }
+    },
+    "installs": {
+      "feishu": {
+        "source": "npm",
+        "spec": "@openclaw/feishu",
+        "installPath": "/root/.openclaw/extensions/feishu",
+        "version": "2026.3.1",
+        "resolvedName": "@openclaw/feishu",
+        "resolvedVersion": "2026.3.1",
+        "resolvedSpec": "@openclaw/feishu@2026.3.1",
+        "integrity": "sha512-zEO9V/ZN83p1o6jjCy652VEbpNYcDd5vrtRvuwRMfEYPE6oXhfog60ZegTQKCb6go4bbvwTgKyK0c4Cc7pQ5vQ==",
+        "shasum": "2ef7b14f777ae181be0a345f11eabe4618a83108",
+        "resolvedAt": "2026-03-02T09:40:53.063Z",
+        "installedAt": "2026-03-02T09:40:54.006Z"
+      }
+    }
+  }
+}
