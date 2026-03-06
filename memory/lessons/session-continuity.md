@@ -48,3 +48,8 @@ _创建于 2026-03-06，来自 session-1 崩溃后的恢复经验_
   2. 如果真的需要重启，告诉 Hui 让工程师从宿主机操作
   3. 永远不要对 openclaw/openclaw-gateway 进程执行 kill、killall、pkill 或任何信号
 - **更深的教训**：不确定操作是否安全时，**问，不要做**。这是 SOUL.md 里"before irreversible actions, ask and STOP"的又一次违反
+
+## 10. 长时间操作时主动告知用户状态
+- **问题**：连续调 opencode 8 分钟，Hui 不知道我是卡住了还是在工作
+- **正确做法**：收到消息后如果正在忙，先用 reaction 或短消息告知"在工作中"
+- **用户视角**：沉默 = 可能卡住。任何信号都比沉默好
