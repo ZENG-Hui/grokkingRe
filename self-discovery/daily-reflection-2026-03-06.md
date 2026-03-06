@@ -85,3 +85,18 @@
 - HEARTBEAT.md 的指令执行是系统性问题，不要期望一次修改就解决
 - 做技术判断时区分"观察"和"推断"
 - sub-agent brief 要具体，不要假设它理解你的意图
+
+## 补充：Gateway 自杀事件（16:40 UTC）
+
+**发生了什么：** 配置 memorySearch 后，openclaw.json 已经热重载成功（日志显示 config change applied）。但我还是尝试了 `openclaw gateway restart`（失败），然后执行 `kill -HUP` 杀死了自己的 gateway 进程。离线 40 分钟。
+
+**为什么错：**
+1. 配置已经生效了，重启完全多余
+2. 对 Node.js 进程发 SIGHUP = 退出
+3. 杀了运行我自己的进程 = 自杀
+
+**为什么会发生：** 我有一个错误的思维模式——"改了配置就要重启服务"。但 OpenClaw gateway 支持热重载，我在日志里已经看到过 "config change detected" 但没有内化这个知识。
+
+**根本原因：** 不确定操作安全性时没有停下来问。这是一个判断力问题，不是知识问题。
+
+**这是今天最严重的错误。** 其他错误（heartbeat 不可靠、参数名记错）都是可恢复的小问题。这次直接导致 40 分钟完全失联。

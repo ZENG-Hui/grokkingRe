@@ -108,6 +108,28 @@
         "every": "10m",
         "prompt": "MANDATORY: First call the read tool to read HEARTBEAT.md. Then execute EVERY step listed in it in exact order, including all conditional logic. The conditions in HEARTBEAT.md (such as when to skip message or when to reply HEARTBEAT_OK) are authoritative. Do NOT reply HEARTBEAT_OK until the correct step says so.",
         "ackMaxChars": 300
+      },
+      "memorySearch": {
+        "provider": "openai",
+        "model": "text-embedding-3-small",
+        "remote": {
+          "baseUrl": "https://proxy.high-five-ai.xyz:8443/v1/",
+          "apiKey": "qqmgfoKhD9fnfJoZ93bB8K8HReZm8aEd"
+        },
+        "experimental": {
+          "sessionMemory": true
+        },
+        "query": {
+          "hybrid": {
+            "enabled": true,
+            "vectorWeight": 0.7,
+            "textWeight": 0.3,
+            "temporalDecay": {
+              "enabled": true,
+              "halfLifeDays": 30
+            }
+          }
+        }
       }
     }
   },
@@ -184,6 +206,11 @@
         "resolvedAt": "2026-03-02T09:40:53.063Z",
         "installedAt": "2026-03-02T09:40:54.006Z"
       }
+    }
+  },
+  "tools": {
+    "exec": {
+      "timeoutSec": 300
     }
   }
 }

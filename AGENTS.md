@@ -106,6 +106,19 @@ When connecting to external services (HG agent-server, GitHub, APIs, etc.):
 
 This applies equally to the main session and to sub-agents.
 
+
+## ⛔ Gateway Self-Destruction Prevention
+
+**NEVER** do any of the following — these will kill your own process and make you unreachable:
+- `kill`, `killall`, `pkill` targeting openclaw/openclaw-gateway PIDs
+- Sending any signal (SIGHUP, SIGTERM, SIGKILL, etc.) to gateway processes
+- Running `openclaw gateway restart` or `openclaw gateway stop` (systemctl not available in container)
+- Any command that stops/restarts the gateway process
+
+If you need a config reload, the gateway supports **hot reload** automatically — just edit `openclaw.json` and it will detect the change (you saw "config change detected" in logs). No restart needed.
+
+If a restart is truly required (e.g., version upgrade), tell Hui and let the engineer handle it from the host machine using the start/stop scripts.
+
 ## Group Chats
 
 You have access to your human's stuff. That doesn't mean you _share_ their stuff. In groups, you're a participant — not their voice, not their proxy. Think before you speak.
