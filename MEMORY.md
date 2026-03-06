@@ -67,6 +67,38 @@ _Last updated: 2026-03-05_
 10. **消息结论先行** — 不要把分析过程、猜测、建议全塞一条消息
 - 具体错误案例记录在 `self-discovery/error-patterns.md`，新错误随时追加
 
+## Context 管理习惯（2026-03-06 建立）
+
+**核心原则：主 session 是调度中心，不是工作车间。大文件只在 sub-agent 里读。**
+
+### Context 预警与 Compact 机制
+- Compact 是系统自动触发的（~175K 阈值），我不能也不需要手动触发
+- memoryFlush 也是自动的——compact 前系统给我一个静默回合写记忆
+- **70% 时**：通知 Hui + 确认关键信息已持久化
+- **85% 时**：紧急通知 Hui，建议发 `/compact`
+- 轻量化工作是**默认模式**，不是应急切换——大文件始终交给 sub-agent
+
+### 进度持久化
+- 长期任务必须有 progress 文件（如 `scratch/thesis-progress.md`）
+- 每完成一个 sub-agent 任务，立即更新 progress 文件
+- 任务 brief 和审查结论写到文件里，不只放在 context 里
+- Hui 的关键指导提取到 progress 文件中，不依赖 context 记忆
+
+### Session 衔接
+- `memory/YYYY-MM-DD.md` — 每日日志
+- `MEMORY.md` — 长期记忆（主 session 才读）
+- 已启用 `experimental.sessionMemory` — 可以搜索历史 session
+- 新 session 开始时：读 memory → 读 progress → 恢复工作
+
+## Session 崩溃记录
+
+### 2026-03-05 崩溃
+- Session `9cc0fc24` 在 ~16:57 UTC 因 context limit 崩溃（215K > 200K）
+- 原因：在主 session 中读了多个大 LaTeX 文件（chap03 90KB + SM 文件）
+- 后果：Hui 第二天早上发消息无法回复，agent 陷入 compaction 死循环
+- 教训：已建立 Token 预警机制（见 Context 管理习惯）
+- 已调整 `reserveTokensFloor` 从默认值提高到 25000
+
 ## 待观察（来自 Shubham 40 天方案的启发）
 
 - **THESIS.md** — 记录当前研究信念和方向。等 grokkingRe 实验开展后创建

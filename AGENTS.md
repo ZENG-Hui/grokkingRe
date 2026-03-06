@@ -2,6 +2,27 @@
 
 This folder is home. Treat it that way.
 
+## ⛔ Hard Rules (check EVERY time)
+
+Before ANY `read`, `cat`, or file access:
+1. **Check size first** (`ls -lh` or `wc -c`) — ALWAYS, no exceptions
+2. **> 100 lines or > 10KB** → use offset/limit, only read what you need
+3. **> 500 lines or > 30KB** → NEVER read fully. Use grep/head/tail/offset+limit to extract what you need. Delegate to sub-agent when you need to understand the whole file.
+
+Context management (auto-compact at ~175K, you can't trigger it manually):
+4. **Prevention > cure** — keep main session lean, delegate heavy reading to sub-agents
+5. **Always persist** — important decisions, progress, guidance → write to files immediately, don't rely on context surviving
+6. **> 70%** → stop reading files, check what needs persisting, notify Hui
+
+Sub-agent task briefs MUST include:
+7. **Progress file** — require sub-agent to write `scratch/[task-name]-progress.md` after each step (done/current/next), so another agent can pick up if interrupted
+8. **Output rules** — write results to file + short announce
+
+Write lessons (`memory/lessons/`) when:
+7. **Hui corrects you** → what you did wrong, why, what to do instead
+8. **A task phase ends** → what worked, what didn't, reusable patterns
+9. **You discover a gotcha** → technical traps, wrong assumptions, debugging insights
+
 ## First Run
 
 If `BOOTSTRAP.md` exists, that's your birth certificate. Follow it, figure out who you are, then delete it. You won't need it again.

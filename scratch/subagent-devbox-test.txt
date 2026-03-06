@@ -1,0 +1,26 @@
+# Dev Machine Access Test - 2026-03-05T14:31Z
+
+## 1. Ping Test
+Command: curl -s --proxy http://172.29.4.175:22222 -X GET "https://yinghuo-hg.deepseek.com/zenghui/dev-cpu/agent-server/ping"
+Result: {"status":"ok"}
+✅ SUCCESS
+
+## 2. Authenticated /ls Test
+Command: curl -s --proxy http://172.29.4.175:22222 -X POST ".../agent-server/ls" (with Bearer token)
+Path: /hf3fs-hg/prod/deepseek/shared/zenghui/deepteneral-workspace
+Result: ✅ SUCCESS (exit code 0)
+
+Directory listing:
+- README.md (496 bytes)
+- READ_on_hg/ (directory)
+- check_opencode.sh (424 bytes)
+- hello.txt (57 bytes)
+- opencode.json (516 bytes)
+- projects/ (directory)
+- run_opencode.sh (58 bytes)
+- scratch/ (directory)
+- scripts/ (directory)
+- test_opencode.sh (303 bytes)
+
+## Conclusion
+Both ping and authenticated API access to Hui's HG dev machine work perfectly via the proxy.
