@@ -1,0 +1,310 @@
+% !TeX root = ../thuthesis-example.tex
+
+\chapter{研究背景}
+
+\section{引言}
+\label{sec:introduction}
+
+凝聚态物理研究的一个核心主题，是理解微观量子态如何在宏观尺度上以可观测的方式呈现。传统上，人们使用朗道对称性破缺范式刻画相变与相结构：序参量、对称性与低能激发在很大程度上决定了物态分类。然而，过去数十年的研究逐渐显示，即便不发生对称性破缺，量子态仍可能由于其整体的拓扑结构而形成稳定的量子相。对能带电子体系而言，这种"整体结构"往往隐藏在布洛赫波函数的规范（gauge）自由度之中：同一物理态允许在动量空间逐点做相位变换，而沿闭合路径的相位积累则变为可观测量，即贝里相\cite{Berry}。这一视角不仅解释了多种量子化输运现象，也推动了拓扑绝缘体、拓扑半金属等拓扑物态的系统建立，并以体边对应关系为核心形成了"体拓扑决定边界态"的统一图景\cite{RevModPhys.82.3045,RevModPhys.83.1057}。
+
+然而，贝里曲率并不是布洛赫态所携带的全部几何信息。将动量空间视为参数空间，占据态子空间在希尔伯特空间中形成一族流形，其局域几何由量子几何张量刻画\cite{Provost1980}。该张量的虚部是人们熟知的贝里曲率，其实部——量子度规——则衡量相邻动量点处布洛赫态的"距离"。在相当长的时间里，研究的焦点集中在贝里曲率及其导出的拓扑不变量上，量子度规的物理效应相对较少被讨论。近年来的一系列理论与实验进展表明，量子度规在非线性输运、超导配对、强驱动动力学等问题中均扮演不可忽视的角色，由此催生了"量子几何"作为一个统一概念框架的广泛关注\cite{annurev-conmatphys-060220-100347}。
+
+本论文围绕"拓扑—量子几何—响应"这一主线展开，聚焦于三个相互衔接的科学问题：
+\begin{enumerate}
+  \item 面对高阶拓扑与复杂空间群对称性的耦合，如何在统一的几何语言下构造可计算、可诊断的拓扑指标，并澄清其与高阶边界谱（特别是高阶费米弧）的对应关系？
+  \item 在弱场与低频极限，量子几何的不同分量如何主导二阶非线性霍尔响应，从而把内部序参量取向与局域结构反演破缺放大为可测电学信号？
+  \item 在强场极限，除了传统的布洛赫振荡与齐纳隧穿图景之外，量子几何是否还能诱导新的漂移与振荡输运机制，从而拓展强驱动动力学的基本理解？
+\end{enumerate}
+这三个问题贯穿了"量子几何如何定义拓扑""量子几何如何进入弱场响应"以及"量子几何如何在强场中产生新信号"的逻辑链，构成本文的统一主线。
+
+以下各节将依次介绍拓扑物态、量子几何、非线性输运、强场动力学以及数值方法的研究背景，为后续章节提供概念底座。最后一节给出本论文的主要内容与结构安排。
+
+
+\section{拓扑物态的基本概念}
+\label{sec:topology-basics}
+
+\subsection{贝里相与拓扑不变量}
+
+量子系统在参数空间中绝热演化时，波函数除了积累动力学相之外，还会获得一个仅依赖于演化路径的几何相——贝里相\cite{Berry}。设系统的哈密顿量 $H(\bm{\lambda})$ 依赖于参数 $\bm{\lambda}$，第 $n$ 个本征态 $|n(\bm{\lambda})\rangle$ 沿闭合路径 $\mathcal{C}$ 绝热演化一周后获得的贝里相为
+\begin{equation}
+  \gamma_n = \oint_{\mathcal{C}} \bm{\mathcal{A}}_n(\bm{\lambda}) \cdot \mathrm{d}\bm{\lambda},
+\end{equation}
+其中 $\mathcal{A}_{n,\mu}(\bm{\lambda}) = i\langle n(\bm{\lambda}) | \partial_{\lambda_\mu} n(\bm{\lambda}) \rangle$ 是贝里联络。贝里联络本身是规范依赖的，但沿闭合路径的积分——贝里相——则是规范不变的可观测量。Simon 指出，贝里相的数学本质是纤维丛上的和乐（holonomy），从而将其与微分几何中的联络和曲率概念联系起来\cite{berry_phase_1}。
+
+对周期晶体中的布洛赫电子而言，参数空间就是布里渊区。定义贝里曲率为
+\begin{equation}
+  \Omega_{n,\mu\nu}(\kk) = \partial_{k_\mu} \mathcal{A}_{n,\nu}(\kk) - \partial_{k_\nu} \mathcal{A}_{n,\mu}(\kk),
+\end{equation}
+则在二维体系中，贝里曲率在整个布里渊区上的积分给出一个整数拓扑不变量——陈数：
+\begin{equation}
+  C_n = \frac{1}{2\pi} \int_{\mathrm{BZ}} \Omega_{n,xy}(\kk) \, \mathrm{d}^2k.
+\end{equation}
+Thouless、Kohmoto、Nightingale 和 den Nijs（TKNN）在研究整数量子霍尔效应时首次证明，霍尔电导的量子化可以用占据态的总陈数来精确表示\cite{PhysRevLett.95.016405}。这一结果——通常称为 TKNN 公式——是拓扑能带理论的奠基性成果，它表明即使不引入朗道能级的图景，仅从布洛赫波函数的拓扑结构出发就可以理解输运的量子化。
+
+值得强调的是，陈数作为全局拓扑量具有整数量子化的鲁棒性，对系统参数的连续微扰保持不变。这种鲁棒性的根源在于，改变陈数需要关闭体能隙（即发生拓扑相变），而连续微扰无法做到这一点——这正是"拓扑保护"的基本机制。
+
+\subsection{拓扑绝缘体与体边对应}
+
+TKNN 公式揭示了一个深刻的一般原则：体态的拓扑不变量决定了边界上的无能隙模式。这一原则被称为"体边对应"（bulk-boundary correspondence），是拓扑物态研究的核心思想之一。
+
+对具有时间反演对称性的体系，贝里曲率在动量空间满足 $\Omega_n(-\kk) = -\Omega_n(\kk)$，使得陈数恒为零。然而，Kane 和 Mele 在 2005 年提出的石墨烯模型表明，时间反演对称体系可以由一个新的 $\mathbb{Z}_2$ 拓扑不变量来分类\cite{PhysRevLett.95.146802}。该不变量取值 $\nu = 0$ 或 $1$，分别对应平庸绝缘体和拓扑绝缘体（也称量子自旋霍尔绝缘体）。与量子霍尔效应中的手征边缘态类似，$\nu = 1$ 的拓扑绝缘体具有受时间反演对称性保护的螺旋边缘态，其中自旋向上与自旋向下的电子沿相反方向传播。
+
+Bernevig、Hughes 和 Zhang 随后提出了 HgTe/CdTe 量子阱中实现量子自旋霍尔效应的理论方案\cite{bernevig2006quantum}，并由 König 等人在实验上成功验证\cite{konig2007quantum}。这一突破将拓扑绝缘体从理论预言推向了实验事实。
+
+二维拓扑绝缘体的概念很快被推广到三维。Fu、Kane 和 Mele 以及 Moore 和 Balents 等人独立地建立了三维 $\mathbb{Z}_2$ 拓扑绝缘体的理论框架\cite{PhysRevB.76.045302,PhysRevB.75.121306}：三维拓扑绝缘体具有四个独立的 $\mathbb{Z}_2$ 不变量 $(\nu_0;\nu_1\nu_2\nu_3)$，当 $\nu_0 = 1$ 时体系为"强拓扑绝缘体"，其表面呈现奇数个狄拉克锥形式的无能隙表面态。Bi$_2$Se$_3$ 族材料被理论预言\cite{hjzhang}并由 Xia 等人在角分辨光电子能谱（ARPES）实验中证实\cite{xia2009observation}为具有单个狄拉克锥的三维强拓扑绝缘体，成为该领域的标志性材料体系。
+
+体边对应的一般性在后续研究中得到了广泛的检验和扩展。它不仅适用于拓扑绝缘体，也适用于拓扑半金属（如外尔半金属表面的费米弧\cite{WanXG}）以及各类对称性保护的拓扑相。这一原则的核心思想是：体态拓扑不变量的非平庸性"迫使"体系在与平庸绝缘体（如真空）的界面上产生无能隙的边界态以保证拓扑一致性。
+
+\subsection{高阶拓扑绝缘体与高阶费米弧}
+
+传统的体边对应将 $d$ 维的体拓扑与 $(d-1)$ 维的边界态联系起来。然而，Benalcazar、Bernevig 和 Hughes 在 2017 年提出的电四极子绝缘体模型\cite{bernevig2017quantizedNBP}揭示了一类更丰富的可能性：体拓扑可以保护出现在 $(d-2)$ 维甚至更低维边界上的态——这就是"高阶拓扑绝缘体"（HOTI）的概念。在二维高阶拓扑绝缘体中，受保护的态出现在零维的角上（角态）；在三维情形，受保护的态出现在一维的铰链上（铰链态）。
+
+高阶拓扑的诊断需要超越传统的威尔逊环方法。对电四极子绝缘体而言，Benalcazar 等人发展了"嵌套威尔逊环"（nested Wilson loop）形式主义\cite{bernevig2017quantizedNBP}：首先沿一个动量方向计算威尔逊环谱获得 Wannier 能带，然后在选定的 Wannier 扇区内沿另一个动量方向再做一次威尔逊环计算，所得到的嵌套贝里相 $\theta^{(2)}$ 在适当对称性保护下取量子化值，可以作为高阶拓扑的诊断指标。Schindler 等人在 Bi 的实验中观测到了铰链态的证据\cite{Schindler2018HOTI_Bi}，为高阶拓扑绝缘体的实验实现提供了支持。
+
+在三维拓扑半金属中，高阶拓扑的概念衍生出"高阶费米弧"（higher-order Fermi arcs, HOFA）\cite{bernevig2020HOFA}。与传统费米弧出现在半金属的表面不同，HOFA 出现在样品的铰链（棱）上，是高阶体拓扑的谱学表征。
+
+然而，嵌套威尔逊环方法在应用到具有一般空间群对称性的真实材料时面临困难。其核心问题在于：Wannier 能带扇区的划分依赖于特定的对称性约束（如镜面或旋转对称性来保证 Wannier 能隙的存在），而在非共形空间群中，传统的扇区划分和量子化条件可能不再适用。如何在保持规范不变性的同时推广嵌套构造，使之能够处理一般对称性约束下的高阶拓扑诊断，是一个重要的开放问题——这正是本文第二章要解决的核心问题。
+
+\subsection{拓扑量子化学与对称性指标}
+
+除了基于贝里相和威尔逊环的"几何方法"之外，另一条强大的拓扑分类路径来自于对空间群对称性的系统利用。Bradlyn 等人在 2017 年提出的"拓扑量子化学"（topological quantum chemistry, TQC）理论\cite{PhysRevB.97.035158}，将空间群的带表示理论与拓扑能带理论结合起来，建立了一套基于对称性的拓扑判据。
+
+TQC 的核心思想如下：空间群中每个 Wyckoff 位置上的局域轨道可以通过空间群操作诱导出一组能带——即"基本带表示"（elementary band representation, EBR）。EBR 构成了平庸绝缘相的"积木"，任何可以分解为 EBR 正整数线性组合的能带集合在拓扑上是平庸的。反之，如果一组能带无法被如此分解，则该能带集合必须是拓扑非平庸的。
+
+与此密切相关的是"对称性指标"（symmetry indicators）方法\cite{Khalaf2017Symm_indicator_and_anomaly_TCI}，它通过比较高对称点处的不可约表示来快速判断拓扑性质。这两种方法为高通量的拓扑材料筛选提供了高效工具，并已被用于对整个无机晶体结构数据库进行拓扑分类。
+
+需要指出的是，对称性指标方法与威尔逊环方法是互补而非替代的关系。对称性指标能够高效地识别"指标非平庸"的拓扑材料，但对于"指标平庸"但实际非平庸的拓扑相（如某些脆弱拓扑相），则需要依赖威尔逊环等几何方法来诊断。在高阶拓扑的语境中，这一互补性尤为重要：嵌套威尔逊环能够捕捉到对称性指标所遗漏的高阶拓扑不变量。
+
+
+\section{量子几何：从贝里曲率到量子度规}
+\label{sec:quantum-geometry}
+
+\subsection{量子几何张量的定义与分解}
+
+量子几何的概念最早由 Provost 和 Vallee 在量子力学的一般框架中提出\cite{Provost1980}。其核心思想是：在参数空间中，量子态之间的"距离"可以用一个自然的度量来衡量。设两个参数相邻的归一化量子态 $|\psi(\bm{\lambda})\rangle$ 和 $|\psi(\bm{\lambda}+\mathrm{d}\bm{\lambda})\rangle$，则它们之间的距离平方（用 Fubini-Study 度量衡量）为
+\begin{equation}
+  \mathrm{d}s^2 = 1 - |\langle \psi(\bm{\lambda}) | \psi(\bm{\lambda}+\mathrm{d}\bm{\lambda}) \rangle|^2 = \sum_{\mu\nu} g_{\mu\nu}(\bm{\lambda}) \, \mathrm{d}\lambda_\mu \, \mathrm{d}\lambda_\nu,
+\end{equation}
+其中 $g_{\mu\nu}$ 就是量子度规。
+
+对能带电子体系，参数空间为动量空间。对单个布洛赫能带 $n$，量子几何张量定义为
+\begin{equation}
+  \mathcal{Q}_{\mu\nu}^{n}(\kk) = \langle \partial_{k_\mu} u_n(\kk) | \partial_{k_\nu} u_n(\kk) \rangle - \langle \partial_{k_\mu} u_n(\kk) | u_n(\kk) \rangle \langle u_n(\kk) | \partial_{k_\nu} u_n(\kk) \rangle.
+\end{equation}
+利用投影算符 $P_n = |u_n\rangle\langle u_n|$ 和其补 $\bar{P}_n = 1 - P_n$，可以将上式简洁地写为
+\begin{equation}
+  \mathcal{Q}_{\mu\nu}^{n}(\kk) = \langle \partial_{k_\mu} u_n | \bar{P}_n | \partial_{k_\nu} u_n \rangle.
+\end{equation}
+该张量的对称实部给出量子度规，反对称虚部给出贝里曲率：
+\begin{equation}
+  \mathcal{Q}_{\mu\nu}^{n}(\kk) = g_{\mu\nu}^{n}(\kk) - \frac{i}{2}\,\Omega_{\mu\nu}^{n}(\kk).
+\end{equation}
+量子几何张量是规范不变的——无论如何选择布洛赫态的相位约定，$g_{\mu\nu}$ 和 $\Omega_{\mu\nu}$ 都不变。直觉上，$\Omega_{\mu\nu}$ 刻画态在参数空间中"转动"的速率（类比于磁场），而 $g_{\mu\nu}$ 刻画态"变形"的幅度（类比于度规张量）。虽然陈数（贝里曲率的积分）长期以来是拓扑能带理论的核心对象，但量子度规的全布里渊区积分也具有明确的物理含义——它与 Wannier 函数的展宽（spread）密切相关，下文将详细讨论。
+
+\subsection{量子度规的物理含义}
+\label{subsec:metric-physical}
+
+量子度规 $g_{\mu\nu}(\kk)$ 衡量的是相邻 $\kk$ 点处布洛赫态之间的"距离"——更精确地说，是态矢量在投影希尔伯特空间中的 Fubini-Study 距离。这一概念有多个层次的物理含义。
+
+首先，量子度规与 Wannier 函数的空间展宽存在直接联系。Marzari 和 Vanderbilt 在最大局域化 Wannier 函数（MLWF）的构造中\cite{wannier1}引入了 spread functional
+\begin{equation}
+  \Omega = \sum_n \left[ \langle r^2 \rangle_n - \langle \bm{r} \rangle_n^2 \right],
+\end{equation}
+并将其分解为规范不变部分 $\Omega_\mathrm{I}$ 和规范依赖部分 $\tilde{\Omega}$。其中，$\Omega_\mathrm{I}$ 正比于量子度规的布里渊区积分\cite{Resta_2010}：
+\begin{equation}
+  \Omega_\mathrm{I} = \frac{1}{(2\pi)^d} \int_{\mathrm{BZ}} \sum_n \mathrm{tr}\, g^n(\kk) \, \mathrm{d}^d k.
+\end{equation}
+这意味着量子度规越大，Wannier 函数在实空间中越弥散——体系的"量子几何纹理"越丰富。在极端情形下，如果量子度规在整个布里渊区均匀且很大，则 Wannier 函数无法被很好地局域化，这通常出现在拓扑非平庸或具有"obstructed atomic limit"的体系中。
+
+其次，量子度规与贝里曲率之间存在一个重要的不等式关系。对单带体系的任一 $\kk$ 点：
+\begin{equation}
+  \det g(\kk) \geq \frac{1}{4} |\Omega(\kk)|^2.
+\label{eq:metric-curvature-bound}
+\end{equation}
+当且仅当该能带具有所谓的"理想几何"（ideal band geometry）时取等号。满足等号条件的能带——其量子几何完全由贝里曲率决定——在朗道能级、最低朗道能级投影问题以及扭转双层石墨烯的平带中出现\cite{PhysRevResearch.1.032019}。更一般地，对于平带（或近平带）体系，量子度规的大小远可以超过式~(\ref{eq:metric-curvature-bound}) 的下界。在这种情况下，量子度规携带了独立于贝里曲率的额外几何信息，可以导致独特的物理效应——如本文第三章讨论的本征非线性霍尔效应和第四章讨论的量子度规振荡。
+
+\subsection{多带推广与 non-Abelian 量子几何}
+
+当体系有多条简并或近简并能带时，单带量子几何张量的定义需要推广到多带情形。设占据态子空间由一组能带 $\{|u_{n\kk}\rangle\}_{n=1}^{N_\mathrm{occ}}$ 张成，则 non-Abelian 贝里联络矩阵定义为\cite{PhysRevLett.114.206401}
+\begin{equation}
+  [\mathcal{A}_\mu(\kk)]_{mn} = i\langle u_{m\kk} | \partial_{k_\mu} u_{n\kk} \rangle,
+\end{equation}
+相应的 non-Abelian 贝里曲率为
+\begin{equation}
+  [\mathcal{F}_{\mu\nu}]_{mn} = \partial_{k_\mu} [\mathcal{A}_\nu]_{mn} - \partial_{k_\nu} [\mathcal{A}_\mu]_{mn} - i[\mathcal{A}_\mu, \mathcal{A}_\nu]_{mn}.
+\end{equation}
+多带量子几何张量可以类似地定义：
+\begin{equation}
+  \mathcal{Q}_{\mu\nu}(\kk) = \sum_{n \in \mathrm{occ}} \langle \partial_{k_\mu} u_n | \bar{P} | \partial_{k_\nu} u_n \rangle,
+\end{equation}
+其中 $\bar{P} = 1 - \sum_{n \in \mathrm{occ}} |u_n\rangle\langle u_n|$ 是占据态子空间的补投影算符。
+
+non-Abelian 几何结构的一个重要应用是威尔逊环（Wilson loop）。沿布里渊区中的闭合路径 $\mathcal{C}$ 定义的威尔逊环算符为路径有序指数
+\begin{equation}
+  \mathcal{W}(\mathcal{C}) = \mathcal{P} \exp\left( i \oint_{\mathcal{C}} \bm{\mathcal{A}}(\kk) \cdot \mathrm{d}\kk \right),
+\end{equation}
+其本征值的相位即为 Wannier 能带（Wannier band）——它们是动量空间的 Wannier 中心（或称 Wannier 扇区极化）。威尔逊环谱提供了一种规范不变的方式来可视化占据态子空间的拓扑与几何信息：Wannier 能带的缠绕（winding）对应非零陈数，而 Wannier 能带之间的对称性保护的简并则揭示了更精细的拓扑结构\cite{alexey1,alexey2}。
+
+本文第二章所发展的"广义嵌套威尔逊环"（generalized nested Wilson loop）形式主义，正是建立在 non-Abelian 量子几何的框架之上：首先通过一次威尔逊环获取 Wannier 能带，然后对选定的 Wannier 扇区在垂直方向上再执行一次威尔逊环计算。关键的推广在于处理 Wannier 扇区划分在一般对称性下的唯一性与量子化条件——这需要仔细分析对称性如何约束 Wannier 能隙的存在及嵌套贝里相的量子化。
+
+
+\section{非线性输运中的量子几何效应}
+\label{sec:nonlinear-transport}
+
+\subsection{弱场二阶响应的理论框架}
+
+在弱电场条件下，体系的电流密度可以对外加电场做微扰展开：
+\begin{equation}
+  j_a = \sigma_{ab} E_b + \sigma_{abc} E_b E_c + \cdots,
+\end{equation}
+其中 $\sigma_{ab}$ 是线性电导张量，$\sigma_{abc}$ 是二阶非线性电导张量。线性霍尔效应（反常霍尔效应）的内禀贡献完全由贝里曲率的费米海积分决定\cite{nagaosa_anomalous_2010}；而在二阶响应中，情况要更为丰富：贝里曲率和量子度规都可以通过不同的机制进入非线性电导。
+
+从半经典玻尔兹曼输运方程出发，电子的运动方程包含反常速度项
+\begin{equation}
+  \dot{\bm{r}}_n = \frac{1}{\hbar}\frac{\partial \varepsilon_n(\kk)}{\partial \kk} - \frac{e}{\hbar}\bm{E} \times \bm{\Omega}_n(\kk),
+\end{equation}
+将分布函数按电场阶次展开，$f = f^{(0)} + f^{(1)} + f^{(2)} + \cdots$，可以系统地获得各阶电流的表达式。在二阶，产生非线性霍尔电流的贡献可以分为两大类：
+\begin{enumerate}
+  \item \textbf{费米面贡献}（Fermi surface contributions）：来源于费米面附近分布函数对电场的响应，与弛豫时间 $\tau$ 密切相关。其中最重要的是贝里曲率偶极子（Berry curvature dipole, BCD）机制\cite{PhysRevLett.115.216806}。
+  \item \textbf{费米海贡献}（Fermi sea contributions）：来源于所有占据态的带间相干效应，通常是内禀（intrinsic）的——不依赖于杂质散射，而由能带的量子几何性质完全决定\cite{gao_field_2014,gao_orbital_2018}。
+\end{enumerate}
+这两类贡献具有不同的对称性性质、频率依赖关系和弛豫时间标度。在具体材料中，哪一类占主导取决于对称性约束和费米能位置。
+
+\subsection{贝里曲率偶极子机制}
+
+Sodemann 和 Fu 在 2015 年的开创性工作\cite{PhysRevLett.115.216806}中提出了贝里曲率偶极子（BCD）作为二阶非线性霍尔效应的一种内禀机制。BCD 定义为贝里曲率在费米面附近的一阶矩：
+\begin{equation}
+  D_a = \int_{\mathrm{BZ}} f_0(\kk) \, \partial_{k_a} \Omega(\kk) \, \frac{\mathrm{d}^d k}{(2\pi)^d},
+\end{equation}
+其中 $f_0$ 是平衡分布函数。通过分部积分，$D_a$ 也可以等价地写成费米面上贝里曲率加权的速度积分。
+
+BCD 的产生需要两个基本条件：第一，空间反演对称性必须破缺——在保持反演的体系中，$\Omega(\kk) = \Omega(-\kk)$，使得 BCD 恒为零；第二，费米面附近的贝里曲率分布必须具有不对称性（"偶极"分布），这通常出现在能带倾斜的费米面结构中，如 Type-II 外尔半金属\cite{type2Weyl}。
+
+BCD 驱动的非线性霍尔响应具有以下特征：(i) 它是时间反演偶（$\mathcal{T}$-even）的，因此可以在保持 $\mathcal{T}$ 的非磁性材料中出现；(ii) 在直流驱动下，它产生二倍频的横向霍尔电流；(iii) 其大小正比于弛豫时间 $\tau$，反映了费米面效应的特征。
+
+实验上，Ma 等人在 WTe$_2$ 薄层样品中首次观测到了由 BCD 主导的非线性霍尔效应\cite{ma2019observation}，Kang 等人在类似体系中也独立地报道了一致的结果\cite{kang2019nonlinear}。此后，非线性霍尔效应在 BiTeI、TaIrTe$_4$、BaMnSb$_2$ 等多种材料中被观测\cite{Kumar2021_TaIrTe4,he2021quantum}，BCD 机制的适用范围不断被扩展。
+
+\subsection{量子度规相关的本征非线性霍尔效应}
+\label{subsec:inh}
+
+在某些对称性约束下，BCD 被严格禁止，但体系仍可出现非零的二阶霍尔信号。一个重要的情形是具有 $\mathcal{PT}$（空间反演 $\times$ 时间反演）对称性的磁性体系：$\mathcal{PT}$ 保证 $\Omega(\kk) = -\Omega(-\kk)$（从而 BCD $= 0$），但并不禁止所有的非线性霍尔响应。
+
+Gao 等人在一系列工作中\cite{gao_field_2014,gao_orbital_2018}发展了基于密度矩阵微扰理论的非线性响应框架，系统地推导了二阶电导张量的各项贡献。在该框架中，除了 BCD 之外，还存在来自带间相干的"内禀"贡献——这些贡献不依赖于弛豫时间（或仅通过带间弛豫进入），其物理根源在于外场如何激发占据态与非占据态之间的量子相干。
+
+具体而言，在 $\mathcal{PT}$ 对称体系中，时间反演奇（$\mathcal{T}$-odd）的本征非线性霍尔（intrinsic nonlinear Hall, INH）电导与量子几何密切相关。这类贡献反映了量子度规偶极子（quantum metric dipole）和相关的带间矩阵元结构，其对称性性质——特别是对奈尔矢量方向的敏感性——使其成为反铁磁序参量电学读出的潜在探针。
+
+本文第三章将以 MnS 单层反铁磁体系为例，系统展示 INH 效应如何随奈尔矢量取向而变化，并论证其作为二维反铁磁自旋电子学读出信号的可行性。
+
+\subsection{实验进展与材料体系}
+
+自 2019 年以来，非线性霍尔效应的实验研究迅速扩展到了多种材料平台。按照驱动机制和对称性类型，可以大致划分为以下几类：
+
+\begin{itemize}
+  \item \textbf{非磁性 Type-II 外尔/狄拉克半金属}：WTe$_2$\cite{ma2019observation,kang2019nonlinear}、MoTe$_2$\cite{shvetsov2019nonlinear}等，以 BCD 机制为主。这些材料具有自然的反演破缺和倾斜费米面，是研究 BCD 非线性霍尔效应的原型体系。
+  \item \textbf{铁电/极性材料}：通过界面效应或本体极性引起反演破缺，如 BaTiO$_3$/SrTiO$_3$ 界面等。
+  \item \textbf{磁性材料}：包括铁磁和反铁磁体系。在反铁磁体中，非线性霍尔效应可以作为奈尔矢量的电学探测工具——这是传统线性输运方法难以实现的，因为反铁磁体在线性响应中表现为"无净磁化"的状态。
+  \item \textbf{莫尔超晶格}：扭转双层石墨烯\cite{He2022_grapheneMoire}和 WSe$_2$/WS$_2$ 等莫尔体系中，平带结构导致增强的量子几何效应，非线性霍尔信号可以显著增大。
+\end{itemize}
+
+此外，薄膜几何为调控非线性霍尔效应提供了独特的手段。层间滑移（interlayer sliding）可以在原本保持反演对称性的材料中引入反演破缺，从而激活 BCD 非线性霍尔信号。本文第三章将以 ZrTe$_5$ 薄膜为例，展示层间滑移如何导致自发的反演对称性破缺并引发可测的非线性霍尔效应——这一机制为利用非线性输运探测薄膜结构提供了新的途径。
+
+
+\section{强场量子动力学}
+\label{sec:strong-field}
+
+\subsection{布洛赫振荡与 Wannier-Stark 阶梯}
+
+当外加均匀静电场 $\bm{E}$ 作用于晶体中的布洛赫电子时，电子的晶体动量按 $\hbar\dot{\kk} = e\bm{E}$ 随时间线性增长。由于布里渊区的周期性，动量最终回到等价的起点，形成周期为
+\begin{equation}
+  T_\mathrm{B} = \frac{2\pi\hbar}{eEa}
+\end{equation}
+的布洛赫振荡，其中 $a$ 是晶格常数在电场方向上的分量。在实空间中，电子在一个能带内做来回振荡运动，振荡幅度由带宽 $W$ 和电场强度决定：$x_\mathrm{B} = W/(eE)$。
+
+从能级结构的角度看，均匀电场将原本连续的布洛赫能带离散化为等间距的 Wannier-Stark 阶梯，能级间距 $\Delta E = eEa$。布洛赫振荡的频率 $\omega_\mathrm{B} = eEa/\hbar$ 正对应于相邻 Wannier-Stark 能级之间的跃迁。
+
+布洛赫振荡的直接观测在传统固体中由于电子-声子散射和带间隧穿的竞争而极为困难。半导体超晶格（大晶格常数、可调带宽）和冷原子光晶格（超长弛豫时间）是实现布洛赫振荡的两个主要实验平台\cite{PhysRevLett.76.4508,PhysRevLett.83.4756}。在这些体系中，布洛赫振荡频率通常落在太赫兹范围，使其在太赫兹辐射源和精密测量等方面具有潜在应用。
+
+\subsection{齐纳隧穿与朗道-齐纳公式}
+
+当电场足够强时，电子可以在不同能带之间发生非绝热跃迁——这就是齐纳隧穿（Zener tunneling）。Zener 在 1934 年给出了两带模型中的隧穿概率\cite{zener1934theory}：
+\begin{equation}
+  P_\mathrm{LZ} = \exp\left( -\frac{\pi \Delta^2}{2\hbar v_\kk eE} \right),
+\end{equation}
+其中 $\Delta$ 是能带交叉处的能隙，$v_\kk$ 是电子在交叉点的群速度。这就是著名的朗道-齐纳（Landau-Zener）公式。
+
+齐纳隧穿与布洛赫振荡之间存在竞争关系：弱电场下隧穿指数压低，电子可以在单一能带内完成布洛赫振荡；强电场下隧穿概率增大，带间跃迁破坏了单带图景。两者的竞争由无量纲参数 $\gamma = \Delta^2/(W \cdot eEa)$ 控制——$\gamma \gg 1$ 对应布洛赫振荡主导的"弱隧穿"区间，$\gamma \ll 1$ 则对应齐纳击穿。
+
+在处理齐纳隧穿的量子力学描述时，Stokes 现象——即解的渐近展开在不同扇区之间的不连续跳变——扮演着核心角色。最近的研究表明，Stokes 现象的几何相位修正与贝里相和量子度规密切相关\cite{Quantum_Geometric_Oscillations}。
+
+\subsection{贝里曲率振荡与量子度规振荡}
+
+在传统的半经典强场动力学中，贝里曲率通过修正运动方程引入一个与群速度垂直的反常速度分量。当电子在电场驱动下遍历布里渊区时，贝里曲率的周期性空间变化导致实空间漂移中出现振荡成分——这就是贝里曲率振荡（Berry curvature oscillation, BCO）\cite{Quantum_Geometric_Oscillations}。BCO 的物理图像比较直观：它是贝里曲率对布洛赫振荡运动的调制效应。
+
+然而，半经典理论并不是强场量子动力学的完整描述。在全量子处理中（例如基于密度矩阵或波函数在布洛赫基底中的展开），除了绝热的带内运动和非绝热的齐纳隧穿之外，还存在带间相干（interband coherence）的贡献。当一个能带近乎平坦（色散极小）但具有显著的量子度规时，带间相干效应可以产生一种新的漂移与振荡机制——量子度规振荡（quantum metric oscillation, QMO）。
+
+QMO 的物理图像如下：在平带中，电子的群速度趋于零，传统的布洛赫振荡消失；但如果量子度规在布里渊区中不均匀，则外场驱动的带间相干会通过"度规涨落"产生非零的输运贡献。QMO 的振荡频率和振幅由量子度规的空间结构——而非能带色散——决定，从而代表了一种在以往强场理论中未被系统认识的量子几何效应。
+
+值得注意的是，BCO 和 QMO 代表了量子几何张量的两个分量（贝里曲率与量子度规）分别在强场动力学中的效应。前者可以在半经典框架内理解，后者则本质上需要量子处理。这种"几何量的虚部 vs 实部"的对比构成了一条贯穿本文弱场和强场研究的统一线索：在弱场中，贝里曲率偶极子和量子度规偶极子分别驱动不同的非线性霍尔机制（第三章）；在强场中，贝里曲率振荡和量子度规振荡分别产生不同的漂移与振荡信号（第四章）。
+
+本文第四章将建立一个统一的递推框架来系统地描述 BCO 和 QMO，并通过多个模型体系验证 QMO 的存在条件和实验特征。
+
+
+\section{基于第一性原理的数值方法}
+\label{sec:first-principles}
+
+\subsection{密度泛函理论基础}
+
+密度泛函理论（DFT）是研究实际材料基态电子结构的核心方法。其理论基础由 Hohenberg-Kohn 定理奠定：基态能量是电子密度 $n(\bm{r})$ 的唯一泛函，基态密度最小化该泛函。然而，Hohenberg-Kohn 定理是存在性定理，并不给出泛函的具体形式。Kohn 和 Sham 通过引入一组辅助的单粒子轨道——Kohn-Sham 轨道——将多体问题转化为在有效势中运动的单粒子方程组：
+\begin{equation}
+  \left[ -\frac{\hbar^2}{2m}\nabla^2 + V_\mathrm{eff}[n](\bm{r}) \right] \psi_i(\bm{r}) = \varepsilon_i \, \psi_i(\bm{r}),
+\end{equation}
+其中有效势包含外场、Hartree 势和交换关联势三部分。该方程组需要自洽求解——密度由轨道构造，势由密度决定——迭代至收敛。
+
+实际计算中，交换关联泛函的近似选择是决定精度的关键。本文使用广义梯度近似下的 PBE 交换关联泛函\cite{perdew_generalized_1996}，它在大量材料中对晶格参数和能带结构给出了良好的平衡。离子势通过投影缀加波（PAW）方法处理\cite{PAW_method,blochl_projector_1994}，该方法在保持全电子精度的同时避免了显式处理核心电子的计算开销。本文的第一性原理计算通过 VASP 实现\cite{vasp1,vasp2}。
+
+需要指出，DFT 在标准近似下已知的局限性——如带隙低估、强关联体系的处理困难——在本文涉及的材料中并不构成主要障碍。对于需要更精确带隙的情形（如 ZrTe$_5$ 的拓扑性质判断），可以通过 HSE 混合泛函\cite{heyd2003}进行修正。
+
+\subsection{Wannier 化与紧束缚模型}
+
+第一性原理计算给出的布洛赫态定义在平面波基底上，直接用于后续的拓扑和输运计算存在两个困难：第一，$\kk$ 网格密度受限于计算成本；第二，布洛赫态之间的规范自由度使得导数和相干量的计算容易受数值噪声影响。Wannier 化提供了一条优雅的解决路径。
+
+最大局域化 Wannier 函数（MLWF）的构造由 Marzari 和 Vanderbilt 于 1997 年系统建立\cite{wannier1}，其核心思想是：通过在占据态子空间中做幺正混合（酉规范变换），使得所构造的 Wannier 函数在实空间中尽可能局域化。Souza、Marzari 和 Vanderbilt 随后将该方法推广到纠缠（entangled）能带的情形\cite{wannier2}，使其可以应用于金属和半金属体系。通过 Wannier90 代码\cite{pizzi2020wannier90}，可以高效地从第一性原理输出构造 MLWF 并输出相应的紧束缚哈密顿量。
+
+Wannier 插值的原理十分自然：紧束缚哈密顿量 $H_{mn}(\bm{R})$ 在实空间中是短程的（因为 Wannier 函数局域），所以只需要有限数量的实空间格矢 $\bm{R}$；而在动量空间中，任意 $\kk$ 点的哈密顿量可以通过傅里叶变换
+\begin{equation}
+  H_{mn}(\kk) = \sum_{\bm{R}} e^{i\kk\cdot\bm{R}} H_{mn}(\bm{R})
+\end{equation}
+以极低的计算成本获得。这使得在极密的 $\kk$ 网格上计算能带、贝里曲率、量子度规等量成为可能，而无需回到代价高昂的平面波自洽计算。
+
+\subsection{拓扑诊断与输运响应的计算流程}
+\label{subsec:workflow}
+
+本文的数值计算遵循"第一性原理基态 $\rightarrow$ Wannier 化紧束缚 $\rightarrow$ 拓扑/几何/响应"的标准链条。具体而言：
+
+\begin{enumerate}
+  \item \textbf{第一性原理计算}：使用 VASP\cite{vasp1,vasp2} 进行结构优化和自洽场计算，获得基态电子密度和 Kohn-Sham 能带。关键参数包括截断能、$\kk$ 点网格密度、自旋轨道耦合的处理方式等，视具体材料而定。
+  \item \textbf{Wannier 化}：使用 Wannier90\cite{pizzi2020wannier90} 构造 MLWF 并输出紧束缚哈密顿量。初始投影轨道的选择需要兼顾物理直觉和数值稳定性——通常选取与目标能窗内的主要轨道特征匹配的原子轨道作为初始猜测。
+  \item \textbf{拓扑与几何计算}：使用 WannierTools\cite{WU2018405} 计算威尔逊环谱、表面态与拓扑不变量；使用 WannierBerri\cite{wannierberri} 计算贝里曲率分布和输运响应系数。对于本文第二章涉及的嵌套威尔逊环计算，使用了基于自编代码的实现，其核心在于离散化威尔逊线的乘积、重叠矩阵的幺正化处理以及 Wannier 扇区的排序跟踪。
+\end{enumerate}
+
+通过上述链条，本文在第二章中实现了面向真实材料对称性的高阶拓扑指标计算；在第三章中实现了弱场非线性霍尔信号与量子几何分布的第一性原理评估；并为第四章的有效模型分析提供了参数输入和数值验证的基础。
+
+
+\section{本论文的主要内容与结构安排}
+\label{sec:outline}
+
+本论文以量子几何为统一主线，研究其在拓扑材料非线性输运中的多层面效应。从"量子几何如何定义拓扑"到"量子几何如何进入弱场响应"再到"量子几何如何在强场中产生新信号"，三部分工作构成一条由浅入深、由平衡态到远离平衡态的逻辑链条。以下概述各章内容。
+
+\textbf{第二章：广义嵌套威尔逊环与高阶拓扑诊断。}
+本章发展广义嵌套威尔逊环理论，将传统的嵌套贝里相形式主义推广到一般空间群对称性约束下。核心贡献包括：（1）提出四阶嵌套贝里相 $\theta^{(4)}$ 作为适用于非共形对称性的高阶拓扑不变量；（2）系统分析 80 个层群中嵌套威尔逊环的对称性约束与量子化条件；（3）将该理论应用于狄拉克半金属中高阶费米弧（HOFA）的拓扑诊断，以 NaCuSe 为原型材料，完成了从体拓扑指标到铰链态的完整对应。这一工作的方法论意义在于为高阶拓扑分析提供了一套与材料对称性兼容的可计算工具。
+
+\textbf{第三章：弱场量子几何非线性霍尔效应。}
+本章在弱场框架下研究两种不同机制驱动的二阶非线性霍尔响应。第一部分以二维反铁磁单层 MnS 为例，展示量子度规相关的本征非线性霍尔（INH）效应如何随奈尔矢量取向而变化，并论证其作为反铁磁序参量电学读出的可行性——这为二维反铁磁自旋电子学提供了一种新的检测方案。第二部分以 ZrTe$_5$ 薄膜为例，展示层间滑移导致的自发反演对称性破缺如何激活贝里曲率偶极子（BCD）驱动的非线性霍尔效应，从而为利用非线性输运探测薄膜局域结构提供新途径。两部分工作共同展示了量子几何张量的不同分量如何在弱场极限下映射为可测的电学信号。
+
+\textbf{第四章：强场量子度规振荡。}
+本章跳出弱场微扰展开的框架，在强电场驱动的量子动力学中揭示量子度规诱导的新型振荡机制——量子度规振荡（QMO）。核心贡献包括：（1）建立基于密度矩阵的统一递推框架，系统地将电流分解为布洛赫振荡、齐纳隧穿、贝里曲率振荡和量子度规振荡四个贡献；（2）在近平带条件下推导 QMO 的解析标度关系，揭示其与量子度规空间结构的直接联系；（3）通过 GaAs 两带模型和蜂窝晶格模型等数值验证，展示 QMO 的特征频谱和漂移标度。这一发现将量子度规的物理效应从近平衡的响应系数扩展到了远离平衡的动力学信号。
+
+\textbf{第五章：总结与展望。}
+总结全文主要结论，讨论各方向的开放问题与未来研究方向。
+
+综合来看，本论文的三部分工作分别处于拓扑诊断、弱场响应和强场动力学三个层面，但它们由量子几何这根统一主线串联：第二章关注量子几何如何编码拓扑信息，第三章关注量子几何如何产生弱场电学信号，第四章关注量子几何如何在强驱动下诱导新的动力学效应。这一"几何对象—外场耦合—可观测信号"的组织方式，为理解拓扑材料中量子几何的多层面效应提供了一个统一的视角。

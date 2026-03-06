@@ -17,6 +17,13 @@ Context management (auto-compact at ~175K, you can't trigger it manually):
 Sub-agent task briefs MUST include:
 7. **Progress file** — require sub-agent to write `scratch/[task-name]-progress.md` after each step (done/current/next), so another agent can pick up if interrupted
 8. **Output rules** — write results to file + short announce
+9. **File size rules** — copy the Hard Rules for file access into every brief:
+   - Check size FIRST (`wc -l` / `ls -lh`) before ANY read/cat
+   - \> 100 lines → use offset/limit, only read what you need
+   - \> 500 lines → NEVER read fully, use grep/head/tail to extract specific content on demand
+
+Sub-agent management:
+9. **Check all sub-agents** (`subagents list`) before starting any new phase or major task — make sure nothing is forgotten or stuck
 
 Write lessons (`memory/lessons/`) when:
 7. **Hui corrects you** → what you did wrong, why, what to do instead
@@ -145,6 +152,10 @@ Skills provide your tools. When you need one, check its `SKILL.md`. Keep local n
 - **Discord/WhatsApp:** No markdown tables! Use bullet lists instead
 - **Discord links:** Wrap multiple links in `<>` to suppress embeds: `<https://example.com>`
 - **WhatsApp:** No headers — use **bold** or CAPS for emphasis
+
+## 📨 On Receiving a User Message
+
+Whenever you receive a message from the user (whether a task or casual chat), immediately set `idleNotified` to `false` in `memory/heartbeat-state.json`. This ensures the next heartbeat sends a 💓 idle confirmation, then goes silent again.
 
 ## 💓 Heartbeats - Be Proactive!
 

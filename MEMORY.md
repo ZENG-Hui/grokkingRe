@@ -105,3 +105,18 @@ _Last updated: 2026-03-05_
 - **FEEDBACK-LOG.md** — 跨 agent 的修正集中层。等有多个常驻 agent 协同时建立
 - **shared-context/** — 多 agent 共享知识层。当前 sub-agent 是临时的，暂不需要
 - **影视角色设定法** — 给 sub-agent 分配角色性格以获得更一致的输出风格。可以在下次复杂 sub-agent 任务时试验
+
+## Heartbeat 执行问题（2026-03-06 发现）
+
+- Heartbeat 回合是独立 context（不在主对话中），我在那里的行为可能不遵循 HEARTBEAT.md 指令
+- 工程师证实：我多次只做 session_status 就回 HEARTBEAT_OK，跳过 subagents list 和 message
+- 修复尝试：HEARTBEAT.md 改为强制顺序步骤 + 禁止提前 HEARTBEAT_OK
+- 效果不稳定——有时正确，有时仍跳过或重复发送
+- **根本问题：文字指令对 heartbeat 轻量 context 的约束力有限，可能需要系统级方案**
+- SOUL.md 加了诚实承诺：不知道就说不知道，不编造解释
+
+## 论文修改里程碑（2026-03-06）
+
+- 从 ~120 页推进到 152 页
+- 所有 5 个优先级完成
+- 剩余小项：1 undefined table ref, 3 missing bib entries, 致谢, chap01 可能加深
