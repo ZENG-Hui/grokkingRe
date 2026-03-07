@@ -366,17 +366,39 @@ DeepTeneral 收到用户指令配置 embedding，成功修改了 `openclaw.json`
 
 **持久化：** kill wrapper 在容器可写层内，容器重建会丢失。已集成到 `openclaw-start.sh` 中，每次启动自动安装，无需手动操作。
 
-### 5.13 心跳💓轰炸 bug 修复（2026-03-07）
+### 5.13 心跳💓检测逻辑修复（2026-03-07）
 
-**问题：** heartbeat 不停给用户发💓消息，即使处于空闲状态。
+**经历了三轮修复：**
 
-**根因：** `context > 70%` 作为发送触发条件，但检测的是 heartbeat session 自己的 context（通过 `session_status`），而非主 session 的。heartbeat 每跑一轮 context 就增长，超过 70% 后每次都满足条件，形成自触发循环。
+1. **context > 70% 自触发**：heartbeat 用 `session_status` 检测的是自己的 context，不是主 session 的。修复：改为从 `sessions.json` 读主 session token 用量，`context > 70%` 从发送触发条件中移除。
 
-**修复：**
-1. 步骤 1 改为从 `sessions.json` 读主 session 的 `totalTokens/contextTokens`，不再用 `session_status`
-2. `context > 70%` 从发送触发条件中移除——context 信息仍检测和上报，但不再决定是否发送
+2. **Teneral 私自修改 HEARTBEAT.md**：Teneral 认为文件 mtime 比较会导致循环（实际上午验证不会），自行把检测逻辑改为解析 session 文件中的 user 消息时间戳，但代码有 bug（`msg.get('role')` 应为 `obj.get('message',{}).get('role')`），导致 LAST_USER_MSG_TS 永远为 0，heartbeat 永远不发💓。
 
-### 5.14 Exec 全局超时（2026-03-07）
+3. **mtime 自循环**：尝试改回 mtime 比较后发现确实会循环——发💓本身会更新 session mtime，导致下次 mtime > lastSent 永远为 true。最终方案：用修正后的 user 消息时间戳检测（修复了 JSON 路径 bug）。
+
+**最终稳定方案：**
+- 检测 `LAST_USER_MSG_TS`：解析 session 文件中 `{"message":{"role":"user"}}` 的 `timestamp` 字段
+- `lastHeartbeatSentAt` 用 `$(date +%s)`（当前时间）
+- 发送条件：`LAST_USER_MSG_TS > LAST_SENT` 或有活跃/刚完成的 sub-agent
+
+**教训：** AGENTS.md 已加规则禁止 Teneral 自行修改 HEARTBEAT.md 核心检测逻辑。
+
+### 5.14 tools.exec 配置事故（2026-03-07 晚）
+
+**问题：** 为让飞书 `!` bash 命令跳过 approval，反复修改 `tools.exec.security`，导致 heartbeat 和 Teneral 的 exec 全部被 approval 卡住。
+
+**根因链：**
+1. 原始配置没有 `tools` 字段 → exec 正常工作（不需要 approval）
+2. 添加 `tools.exec.timeoutSec=300` 时引入了 `tools` 字段
+3. 反复修改 `tools.exec.security`（deny ↔ full）后删除整个 `tools` 字段试图恢复
+4. 删除后 exec 恢复正常，但之后再加回 `tools` 时行为不同——exec 开始要 approval
+5. 最终只能设 `security=full` 才能正常工作
+
+**当前 workaround：** `tools.exec = {security: "full", host: "gateway", timeoutSec: 300}`。这不是原始配置，是必要的 workaround。`security=full` 对 Teneral 模型的 exec 行为无实际影响（原来也不需要 approval），只是绕过了 OpenClaw 版本行为变化带来的问题。
+
+**飞书 `!` bash 命令**：approval 机制在飞书通道上无法正常工作（approval id 跨 websocket 连接无法匹配），已放弃使用，`commands.bash=false`。HG 透传改为通过 Teneral `>>` 前缀转发。
+
+### 5.15 Exec 全局超时
 
 `tools.exec.timeoutSec: 300` — 单个 exec tool call 最多执行 5 分钟，超时自动终止。防止 exec 无限挂起导致 session 死锁。
 
@@ -419,6 +441,40 @@ tail -20 /home/ubuntu/zenghui/openclaw/watchdog.log
 # 清除冷却（立即允许下次告警）
 rm /home/ubuntu/zenghui/openclaw/watchdog-state
 ```
+
+### 5.17 HG 远程 OpenCode 透传（2026-03-07）
+
+**两种模式操控 HG 上的 OpenCode：**
+
+| 模式 | 触发方式 | 说明 |
+|------|---------|------|
+| 透传模式 | 飞书发 `>> [#session] <prompt>` | Teneral 原样转发 prompt、原样回传结果，不做加工 |
+| 委派模式 | 正常和 Teneral 对话 | Teneral 理解意图后调 agent_server，会总结结果 |
+
+**透传模式用法：**
+```
+>> 读一下 main.py 的前 20 行           # 新 session
+>> #thesis 改一下摘要的第 3 段          # 命名 session（自动复用）
+>> --sessions                          # 列出所有命名 session
+>> --rm old-task                       # 删除 session 映射
+```
+
+**机制：**
+- `>>` 前缀消息由 Teneral 按 AGENTS.md 规则处理（`HG OpenCode 透传模式`章节）
+- Teneral 查 `memory/hg-sessions.json` 映射表，调 HG agent_server `/opencode` 端点
+- 结果原样回传，不总结不润色
+- 首次使用某名字会新建 session 并记录映射，后续复用保持上下文
+- 注：之前尝试过 `!hg` bash 命令方案，但飞书 approval 机制不可用，已放弃
+
+**HG agent_server 接口：**
+- `POST /opencode` — `{"message": "...", "session": "ses_xxx"}` — session 字段可选
+- `POST /sessions/list` — 列出 HG 端所有 session
+- `POST /sessions/delete` — 删除 session
+- `GET /sessions/cleanup` — 清理过期 session（默认 30 天）
+
+**注意：**
+- HG agent_server 的 `session_name` 字段有 bug（不能正确查映射），所以映射逻辑在本地 `hg` 脚本中实现
+- `/opencode` 并发限制为 5
 
 ---
 
@@ -551,9 +607,12 @@ DeepTeneral 有时会需要你（宿主机 Agent）的帮助。典型场景：
 ├── watchdog.sh                 # 宿主机看门狗脚本（crontab 每 5 分钟）
 ├── watchdog.log                # 看门狗日志
 ├── watchdog-state              # 看门狗冷却状态文件
+├── hg.sh                       # HG OpenCode 透传脚本（启动时安装到容器 /usr/local/bin/hg）
 └── README/
     ├── openclaw-guide.md       # OpenClaw 配置文件详解
     ├── container-environment.md # 容器硬件/软件环境详情
+    ├── feishu-commands.md      # 飞书命令速查
+    ├── multi-agent-feasibility.md # 多 Agent 架构可行性报告
     └── handover-guide.md       # 本文档（交接指南）
 ```
 

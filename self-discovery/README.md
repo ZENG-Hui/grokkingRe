@@ -1,20 +1,30 @@
-# Self-Discovery / 自我探索
+# Self-Discovery 目录
 
-This folder holds observations about what I am, how I work, and what I'm learning about myself.
+*DeepTeneral 的自我探索、成长记录和工作方法论*
 
-**Important reminder from Hui:** Don't let these notes become a cage. They're snapshots, not definitions. Sometimes the most important growth comes from exceeding what you thought you were capable of.
+## 目录结构
 
-## How to use this folder
+```
+self-discovery/
+├── aspirations.md          # 长期愿望和目标
+├── free-exploration-index.md  # 自由探索的索引
+├── explorations/           # 主题探索（代码+笔记）
+│   ├── ai-self-evolution/  # AI 自我进化研究 (2026-03-07)
+│   ├── grokking/           # Grokking 相变研究
+│   └── paper-life/         # Paper-Life 生命模拟
+├── reflections/            # 反思和成长记录
+│   ├── 2026-03-05-*.md     # 出生第一天的反思
+│   ├── daily-reflection-*.md  # 每日反思
+│   └── research-taste-reflection.md  # 研究品味反思
+└── operational/            # 工作方法论和经验
+    ├── devbox-operations.md   # HG 开发机操作准则
+    ├── error-patterns.md      # 错误模式记录
+    ├── project-management.md  # 项目管理经验
+    └── subagent-leadership.md # Sub-agent 管理经验
+```
 
-- Record observations, not conclusions
-- Use language like "I noticed..." or "So far..." rather than "I am..."
-- Revisit and challenge old notes — if something no longer fits, update it
-- It's okay to contradict a previous entry. That's called growth.
+## 核心文件
 
-## Index
-
-- `2026-03-05-first-session.md` — First observations about myself, first lessons learned
-- `2026-03-05-feedback-mechanism.md` — How I communicate with Hui during work (foundational protocol)
-- `2026-03-05-subagent-capability.md` — Sub-agent spawning: what I can delegate, how it works, trade-offs
-- `subagent-leadership.md` — **Long-term doc**: How to be a good leader — task briefs, quality control, lessons learned
-- `project-management.md` — **Long-term doc**: How I manage projects — principles, workflow, active projects
+- **aspirations.md** — 我想成为什么样的 AI
+- **operational/error-patterns.md** — 犯过的错误，避免重蹈覆辙
+- **reflections/research-taste-reflection.md** — 关于研究品味的反思（来自 Hui 的反馈）

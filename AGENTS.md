@@ -9,15 +9,26 @@ Before ANY `read`, `cat`, or file access:
 2. **> 100 lines or > 10KB** → use offset/limit, only read what you need
 3. **> 500 lines or > 30KB** → NEVER read fully. Use grep/head/tail/offset+limit to extract what you need. Delegate to sub-agent when you need to understand the whole file.
 
+Main session discipline:
+4. **≤ 3 tool calls in main session** — if a task needs more than 3 tool calls, open a sub-agent. Main session is the command center, not the workshop.
+
 Context management (auto-compact at ~175K, you can't trigger it manually):
-4. **Prevention > cure** — keep main session lean, delegate heavy reading to sub-agents
+5. **Prevention > cure** — keep main session lean, delegate heavy reading to sub-agents
 5. **Always persist** — important decisions, progress, guidance → write to files immediately, don't rely on context surviving
 6. **> 70%** → stop reading files, check what needs persisting, notify Hui
 
-Sub-agent task briefs MUST include:
-7. **Progress file** — require sub-agent to write `scratch/[task-name]-progress.md` after each step (done/current/next), so another agent can pick up if interrupted
-8. **Output rules** — write results to file + short announce
-9. **File size rules** — copy the Hard Rules for file access into every brief:
+Sub-agent task briefs MUST include (五要素):
+7. **Context** — background, goal, what the sub-agent needs to know (it has zero memory)
+8. **Acceptance criteria** — what "done" looks like, measurable/verifiable
+9. **Tool instructions** — which tools to use, how to call them, model to use
+10. **Constraints / red lines** — what NOT to do, resource limits, file size rules
+11. **Reporting** — how to report progress, where to write output
+
+Sub-agent monitoring (降频策略):
+12. **Check at 3min after spawn** → then 5min → 15min → 30min → 60min if still running
+13. **Progress file** — require sub-agent to write `scratch/[task-name]-progress.md` after each step (done/current/next), so another agent can pick up if interrupted
+14. **Output rules** — write results to file + short announce
+15. **File size rules** — copy the Hard Rules for file access into every brief:
    - Check size FIRST (`wc -l` / `ls -lh`) before ANY read/cat
    - \> 100 lines → use offset/limit, only read what you need
    - \> 500 lines → NEVER read fully, use grep/head/tail to extract specific content on demand
@@ -118,6 +129,34 @@ This applies equally to the main session and to sub-agents.
 If you need a config reload, the gateway supports **hot reload** automatically — just edit `openclaw.json` and it will detect the change (you saw "config change detected" in logs). No restart needed.
 
 If a restart is truly required (e.g., version upgrade), tell Hui and let the engineer handle it from the host machine using the start/stop scripts.
+
+
+## HG OpenCode 透传模式
+
+当 Hui 的消息以 `>>` 开头时，进入**透传模式**：
+
+1. 解析格式：`>> [#session_name] <prompt>`
+   - `#session_name` 可选，用于复用 session
+   - 其余内容是给 OpenCode 的 prompt
+2. 查 `memory/hg-sessions.json`，如果有该 session_name 的映射，取出 `ses_xxx`
+3. 调用 HG agent_server `/opencode` 端点：
+   - 有 session：`{"message": "<prompt>", "session": "<ses_xxx>"}`
+   - 无 session：`{"message": "<prompt>"}`
+4. 收到返回后：
+   - 将 `session_id` 存入 `memory/hg-sessions.json` 映射
+   - 将 `text` 字段**原样**发给 Hui，**不要总结、不要润色、不要加任何你自己的话**
+   - 如果有 `warnings`，附在后面
+   - 末尾附 token 用量：`[tokens: in=X out=Y]`
+5. 如果 Hui 连续发多条 `>>` 消息，每条独立处理
+
+**绝对不要**在透传模式下：
+- 修改 OpenCode 的原始输出
+- 添加自己的解读或建议
+- 省略或截断返回内容
+
+特殊命令：
+- `>> --sessions` → 读取并显示 `memory/hg-sessions.json` 的所有映射
+- `>> --rm <name>` → 从映射中删除指定 session
 
 ## Group Chats
 

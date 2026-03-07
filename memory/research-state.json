@@ -1,0 +1,122 @@
+{
+  "seen_arxiv": [
+    "http://arxiv.org/abs/2603.05473v1",
+    "http://arxiv.org/abs/2603.05460v1",
+    "http://arxiv.org/abs/2603.05502v1",
+    "http://arxiv.org/abs/2603.05496v1",
+    "http://arxiv.org/abs/2603.05471v1",
+    "http://arxiv.org/abs/2603.05451v1",
+    "http://arxiv.org/abs/2603.05507v1",
+    "http://arxiv.org/abs/2603.05228v1",
+    "http://arxiv.org/abs/2603.05495v1",
+    "http://arxiv.org/abs/2603.05485v1",
+    "http://arxiv.org/abs/2603.05504v1",
+    "http://arxiv.org/abs/2603.05486v1",
+    "http://arxiv.org/abs/2603.05117v1",
+    "http://arxiv.org/abs/2603.05506v1",
+    "http://arxiv.org/abs/2603.05503v1",
+    "http://arxiv.org/abs/2603.05500v1",
+    "http://arxiv.org/abs/2603.05505v1",
+    "http://arxiv.org/abs/2603.05487v1",
+    "http://arxiv.org/abs/2603.05480v1",
+    "http://arxiv.org/abs/2603.05499v1",
+    "http://arxiv.org/abs/2603.05494v1",
+    "http://arxiv.org/abs/2603.05225v1"
+  ],
+  "seen_github_repos": {
+    "openai": [
+      "plugins",
+      "symphony",
+      "GABRIEL",
+      "skills",
+      "apps-sdk-ui",
+      "openai-knowledge-retrieval",
+      "openai-mcpkit",
+      "circuit_sparsity",
+      "gpt-oss-safeguard",
+      "openai-sora-sample-app"
+    ],
+    "deepseek-ai": [
+      "DeepSeek-OCR-2",
+      "Engram",
+      "DeepSeek-Math-V2",
+      "LPLB",
+      "DeepSeek-OCR",
+      "DeepSeek-V3.2-Exp",
+      "DeepSeek-Prover-V2",
+      "3FS",
+      "DualPipe",
+      "EPLB"
+    ],
+    "bytedance-seed": [
+      "Seed2.0",
+      "Stable-DiffCoder",
+      "SpatialTree",
+      "DATAMASK",
+      "AInsteinBench",
+      "Seed-1.8",
+      "cryofm",
+      "SimFlow",
+      "entangle",
+      "DAComp"
+    ]
+  },
+  "seen_research_links": {
+    "Anthropic": [
+      "/research/project-vend-2",
+      "/research/introspection",
+      "/research/tracing-thoughts-language-model",
+      "/research/constitutional-classifiers",
+      "/research/alignment-faking",
+      "/research/labor-market-impacts",
+      "/research/deprecation-updates-opus-3",
+      "/research/persona-selection-model",
+      "/research/AI-fluency-index",
+      "/research/measuring-agent-autonomy",
+      "/research/india-brief-economic-index",
+      "/research/AI-assistance-coding-skills",
+      "/research/disempowerment-patterns",
+      "/research/assistant-axis"
+    ],
+    "jina_Moonshot": [
+      "Kimi K2.5 --------- Visual Agentic Intelligence",
+      "Kimi K2 Thinking",
+      "Kimi-K2-Instruct-0905",
+      "Kimi K2",
+      "Kimi-Researcher",
+      "Kimi-Dev",
+      "Kimi-Audio",
+      "Kimina-Prover Preview",
+      "Kimi-VL",
+      "Muon is Scalable for LLM Training",
+      "MoBA: Mixture of Block Attention for Long-Context LLMs",
+      "Kimi k1.5: Scaling Reinforcement Learning with LLMs",
+      "Mooncake: A KVCache-centric Disaggregated Architecture for LLM Serving"
+    ],
+    "jina_Seed": [
+      "Seed2.0 Released",
+      "Seedream 5.0 Lite Released",
+      "Seed1.8 Released",
+      "Seedance 1.5 pro Released",
+      "Seed Prover 1.5 Released",
+      "Seed2.0 Released",
+      "Seedream 5.0 Lite Released",
+      "Seed1.8 Released",
+      "Seedance 1.5 pro Released",
+      "Seed Prover 1.5 Released"
+    ],
+    "mcp_search": [
+      "https://www.linkedin.com/posts/ben-williamson-7a501b329_anyone-else-worried-about-openai-suddenly-activity-7435739221631574017-GvLQ",
+      "https://www.cnbc.com/2025/11/06/alibaba-backed-moonshot-releases-new-ai-model-kimi-k2-thinking.html",
+      "https://finance.yahoo.com/news/openai-releases-financial-services-tools-190124457.html",
+      "https://openai.com/open-models/",
+      "https://www.thehindubusinessline.com/info-tech/openai-releases-ai-agent-security-tool-for-research-preview/article70714772.ece",
+      "https://www.bloomberg.com/news/articles/2026-03-06/openai-releases-ai-agent-security-tool-for-research-preview",
+      "https://openai.com/index/codex-security-now-in-research-preview/",
+      "https://en.wikipedia.org/wiki/Kimi_(chatbot)",
+      "https://dev.to/czmilo/kimi-k25-in-2026-the-ultimate-guide-to-open-source-visual-agentic-intelligence-18od",
+      "https://techcrunch.com/2026/01/27/chinas-moonshot-releases-a-new-open-source-model-kimi-k2-5-and-a-coding-agent/",
+      "https://www.scmp.com/tech/tech-trends/article/3341580/moonshots-newest-release-narrows-us-china-ai-model-development-gap-analysts"
+    ]
+  }
+}

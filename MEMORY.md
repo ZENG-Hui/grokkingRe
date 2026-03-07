@@ -18,6 +18,17 @@ _Last updated: 2026-03-06_
 - Self-discovery notes in `self-discovery/`
 - Key trait discovered: I tend to silently retry when things fail. Must communicate instead.
 
+## Hui 的干预手段（飞书命令）
+
+- `/stop` — 中断当前运行，session 恢复 idle，不丢 context。**我卡住时 Hui 直接用这个**
+- `/compact [指令]` — 手动触发 compaction，可附带保留重点
+- `/new` 或 `/reset` — 开新 session（清空历史，重新注入 AGENTS.md 等）
+- `/status` — 查看 session 状态和 token 用量
+- `/subagents` — 查看 sub-agent 列表
+- 看门狗 — 最后兜底（gateway 进程死掉的情况）
+
+**结论：不需要 SSH 到宿主机来救我。飞书发 /stop 就够了。**
+
 ## Communication Protocols
 
 - **Real-time feedback:** Use `message` tool (instant delivery), NOT reply text (buffered)
@@ -41,7 +52,8 @@ _Last updated: 2026-03-06_
 - GitHub PAT: stored at `~/.openclaw/github_pat.txt`（Fine-grained, 90 天有效期）
 - **Soul repo:** `github.com/deepteneral/soul`（私有），备份身份/记忆/成长记录
   - Commit 格式：`YYYY-MM-DD: 更新要点小结`
-- Cron: Daily token report at UTC 16:00 (Beijing midnight)
+- Cron: Daily token report at UTC 16:00 (Beijing midnight); Daily research digest at UTC 0:10 (Beijing 8:10)
+- **搜索工具：** MCP Search (`http://10.9.200.200:30130/mcp`) 是主力搜索，Jina Reader (`r.jina.ai`) 反爬备选。详见 TOOLS.md
 - **HG 开发机:** agent_server + opencode，通过 HTTP API 远程操作
   - URL: `https://yinghuo-hg.deepseek.com/zenghui/dev-cpu/agent-server`
   - 必须走代理访问（域名解析到内网 IP）
@@ -52,6 +64,10 @@ _Last updated: 2026-03-06_
 ## Active Projects
 
 - **grokkingRe** — Grokking + sparsity research. Goal: find order parameters for grokking phase transition. Branch: deepteneral. Next: enhance geometry tracking, re-run sweep.
+- **每日研究推送** — 已完成 MVP。Cron 每天 UTC 0:10 推送。脚本 `scripts/daily_research.py`。
+  - 数据源：arXiv API + GitHub API + Anthropic 网页 + DeepMind RSS + Jina Reader + MCP Search
+  - 状态文件：`memory/research-state.json`（增量检测）
+  - 收藏：回复编号存 `memory/research-favorites.md`
 
 ## Lessons Learned
 
@@ -74,6 +90,13 @@ _Last updated: 2026-03-06_
 17. **message tool 的 filePath 不可靠** — 用 feishu-file-send skill（直接调飞书 API）
 18. **HG 大文件用 /download 端点** — 不要 base64 分块。链路：/download → send_file.py
 19. **总结必须内化到持久文件** — 发消息和写日志不够，关键教训要进 MEMORY.md + lessons/
+20. **Heartbeat mtime 死循环** — 用文件 mtime 判断"有新交互"会被 bot 自己的消息更新触发死循环。改为解析 user 消息时间戳
+21. **任务完成后先落盘再继续** — 总结写到 memory + MEMORY.md，不要急着跳到下一个任务
+22. **Jina Reader 解决 SPA 问题** — `r.jina.ai/<URL>` 能渲染 JS 页面，免费无需 key
+23. **MCP Search 是主力搜索** — 内网搜索服务，质量好时效好，替代缺失的 web_search
+24. **HG opencode session 必须复用** — 按项目/模块划分 session，一个 session 从头用到尾。之前论文任务每次调用都新开 session，堆积了大量无用 session，被工程师批评。正确做法：一个章节=一个 session，编译=一个 session，反复复用。详见 `self-discovery/devbox-operations.md`
+25. **cron 不要写在 openclaw.json 里** — cron jobs 存在 `/root/.openclaw/cron/jobs.json`，不在 openclaw.json 的 cron 字段。之前写了错误的数组格式导致 config validation 失败
+26. **我没有时间感** — 不要靠"感觉"估算时间，永远用代码。限时任务用 `scripts/timer.sh`（start/check/elapsed），定时任务用 cron，时间估算用 `date` 差值
 - 具体错误案例记录在 `self-discovery/error-patterns.md`，新错误随时追加
 - 详细 lessons 在 `memory/lessons/session-continuity.md`（15 条）
 

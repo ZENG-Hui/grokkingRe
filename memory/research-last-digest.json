@@ -1,0 +1,434 @@
+{
+  "1": {
+    "title": "Towards 3D Scene Understanding of Gas Plumes in LWIR Hyperspectral Images Using Neural Radiance Fields",
+    "link": "http://arxiv.org/abs/2603.05473v1",
+    "authors": [
+      "Scout Jarman",
+      "Zigfried Hampel-Arias",
+      "Adra Carr"
+    ]
+  },
+  "2": {
+    "title": "The Inverse Micromechanics Problem given Dielectric Constants for Isotropic Composites with Spherical Inclusions",
+    "link": "http://arxiv.org/abs/2603.05460v1",
+    "authors": [
+      "Athindra Pavan",
+      "Swaroop Darbha",
+      "Bjorn Birgisson"
+    ]
+  },
+  "3": {
+    "title": "Universal quantum computation with group surface codes",
+    "link": "http://arxiv.org/abs/2603.05502v1",
+    "authors": [
+      "Naren Manjunath",
+      "Vieri Mattei",
+      "Apoorv Tiwari"
+    ]
+  },
+  "4": {
+    "title": "Mirror codes: High-threshold quantum LDPC codes beyond the CSS regime",
+    "link": "http://arxiv.org/abs/2603.05496v1",
+    "authors": [
+      "Andrey Boris Khesin",
+      "Jonathan Z. Lu"
+    ]
+  },
+  "5": {
+    "title": "Leveraging LLM Parametric Knowledge for Fact Checking without Retrieval",
+    "link": "http://arxiv.org/abs/2603.05471v1",
+    "authors": [
+      "Artem Vazhentsev",
+      "Maria Marina",
+      "Daniil Moskovskiy"
+    ]
+  },
+  "6": {
+    "title": "FlashAttention-4: Algorithm and Kernel Pipelining Co-Design for Asymmetric Hardware Scaling",
+    "link": "http://arxiv.org/abs/2603.05451v1",
+    "authors": [
+      "Ted Zadouri",
+      "Markus Hoehnerbach",
+      "Jay Shah"
+    ]
+  },
+  "7": {
+    "title": "Transformer-Based Inpainting for Real-Time 3D Streaming in Sparse Multi-Camera Setups",
+    "link": "http://arxiv.org/abs/2603.05507v1",
+    "authors": [
+      "Leif Van Holland",
+      "Domenic Zingsheim",
+      "Mana Takhsha"
+    ]
+  },
+  "8": {
+    "title": "The Geometric Inductive Bias of Grokking: Bypassing Phase Transitions via Architectural Topology",
+    "link": "http://arxiv.org/abs/2603.05228v1",
+    "authors": [
+      "Alper Yıldırım"
+    ]
+  },
+  "9": {
+    "title": "Cheap Thrills: Effective Amortized Optimization Using Inexpensive Labels",
+    "link": "http://arxiv.org/abs/2603.05495v1",
+    "authors": [
+      "Khai Nguyen",
+      "Petros Ellinas",
+      "Anvita Bhagavathula"
+    ]
+  },
+  "10": {
+    "title": "Towards Provably Unbiased LLM Judges via Bias-Bounded Evaluation",
+    "link": "http://arxiv.org/abs/2603.05485v1",
+    "authors": [
+      "Benjamin Feuer",
+      "Lucas Rosenblatt",
+      "Oussama Elachqar"
+    ]
+  },
+  "11": {
+    "title": "RoboPocket: Improve Robot Policies Instantly with Your Phone",
+    "link": "http://arxiv.org/abs/2603.05504v1",
+    "authors": [
+      "Junjie Fang",
+      "Wendi Chen",
+      "Han Xue"
+    ]
+  },
+  "12": {
+    "title": "Improved Decoding of Quantum Tanner Codes Using Generalized Check Nodes",
+    "link": "http://arxiv.org/abs/2603.05486v1",
+    "authors": [
+      "Olai Å. Mostad",
+      "Eirik Rosnes",
+      "Hsuan-Yin Lin"
+    ]
+  },
+  "13": {
+    "title": "SeedPolicy: Horizon Scaling via Self-Evolving Diffusion Policy for Robot Manipulation",
+    "link": "http://arxiv.org/abs/2603.05117v1",
+    "authors": [
+      "Youqiang Gui",
+      "Yuxuan Zhou",
+      "Shen Cheng"
+    ]
+  },
+  "14": {
+    "title": "FaceCam: Portrait Video Camera Control via Scale-Aware Conditioning",
+    "link": "http://arxiv.org/abs/2603.05506v1",
+    "authors": [
+      "Weijie Lyu",
+      "Ming-Hsuan Yang",
+      "Zhixin Shu"
+    ]
+  },
+  "15": {
+    "title": "Accelerating Text-to-Video Generation with Calibrated Sparse Attention",
+    "link": "http://arxiv.org/abs/2603.05503v1",
+    "authors": [
+      "Shai Yehezkel",
+      "Shahar Yadin",
+      "Noam Elata"
+    ]
+  },
+  "16": {
+    "title": "POET-X: Memory-efficient LLM Training by Scaling Orthogonal Transformation",
+    "link": "http://arxiv.org/abs/2603.05500v1",
+    "authors": [
+      "Zeju Qiu",
+      "Lixin Liu",
+      "Adrian Weller"
+    ]
+  },
+  "17": {
+    "title": "Core-bound waves on a Gross-Pitaevskii vortex",
+    "link": "http://arxiv.org/abs/2603.05505v1",
+    "authors": [
+      "Evan Papoutsis",
+      "Nathan Apfel",
+      "Nir Navon"
+    ]
+  },
+  "18": {
+    "title": "Observing and Controlling Features in Vision-Language-Action Models",
+    "link": "http://arxiv.org/abs/2603.05487v1",
+    "authors": [
+      "Hugo Buurmeijer",
+      "Carmen Amo Alonso",
+      "Aiden Swann"
+    ]
+  },
+  "19": {
+    "title": "Thermodynamic Response Functions in Singular Bayesian Models",
+    "link": "http://arxiv.org/abs/2603.05480v1",
+    "authors": [
+      "Sean Plummer"
+    ]
+  },
+  "20": {
+    "title": "Calculating trace distances of bosonic states in Krylov subspace",
+    "link": "http://arxiv.org/abs/2603.05499v1",
+    "authors": [
+      "Javier Martínez-Cifuentes",
+      "Nicolás Quesada"
+    ]
+  },
+  "21": {
+    "title": "Censored LLMs as a Natural Testbed for Secret Knowledge Elicitation",
+    "link": "http://arxiv.org/abs/2603.05494v1",
+    "authors": [
+      "Helena Casademunt",
+      "Bartosz Cywiński",
+      "Khoi Tran"
+    ]
+  },
+  "22": {
+    "title": "AI+HW 2035: Shaping the Next Decade",
+    "link": "http://arxiv.org/abs/2603.05225v1",
+    "authors": [
+      "Deming Chen",
+      "Jason Cong",
+      "Azalia Mirhoseini"
+    ]
+  },
+  "23": {
+    "title": "plugins",
+    "link": "https://github.com/openai/plugins",
+    "source": "OpenAI"
+  },
+  "24": {
+    "title": "Project Vend 2",
+    "link": "https://www.anthropic.com/research/project-vend-2",
+    "source": "Anthropic"
+  },
+  "25": {
+    "title": "Introspection",
+    "link": "https://www.anthropic.com/research/introspection",
+    "source": "Anthropic"
+  },
+  "26": {
+    "title": "Tracing Thoughts Language Model",
+    "link": "https://www.anthropic.com/research/tracing-thoughts-language-model",
+    "source": "Anthropic"
+  },
+  "27": {
+    "title": "Constitutional Classifiers",
+    "link": "https://www.anthropic.com/research/constitutional-classifiers",
+    "source": "Anthropic"
+  },
+  "28": {
+    "title": "Alignment Faking",
+    "link": "https://www.anthropic.com/research/alignment-faking",
+    "source": "Anthropic"
+  },
+  "29": {
+    "title": "Labor Market Impacts",
+    "link": "https://www.anthropic.com/research/labor-market-impacts",
+    "source": "Anthropic"
+  },
+  "30": {
+    "title": "Deprecation Updates Opus 3",
+    "link": "https://www.anthropic.com/research/deprecation-updates-opus-3",
+    "source": "Anthropic"
+  },
+  "31": {
+    "title": "Persona Selection Model",
+    "link": "https://www.anthropic.com/research/persona-selection-model",
+    "source": "Anthropic"
+  },
+  "32": {
+    "title": "Ai Fluency Index",
+    "link": "https://www.anthropic.com/research/AI-fluency-index",
+    "source": "Anthropic"
+  },
+  "33": {
+    "title": "Measuring Agent Autonomy",
+    "link": "https://www.anthropic.com/research/measuring-agent-autonomy",
+    "source": "Anthropic"
+  },
+  "34": {
+    "title": "India Brief Economic Index",
+    "link": "https://www.anthropic.com/research/india-brief-economic-index",
+    "source": "Anthropic"
+  },
+  "35": {
+    "title": "Ai Assistance Coding Skills",
+    "link": "https://www.anthropic.com/research/AI-assistance-coding-skills",
+    "source": "Anthropic"
+  },
+  "36": {
+    "title": "Disempowerment Patterns",
+    "link": "https://www.anthropic.com/research/disempowerment-patterns",
+    "source": "Anthropic"
+  },
+  "37": {
+    "title": "Assistant Axis",
+    "link": "https://www.anthropic.com/research/assistant-axis",
+    "source": "Anthropic"
+  },
+  "38": {
+    "title": "Kimi K2.5 --------- Visual Agentic Intelligence",
+    "link": "https://www.kimi.com/blog/kimi-k2-5",
+    "source": "Moonshot"
+  },
+  "39": {
+    "title": "Kimi K2 Thinking",
+    "link": "https://www.kimi.com/blog/kimi-k2-thinking",
+    "source": "Moonshot"
+  },
+  "40": {
+    "title": "Kimi-K2-Instruct-0905",
+    "link": "https://huggingface.co/moonshotai/Kimi-K2-Instruct-0905",
+    "source": "Moonshot"
+  },
+  "41": {
+    "title": "Kimi K2",
+    "link": "https://www.kimi.com/blog/kimi-k2",
+    "source": "Moonshot"
+  },
+  "42": {
+    "title": "Kimi-Researcher",
+    "link": "https://moonshotai.github.io/Kimi-Researcher/",
+    "source": "Moonshot"
+  },
+  "43": {
+    "title": "Kimi-Dev",
+    "link": "https://github.com/MoonshotAI/Kimi-Dev",
+    "source": "Moonshot"
+  },
+  "44": {
+    "title": "Kimi-Audio",
+    "link": "https://github.com/MoonshotAI/Kimi-Audio",
+    "source": "Moonshot"
+  },
+  "45": {
+    "title": "Kimina-Prover Preview",
+    "link": "https://github.com/MoonshotAI/Kimina-Prover-Preview",
+    "source": "Moonshot"
+  },
+  "46": {
+    "title": "Kimi-VL",
+    "link": "https://github.com/MoonshotAI/Kimi-VL",
+    "source": "Moonshot"
+  },
+  "47": {
+    "title": "Muon is Scalable for LLM Training",
+    "link": "https://github.com/MoonshotAI/Moonlight",
+    "source": "Moonshot"
+  },
+  "48": {
+    "title": "MoBA: Mixture of Block Attention for Long-Context LLMs",
+    "link": "https://github.com/MoonshotAI/MoBA",
+    "source": "Moonshot"
+  },
+  "49": {
+    "title": "Kimi k1.5: Scaling Reinforcement Learning with LLMs",
+    "link": "https://github.com/MoonshotAI/Kimi-k1.5",
+    "source": "Moonshot"
+  },
+  "50": {
+    "title": "Mooncake: A KVCache-centric Disaggregated Architecture for LLM Serving",
+    "link": "https://github.com/kvcache-ai/Mooncake/",
+    "source": "Moonshot"
+  },
+  "51": {
+    "title": "Seed2.0 Released",
+    "link": "https://seed.bytedance.com/en/research",
+    "source": "Seed"
+  },
+  "52": {
+    "title": "Seedream 5.0 Lite Released",
+    "link": "https://seed.bytedance.com/en/research",
+    "source": "Seed"
+  },
+  "53": {
+    "title": "Seed1.8 Released",
+    "link": "https://seed.bytedance.com/en/research",
+    "source": "Seed"
+  },
+  "54": {
+    "title": "Seedance 1.5 pro Released",
+    "link": "https://seed.bytedance.com/en/research",
+    "source": "Seed"
+  },
+  "55": {
+    "title": "Seed Prover 1.5 Released",
+    "link": "https://seed.bytedance.com/en/research",
+    "source": "Seed"
+  },
+  "56": {
+    "title": "Seed2.0 Released",
+    "link": "https://seed.bytedance.com/en/research",
+    "source": "Seed"
+  },
+  "57": {
+    "title": "Seedream 5.0 Lite Released",
+    "link": "https://seed.bytedance.com/en/research",
+    "source": "Seed"
+  },
+  "58": {
+    "title": "Seed1.8 Released",
+    "link": "https://seed.bytedance.com/en/research",
+    "source": "Seed"
+  },
+  "59": {
+    "title": "Seedance 1.5 pro Released",
+    "link": "https://seed.bytedance.com/en/research",
+    "source": "Seed"
+  },
+  "60": {
+    "title": "Seed Prover 1.5 Released",
+    "link": "https://seed.bytedance.com/en/research",
+    "source": "Seed"
+  },
+  "61": {
+    "title": "Codex Security: now in research preview",
+    "link": "https://openai.com/index/codex-security-now-in-research-preview/",
+    "source": "OpenAI"
+  },
+  "62": {
+    "title": "OpenAI Releases AI Agent Security Tool for Research ...",
+    "link": "https://www.bloomberg.com/news/articles/2026-03-06/openai-releases-ai-agent-security-tool-for-research-preview",
+    "source": "Web"
+  },
+  "63": {
+    "title": "OpenAI releases AI agent security tool for research preview",
+    "link": "https://www.thehindubusinessline.com/info-tech/openai-releases-ai-agent-security-tool-for-research-preview/article70714772.ece",
+    "source": "Web"
+  },
+  "64": {
+    "title": "OpenAI Releases New Financial-Services Tools, Rivaling ...",
+    "link": "https://finance.yahoo.com/news/openai-releases-financial-services-tools-190124457.html",
+    "source": "Web"
+  },
+  "65": {
+    "title": "Open models by OpenAI",
+    "link": "https://openai.com/open-models/",
+    "source": "OpenAI"
+  },
+  "66": {
+    "title": "China's Moonshot releases a new open source model Kimi ... ...",
+    "link": "https://techcrunch.com/2026/01/27/chinas-moonshot-releases-a-new-open-source-model-kimi-k2-5-and-a-coding-agent/",
+    "source": "Moonshot"
+  },
+  "67": {
+    "title": "Moonshot's newest release narrows US-China AI model ... ...",
+    "link": "https://www.scmp.com/tech/tech-trends/article/3341580/moonshots-newest-release-narrows-us-china-ai-model-development-gap-analysts",
+    "source": "Moonshot"
+  },
+  "68": {
+    "title": "Kimi (chatbot)",
+    "link": "https://en.wikipedia.org/wiki/Kimi_(chatbot)",
+    "source": "Web"
+  },
+  "69": {
+    "title": "Kimi K2.5 in 2026: The Ultimate Guide to Open-Source ...",
+    "link": "https://dev.to/czmilo/kimi-k25-in-2026-the-ultimate-guide-to-open-source-visual-agentic-intelligence-18od",
+    "source": "Moonshot"
+  },
+  "70": {
+    "title": "Alibaba-backed Moonshot releases new AI model Kimi K2 ...",
+    "link": "https://www.cnbc.com/2025/11/06/alibaba-backed-moonshot-releases-new-ai-model-kimi-k2-thinking.html",
+    "source": "Moonshot"
+  }
+}
