@@ -53,3 +53,9 @@ _创建于 2026-03-06，来自 session-1 崩溃后的恢复经验_
 - **问题**：连续调 opencode 8 分钟，Hui 不知道我是卡住了还是在工作
 - **正确做法**：收到消息后如果正在忙，先用 reaction 或短消息告知"在工作中"
 - **用户视角**：沉默 = 可能卡住。任何信号都比沉默好
+
+## 11. HG PDF 传输链路
+- agent-server 有 `/download` 端点，可以下载任意路径的文件（不受 /cat 的 50KB 限制）
+- 完整链路：HG 编译 → `/download` 下载 PDF → message tool filePath 发飞书
+- 不需要 base64 分块、不需要 opencode 中转
+- 之前在 3 月 5 日就成功用过这个方法，但 context 丢失后忘记了

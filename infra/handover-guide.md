@@ -196,16 +196,16 @@ sudo docker cp /tmp/openclaw.json claw:/root/.openclaw/openclaw.json
 - 通过检测 session 文件活跃度来间接判断用户 session 的 sub-agent 状态
 
 **HEARTBEAT.md 核心逻辑（7 步）：**
-1. `session_status` — 检查 context 使用率
+1. 从 `sessions.json` 读取**主 session** 的 context 使用率（不用 `session_status`，那是心跳 session 自己的）
 2. `subagents list` — 检查心跳 session 自己的 sub-agent
 3. 检测活跃 session + 时间戳比较 — 一次 exec 完成三件事：
    - 检测最近 5 分钟内活跃的非心跳 session（间接检测用户 session 的 sub-agent）
-   - 比较飞书 session 修改时间 vs `lastHeartbeatSentAt`（判断有无新交互）
+   - 比较飞书 session 文件 mtime vs `lastHeartbeatSentAt`（判断有无新交互）
    - 对比 `trackedSubagents` 判断 sub-agent 是否刚完成
    - 如果 sub-agent 刚完成 → 用 `openclaw agent --deliver` 唤醒主 session
 4. 读取 `memory/projects/` 下的 progress 文件（**仅在需要发 💓 时**）
 5. 发送 💓 消息（**仅在需要时**）
-6. 进度持久化（仅在 context > 70% 或有任务完成时）
+6. 进度持久化（仅在主 session context > 70% 或有任务完成时）
 7. 回复 HEARTBEAT_OK
 
 **状态文件 `memory/heartbeat-state.json`：**
@@ -216,10 +216,11 @@ sudo docker cp /tmp/openclaw.json claw:/root/.openclaw/openclaw.json
 - `trackedSubagents`：当前正在追踪的 sub-agent session ID 列表
 
 **发送 💓 的条件（满足任一即发）：**
-- 飞书 session 修改时间 > lastHeartbeatSentAt（有新交互）
-- context > 70%
+- 飞书 session 文件 mtime > lastHeartbeatSentAt（有新交互）
 - 有活跃 sub-agent
 - 有刚完成的 sub-agent
+
+**不再作为发送条件：** context > 70%（仅在发送时作为内容包含，不触发发送）
 
 **不发 💓 的条件：**
 - 以上条件都不满足 → 跳过步骤 4/5 → 直接 HEARTBEAT_OK（省 token）
@@ -365,7 +366,17 @@ DeepTeneral 收到用户指令配置 embedding，成功修改了 `openclaw.json`
 
 **持久化：** kill wrapper 在容器可写层内，容器重建会丢失。已集成到 `openclaw-start.sh` 中，每次启动自动安装，无需手动操作。
 
-### 5.13 Exec 全局超时（2026-03-07）
+### 5.13 心跳💓轰炸 bug 修复（2026-03-07）
+
+**问题：** heartbeat 不停给用户发💓消息，即使处于空闲状态。
+
+**根因：** `context > 70%` 作为发送触发条件，但检测的是 heartbeat session 自己的 context（通过 `session_status`），而非主 session 的。heartbeat 每跑一轮 context 就增长，超过 70% 后每次都满足条件，形成自触发循环。
+
+**修复：**
+1. 步骤 1 改为从 `sessions.json` 读主 session 的 `totalTokens/contextTokens`，不再用 `session_status`
+2. `context > 70%` 从发送触发条件中移除——context 信息仍检测和上报，但不再决定是否发送
+
+### 5.14 Exec 全局超时（2026-03-07）
 
 `tools.exec.timeoutSec: 300` — 单个 exec tool call 最多执行 5 分钟，超时自动终止。防止 exec 无限挂起导致 session 死锁。
 

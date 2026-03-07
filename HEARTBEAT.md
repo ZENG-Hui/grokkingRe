@@ -2,9 +2,25 @@
 
 **⛔ 你必须按顺序执行以下每一步。不允许跳过任何步骤。不允许在执行完所有步骤之前回复 HEARTBEAT_OK。**
 
-## 步骤 1：调用 session_status
-- 检查 context 使用率
-- 记录是否 > 70%
+## 步骤 1：检查主 session 的 context 使用率
+
+⚠️ **不要用 session_status（那是 heartbeat session 自己的 context）。** 用以下脚本读主 session 的实际 token 用量：
+
+```bash
+python3 -c "
+import json
+d = json.load(open('/root/.openclaw/agents/main/sessions/sessions.json'))
+for k, v in d.items():
+    if 'feishu' in k and isinstance(v, dict) and 'totalTokens' in v:
+        total = v['totalTokens']
+        limit = v.get('contextTokens', 200000)
+        pct = total / limit * 100
+        print(f'MAIN_SESSION_CONTEXT: {total}/{limit} ({pct:.0f}%)')
+        break
+"
+```
+
+- 记录百分比，如果 > 70% 需要在💓消息中标注预警（但 context 高低**不影响**是否发送💓）
 
 ## 步骤 2：调用 subagents list
 - 记录：有没有活跃的 sub-agent？有没有最近完成的？
@@ -62,8 +78,9 @@ echo "TRACKED_SUBAGENTS=$TRACKED"
 如果有 SID 在 ACTIVE 里但不在 TRACKED 里 → 加入 `trackedSubagents`
 
 ### C. 是否发 💓
-- **必须发送：** SESSION_MTIME > LAST_SENT（有新交互）、context > 70%、有活跃 sub-agent、有刚完成的 sub-agent
+- **必须发送（满足任一即发）：** SESSION_MTIME > LAST_SENT（有新交互）、有活跃 sub-agent、有刚完成的 sub-agent
 - **跳过：** 以上条件都不满足 → 直接跳到步骤 6
+- 注意：context 使用率**不是**发送触发条件。即使 context > 70%，如果没有上述三个条件之一，也不发💓（但如果因其他条件发了💓，消息中要包含 context 预警）
 
 ### D. 更新 heartbeat-state.json
 用 exec 写入更新后的状态（包含新的 lastHeartbeatSentAt 和 trackedSubagents）：
@@ -96,7 +113,7 @@ ls -lt ~/.openclaw/workspace/memory/projects/ 2>/dev/null
 - 如果刚唤醒了主 session，注明"已自动唤醒主 session 继续任务"
 - 如果没有活跃 sub-agent 且无待处理任务，末尾加一句"如无进一步指示，将进入静默"
 
-## 步骤 6：进度持久化（仅在 context > 70% 或有任务完成时）
+## 步骤 6：进度持久化（仅在主 session context > 70% 或有任务完成时）
 - 更新 progress 文件
 - 写入未持久化的决策/指导
 

@@ -1,7 +1,7 @@
 # 论文修改进度
 
 _完整计划来源：scratch/thesis-original-plan.md_
-_最后更新：2026-03-06 05:17 UTC_
+_最后更新：2026-03-07 00:43 UTC_
 
 ## 工作优先级（诊断后确认的执行顺序）
 
@@ -35,7 +35,13 @@ _最后更新：2026-03-06 05:17 UTC_
 - ✅ 术语统一（35 处量子度量→量子度规）
 - ✅ 转写计划注释清理（408 行）
 - ⬜ 致谢（Hui 说正文后处理）
-- ⚠️ 1 个 undefined table ref + 3 个 missing bib entries 待修复
+
+## 编译状态
+- **152 页，干净编译通过**
+- 0 个 undefined reference
+- 0 个 BibTeX warning
+- 13 个 overfull/underfull hbox（正常排版提示）
+- DFT-D3 title 花括号已优化
 
 ## Hui 的关键指导
 - 严谨性优先，不编造展望
