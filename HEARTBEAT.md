@@ -25,17 +25,17 @@ for k, v in d.items():
 ## 步骤 2：调用 subagents list
 - 记录：有没有活跃的 sub-agent？有没有最近完成的？
 
-## 步骤 3：检测活跃 session + 时间戳比较 + sub-agent 完成检测
+## 步骤 3：检测活跃 session + 用户消息检测 + sub-agent 完成检测
 
 运行以下脚本：
 ```bash
-HEARTBEAT_SID="5b0fdcce-940a-4cd4-8a1a-f8c63ae6a116"
+HEARTBEAT_SID=$(python3 -c "import json; print(json.load(open('/root/.openclaw/agents/main/sessions/sessions.json')).get('agent:main:main', {}).get('sessionId', ''))" 2>/dev/null)
 THRESHOLD=$(date -d '5 minutes ago' +%s)
 
 # 找飞书用户 session ID
 FEISHU_SID=$(python3 -c "import json; d=json.load(open('/root/.openclaw/agents/main/sessions/sessions.json')); [print(v['sessionId']) for k,v in d.items() if 'feishu' in k and isinstance(v,dict) and 'sessionId' in v]" 2>/dev/null | head -1)
 
-# 检测活跃 session
+# 检测活跃 session（排除 heartbeat 和主 session）
 echo "=== Active sessions (last 5 min, excluding heartbeat) ==="
 ACTIVE_SIDS=""
 for f in ~/.openclaw/agents/main/sessions/*.jsonl; do
@@ -53,37 +53,38 @@ for f in ~/.openclaw/agents/main/sessions/*.jsonl; do
 done
 echo "ACTIVE_NON_MAIN_SIDS=$ACTIVE_SIDS"
 
-# 时间戳比较
-SESSION_MTIME=$(stat -c '%Y' ~/.openclaw/agents/main/sessions/${FEISHU_SID}.jsonl 2>/dev/null || echo 0)
+# 检测用户最后一条消息的时间戳（不用文件 mtime，因为 bot 回复也会更新 mtime）
+LAST_USER_MSG_TS=$(python3 -c "
+import json
+last_ts = 0
+with open('/root/.openclaw/agents/main/sessions/${FEISHU_SID}.jsonl') as f:
+    for line in f:
+        try:
+            obj = json.loads(line)
+            msg = obj.get('message', {})
+            if msg.get('role') == 'user':
+                ts = obj.get('timestamp', '')
+                if isinstance(ts, str) and ts:
+                    from datetime import datetime
+                    ts = int(datetime.fromisoformat(ts.replace('Z','+00:00')).timestamp())
+                    if ts > last_ts:
+                        last_ts = ts
+        except: pass
+print(last_ts)
+" 2>/dev/null || echo 0)
 LAST_SENT=$(python3 -c "import json; print(json.load(open('/root/.openclaw/workspace/memory/heartbeat-state.json')).get('lastHeartbeatSentAt',0))" 2>/dev/null || echo 0)
-echo "SESSION_MTIME=$SESSION_MTIME LAST_SENT=$LAST_SENT"
-
-# 读取已追踪的 sub-agent 列表
-TRACKED=$(python3 -c "import json; print(','.join(json.load(open('/root/.openclaw/workspace/memory/heartbeat-state.json')).get('trackedSubagents',[])))" 2>/dev/null || echo "")
-echo "TRACKED_SUBAGENTS=$TRACKED"
+echo "LAST_USER_MSG_TS=$LAST_USER_MSG_TS LAST_SENT=$LAST_SENT"
 ```
-
-## 判断逻辑（按优先级）
-
-### A. Sub-agent 完成检测 → 唤醒主 session
-对比 `TRACKED_SUBAGENTS` 和 `ACTIVE_NON_MAIN_SIDS`：
-- 如果有 SID 在 TRACKED 里但不在 ACTIVE 里 → **该 sub-agent 刚完成**
-- 执行唤醒：
-  ```bash
-  nohup openclaw agent --session-id <FEISHU_SID> --message "[auto-heartbeat] Sub-agent completed. Run 'subagents list' to check results, then continue with next steps." --deliver --channel feishu > /dev/null 2>&1 &
-  ```
-- 从 trackedSubagents 中移除已完成的 SID
-
-### B. 新 sub-agent 检测 → 加入追踪
 如果有 SID 在 ACTIVE 里但不在 TRACKED 里 → 加入 `trackedSubagents`
 
 ### C. 是否发 💓
-- **必须发送（满足任一即发）：** SESSION_MTIME > LAST_SENT（有新交互）、有活跃 sub-agent、有刚完成的 sub-agent
+- **必须发送（满足任一即发）：** LAST_USER_MSG_TS > LAST_SENT（用户有新消息）、有活跃 sub-agent、有刚完成的 sub-agent
 - **跳过：** 以上条件都不满足 → 直接跳到步骤 6
-- 注意：context 使用率**不是**发送触发条件。即使 context > 70%，如果没有上述三个条件之一，也不发💓（但如果因其他条件发了💓，消息中要包含 context 预警）
+- 注意：context 使用率**不是**发送触发条件。即使 context > 70%，如果没有上述条件之一，也不发💓（但如果因其他条件发了💓，消息中要包含 context 预警）
+- ⚠️ **不要自行修改此检测逻辑。** 如果你认为有 bug，先报告给 Hui
 
 ### D. 更新 heartbeat-state.json
-用 exec 写入更新后的状态（包含新的 lastHeartbeatSentAt 和 trackedSubagents）：
+用 exec 写入更新后的状态：
 ```bash
 python3 -c "
 import json

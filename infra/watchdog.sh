@@ -27,15 +27,8 @@ if [ ! -f "$CONFIG_BACKUP" ]; then
 fi
 FEISHU_APP_ID=$(python3 -c "import json; print(json.load(open('$CONFIG_BACKUP'))['channels']['feishu']['appId'])")
 FEISHU_APP_SECRET=$(python3 -c "import json; print(json.load(open('$CONFIG_BACKUP'))['channels']['feishu']['appSecret'])")
-FEISHU_USER_ID=$(python3 -c "
-import json
-c = json.load(open('$CONFIG_BACKUP'))
-pairs = c.get('channels',{}).get('feishu',{}).get('pairing',{}).get('approved',{})
-# 取第一个已批准用户
-for uid in pairs:
-    print(uid)
-    break
-")
+# Hui 的 open_id（openclaw.json 中 pairing 信息可能不持久，直接硬编码）
+FEISHU_USER_ID="ou_69ba193a57d1c578a8d42f06efd985c8"
 
 # === 函数 ===
 log() { echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] $*"; }
@@ -79,7 +72,7 @@ if ! sudo docker ps --format '{{.Names}}' | grep -q "^${CONTAINER}$"; then
 fi
 
 # === 检查 gateway 进程 ===
-gw_alive=$(sudo docker exec "$CONTAINER" pgrep -c "openclaw" 2>/dev/null || echo 0)
+gw_alive=$(sudo docker exec "$CONTAINER" pgrep -c "openclaw" 2>/dev/null) || gw_alive=0
 if [ "$gw_alive" -lt 2 ]; then
     send_feishu_alert "⚠️ 看门狗告警：Teneral 的 gateway 进程已死亡！需要从宿主机重启：bash /home/ubuntu/zenghui/openclaw/openclaw-start.sh"
     date +%s > "$STATE_FILE"

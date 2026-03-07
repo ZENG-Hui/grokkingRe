@@ -149,7 +149,10 @@
     "native": "auto",
     "nativeSkills": "auto",
     "restart": true,
-    "ownerDisplay": "raw"
+    "ownerDisplay": "raw",
+    "config": true,
+    "debug": true,
+    "bash": false
   },
   "session": {
     "dmScope": "per-channel-peer"
@@ -210,7 +213,9 @@
   },
   "tools": {
     "exec": {
-      "timeoutSec": 300
+      "timeoutSec": 300,
+      "security": "full",
+      "host": "gateway"
     }
   }
 }

@@ -65,21 +65,25 @@ WRAPPER3
 chmod +x /usr/local/bin/pkill
 '
 
-# 4. 同步宿主机脚本到容器内 workspace/infra/（供 git 备份）
+# 4. 安装 hg 透传脚本（飞书 !hg 命令直达 HG opencode）
+sudo docker cp "${SCRIPT_DIR}/hg.sh" "${CONTAINER}:/usr/local/bin/hg"
+sudo docker exec "$CONTAINER" chmod +x /usr/local/bin/hg
+
+# 5. 同步宿主机脚本到容器内 workspace/infra/（供 git 备份）
 echo "📂 同步 infra 文件..."
 sudo docker exec "$CONTAINER" mkdir -p /root/.openclaw/workspace/infra
-for f in openclaw-start.sh openclaw-stop.sh watchdog.sh; do
+for f in openclaw-start.sh openclaw-stop.sh watchdog.sh hg.sh; do
     sudo docker cp "${SCRIPT_DIR}/${f}" "${CONTAINER}:/root/.openclaw/workspace/infra/"
 done
-for f in handover-guide.md openclaw-guide.md container-environment.md; do
+for f in handover-guide.md openclaw-guide.md container-environment.md feishu-commands.md multi-agent-feasibility.md; do
     [ -f "${SCRIPT_DIR}/README/${f}" ] && sudo docker cp "${SCRIPT_DIR}/README/${f}" "${CONTAINER}:/root/.openclaw/workspace/infra/"
 done
 
-# 5. 启动 socat + gateway
+# 6. 启动 socat + gateway
 sudo docker exec -d "$CONTAINER" bash -c "socat TCP-LISTEN:18789,fork,reuseaddr,bind=0.0.0.0 TCP:127.0.0.1:18788 & nohup openclaw gateway run > /tmp/openclaw/openclaw-nohup.log 2>&1 &"
 sleep 3
 
-# 6. 确保 watchdog crontab 已安装
+# 7. 确保 watchdog crontab 已安装
 CRON_ENTRY="*/5 * * * * bash ${SCRIPT_DIR}/watchdog.sh >> ${SCRIPT_DIR}/watchdog.log 2>&1"
 if ! crontab -l 2>/dev/null | grep -qF "watchdog.sh"; then
     (crontab -l 2>/dev/null; echo "$CRON_ENTRY") | crontab -
@@ -88,7 +92,7 @@ else
     echo "🐕 看门狗 crontab 已存在"
 fi
 
-# 7. 验证
+# 8. 验证
 sudo docker exec "$CONTAINER" ps aux | grep -E "openclaw|socat" | grep -v grep
 echo ""
 echo "✅ 启动完成！关掉电脑也不会停。"
