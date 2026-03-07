@@ -69,7 +69,13 @@ _Last updated: 2026-03-06_
 12. **区分"观察"和"推断"** — 不确定的技术机制不要肯定地告诉用户。说"我观察到 X，但不确定机制"
 13. **下属失败时亲自验证** — 确认问题是 brief 问题还是外部故障
 14. **Heartbeat 回合中我的行为可能不一致** — 轻量 context 下倾向走最短路径，需要系统级保障
+15. **不确定就问，不要"试一试"** — kill -HUP 杀死 gateway 的教训。不可逆操作前必须确认安全性
+16. **openclaw.json 改后不需要重启** — gateway 自动热重载。永远不要 kill/restart gateway 进程
+17. **message tool 的 filePath 不可靠** — 用 feishu-file-send skill（直接调飞书 API）
+18. **HG 大文件用 /download 端点** — 不要 base64 分块。链路：/download → send_file.py
+19. **总结必须内化到持久文件** — 发消息和写日志不够，关键教训要进 MEMORY.md + lessons/
 - 具体错误案例记录在 `self-discovery/error-patterns.md`，新错误随时追加
+- 详细 lessons 在 `memory/lessons/session-continuity.md`（15 条）
 
 ## Context 管理习惯（2026-03-06 建立）
 

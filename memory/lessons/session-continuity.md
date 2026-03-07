@@ -59,3 +59,23 @@ _创建于 2026-03-06，来自 session-1 崩溃后的恢复经验_
 - 完整链路：HG 编译 → `/download` 下载 PDF → message tool filePath 发飞书
 - 不需要 base64 分块、不需要 opencode 中转
 - 之前在 3 月 5 日就成功用过这个方法，但 context 丢失后忘记了
+
+## 12. openclaw.json 修改后不需要重启
+- gateway 支持热重载，编辑 openclaw.json 后自动检测变化并应用
+- 日志会显示 "config change detected; evaluating reload"
+- **永远不要** kill/restart gateway 进程
+
+## 13. message tool 的 filePath 不可靠
+- filePath 参数发送文件时，API 返回成功但飞书端可能收不到
+- **正确方法**：用 feishu-file-send skill（直接调飞书 API）
+- 路径：skills/feishu-file-send/scripts/send_file.py
+
+## 14. HG 大文件传输用 /download 端点
+- agent-server 的 /download 端点可以下载任意路径文件（不受 /cat 50KB 限制）
+- 链路：HG 编译 → /download 下载到本地 → send_file.py 发飞书
+- 不要用 base64 分块传输（太慢）
+
+## 15. 总结必须内化到持久文件
+- 发消息和写日志不够——消息在 context 里会丢失，日志是原始记录
+- 关键教训必须写入 MEMORY.md（长期记忆）和 lessons/（经验库）
+- 每次反思/总结后检查：这些经验是否已经持久化？
